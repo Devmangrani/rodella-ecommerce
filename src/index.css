@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure entire page has black background */
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  background-color: var(--color-black);
+  min-height: 100vh;
+}
+
+:root {
+  --color-neutral-100: oklch(.97 0 0);
+  --color-neutral-200: oklch(.922 0 0);
+  --color-neutral-300: oklch(.87 0 0);
+  --color-neutral-400: oklch(.708 0 0);
+  --color-neutral-500: oklch(.556 0 0);
+  --color-neutral-600: oklch(.439 0 0);
+  --color-neutral-700: oklch(.371 0 0);
+  --color-neutral-800: oklch(.278 0 0);
+  --color-neutral-900: oklch(.205 0 0);
+  --color-black: #000;
+  --color-white: #fff;
+}
+
+html, body {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--color-black);
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-600);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-500);
+}
+
+/* Selection color */
+::selection {
+  background: var(--color-neutral-700);
+  color: var(--color-white);
+}
+
+/* Focus outline */
+:focus {
+  outline: 2px solid var(--color-neutral-600);
+  outline-offset: 2px;
+}
+
+/* Links */
+a {
+  color: var(--color-white);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-neutral-300);
+}
+
+/* Form elements */
+input, textarea, select {
+  background-color: var(--color-neutral-800);
+  color: var(--color-white);
+  border: 1px solid var(--color-neutral-700);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-neutral-600);
+  outline: none;
+}
+
+/* Buttons */
+button {
+  background-color: var(--color-neutral-800);
+  color: var(--color-white);
+  border: 1px solid var(--color-neutral-700);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--color-neutral-700);
+  border-color: var(--color-neutral-600);
+}
+
+/* Cards and containers */
+.card {
+  background-color: var(--color-neutral-800);
+  border: 1px solid var(--color-neutral-700);
+  border-radius: 0.5rem;
+}
+
+/* Shadows for dark theme */
+.shadow-dark {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
