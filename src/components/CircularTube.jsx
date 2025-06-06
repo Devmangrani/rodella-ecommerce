@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 
 const materials = {
   carbon_fiber: { density: 1.6, label: 'Carbon Fiber' },
-  aluminum: { density: 2.7, label: 'Aluminum' },
-  steel: { density: 7.85, label: 'Steel' },
+  aluminum: { density: 2.7, label: 'Glass Fiber' },
+  steel: { density: 7.85, label: 'Carbon Kevlar' },
 };
 
 
