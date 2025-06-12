@@ -105,9 +105,9 @@ const Form = () => {
 };
 
 // Control Component
-const Control = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const Control = ({ isLoggedIn, setIsLoggedIn }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -117,10 +117,18 @@ const Control = () => {
 
   const handleAuthClick = () => {
     if (isLoggedIn) {
-      setIsLoggedIn(false);
+      // Navigate to dashboard
+      navigate('/dashboard');
     } else {
-      window.location.href = '/login';
+      // Navigate to login
+      navigate('/login');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    navigate('/');
   };
 
   return (
@@ -141,14 +149,51 @@ const Control = () => {
               <ShoppingCartIcon className="text-white" />
             </Link>
           </motion.div>
-          <motion.div 
-            className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleAuthClick}
-          >
-            <PersonIcon className="text-white" />
-          </motion.div>
+          {isLoggedIn ? (
+            <motion.div 
+              className="relative group"
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div 
+                className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleAuthClick}
+              >
+                <PersonIcon className="text-white" />
+              </motion.div>
+              {/* Dropdown menu for logged in user */}
+              <motion.div 
+                className="absolute right-0 top-full mt-2 w-48 bg-neutral-800 border border-neutral-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50"
+                initial={{ opacity: 0, y: -10 }}
+                whileHover={{ opacity: 1, y: 0 }}
+              >
+                <div className="py-2">
+                  <button
+                    onClick={handleAuthClick}
+                    className="w-full text-left px-4 py-2 text-white hover:bg-neutral-700 transition-colors duration-300"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-white hover:bg-neutral-700 transition-colors duration-300"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAuthClick}
+            >
+              <PersonIcon className="text-white" />
+            </motion.div>
+          )}
         </>
       )}
       <Link to="/contact" className="focus:outline-none">
@@ -165,7 +210,7 @@ const Control = () => {
 };
 
 // DrawerNav Component
-const DrawerNav = () => {
+const DrawerNav = ({ isLoggedIn }) => {
   const [state, setState] = useState({
     left: false,
   });
@@ -256,12 +301,14 @@ const DrawerNav = () => {
           whileTap={{ scale: 0.95 }}
           className="group"
         >
-          <Link to="/login" className="no-underline">
+          <Link to={isLoggedIn ? "/dashboard" : "/login"} className="no-underline">
             <div className="flex flex-col items-center gap-2">
               <div className="w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
                 <PersonIcon className="text-white w-[30px] h-[30px]" />
               </div>
-              <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">Account</span>
+              <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">
+                {isLoggedIn ? "Dashboard" : "Account"}
+              </span>
             </div>
           </Link>
         </motion.div>
@@ -381,6 +428,25 @@ const NavLinks = () => {
 
 // Main Header Component
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('authToken');
+      setIsLoggedIn(!!token);
+    };
+    checkAuthStatus();
+
+    // Listen for storage changes to update auth state
+    const handleStorageChange = () => {
+      checkAuthStatus();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   return (
     <motion.nav 
       className="py-3 flex items-center justify-between bg-neutral-900 text-white rounded-2xl px-8 sticky w-full max-w-[96rem] mx-auto opacity-85 z-[999] top-0"
@@ -391,9 +457,9 @@ const Header = () => {
       <NavBrand />
       <NavLinks />
       <div className="flex items-center gap-x-5">
-        <Control />
+        <Control isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         <div className="lg:hidden">
-          <DrawerNav />
+          <DrawerNav isLoggedIn={isLoggedIn} />
         </div>
       </div>
     </motion.nav>

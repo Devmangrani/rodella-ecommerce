@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Header from './Navbar';
+import Footer from './Footer';
 
 const Homepage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -83,73 +84,7 @@ const Homepage = () => {
         <Header />
       </div>
       
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-neutral-900 to-black opacity-90 z-10"></div>
-        
-        {/* Background Animation */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-600/20"></div>
-          <motion.div
-            className="absolute inset-0"
-            animate={{
-              background: [
-                "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-                "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-                "radial-gradient(circle at 40% 70%, rgba(255,255,255,0.1) 0%, transparent 50%)"
-              ]
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          />
-        </div>
-
-        <div className="relative z-20 text-center max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-neutral-300 to-neutral-500 bg-clip-text text-transparent">
-              COMPOSITES
-            </h1>
-            <p className="text-xl md:text-2xl mb-4 text-neutral-300 max-w-4xl mx-auto leading-relaxed">
-              Niche Composites Manufacturer
-            </p>
-            <p className="text-lg md:text-xl mb-12 text-neutral-400 max-w-4xl mx-auto">
-              Specializing in low volume production of high-performance carbon fiber components for aerospace, automotive, and next-generation applications
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="flex justify-center"
-          >
-            <button className="bg-white text-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-neutral-200 transition-all duration-300 transform hover:scale-105">
-              Explore Products
-            </button>
-          </motion.div>
-        </div>
-
-        {/* Floating Elements */}
-        <motion.div
-          className="absolute top-20 left-10 w-2 h-2 bg-white rounded-full opacity-60"
-          animate={{
-            y: [0, -20, 0],
-            opacity: [0.6, 1, 0.6]
-          }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-32 right-16 w-1 h-1 bg-neutral-400 rounded-full"
-          animate={{
-            y: [0, -15, 0],
-            opacity: [0.4, 0.8, 0.4]
-          }}
-          transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-        />
-      </section>
+      
 
       {/* Products Section */}
       <section className="py-20 px-4">
@@ -161,10 +96,7 @@ const Homepage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Products</h2>
-            <p className="text-xl text-neutral-400 max-w-3xl mx-auto">
-              Cutting-edge composite materials engineered for the most demanding applications
-            </p>
+            
           </motion.div>
 
           <motion.div
@@ -211,7 +143,8 @@ const Homepage = () => {
         </div>
       </section>
 
-
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
