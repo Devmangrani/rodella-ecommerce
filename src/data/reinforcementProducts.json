@@ -5,8 +5,8 @@
       "title": "80 GSM 12K spread-tow fabric (Aerospace series)",
       "mrp": 2000,
       "images": [
-        "src/assets/1.jpg",
-        "src/assets/2.jpg"
+        "/assets/1.jpg",
+        "/assets/2.jpg"
       ],
       "details": {
         "weight": "80 gsm",
@@ -19,8 +19,8 @@
       "title": "200 GSM 12K twill weave fabric (Aerospace series)",
       "mrp": 1100,
       "images": [
-        "src/assets/200carbon.jpg",
-        "src/assets/200carbongsm.webp"
+        "/assets/200carbon.jpg",
+        "/assets/200carbongsm.webp"
       ],
       "details": {
         "weight": "200 gsm",
@@ -32,9 +32,9 @@
       "title": "Carbon fiber 3k 2-2twill 200gsm",
       "mrp": 1100,
       "images": [
-        "src/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg",
-        "src/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm2.jpeg",
-        "src/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm3.jpeg"
+        "/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg",
+        "/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm2.jpeg",
+        "/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm3.jpeg"
       ],
       "details": {
         "weight": "200 gsm",
@@ -47,7 +47,7 @@
       "id": 6,
       "title": "E-Glass Ultra Light 50gsm",
       "mrp": 180,
-      "images": ["src/assets/glass50gsm.webp"],
+      "images": ["/assets/glass50gsm.webp"],
       "details": {
         "weight": "50 gsm",
         "weave": "Plain Weave",
@@ -115,7 +115,7 @@
       "id": 12,
       "title": "Aramid - 200gsm",
       "mrp": 1500,
-      "images": ["src/assets/Aramid200gsm1.jpeg", "src/assets/Aramid200gsm2.jpeg", "src/assets/Aramid200gsm3.jpeg"],
+      "images": ["/assets/Aramid200gsm1.jpeg", "/assets/Aramid200gsm2.jpeg", "/assets/Aramid200gsm3.jpeg"],
       "details": {
         "weight": "52 gsm",
         "weave": "Plain Weave",
@@ -183,7 +183,7 @@
       "id": 18,
       "title": "Carbon - Aramid mixed 3K in 200GSM",
       "mrp": 1500,
-      "images": ["src/assets/Carbon-Aramidmixed3K200GSM1.jpeg", "src/assets/Carbon-Aramidmixed3K200GSM2.jpeg"],
+      "images": ["/assets/Carbon-Aramidmixed3K200GSM1.jpeg", "/assets/Carbon-Aramidmixed3K200GSM2.jpeg"],
       "details": {
         "weight": "200 gsm",
         "weave": "3K Mixed Weave",
