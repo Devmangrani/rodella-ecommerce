@@ -2,21 +2,44 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Camera, Edit2, Package, MapPin, Calendar, CreditCard, Eye } from 'lucide-react';
+import { auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doSignOut } from '../firebase/auth';
 
 const UserDashboard = () => {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Check authentication
+  // Check Firebase authentication
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+        setLoading(false);
+      } else {
+        navigate('/login');
+      }
+    });
+
+    return () => unsubscribe();
   }, [navigate]);
 
-  // Get user data from localStorage
+  // Get user data from Firebase user or localStorage fallback
   const getUserData = () => {
+    if (currentUser) {
+      const displayName = currentUser.displayName || '';
+      const nameParts = displayName.split(' ');
+      return {
+        firstName: nameParts[0] || currentUser.email?.split('@')[0] || 'User',
+        lastName: nameParts[1] || '',
+        email: currentUser.email || 'user@example.com',
+        uid: currentUser.uid,
+        emailVerified: currentUser.emailVerified
+      };
+    }
+    
+    // Fallback to localStorage
     const userData = localStorage.getItem('userData');
     if (userData) {
       return JSON.parse(userData);
@@ -115,18 +138,54 @@ const UserDashboard = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await doSignOut();
+      localStorage.removeItem('userData');
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-neutral-950 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div 
-          className="mb-8"
+          className="mb-8 flex justify-between items-start"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-white mb-2">My Dashboard</h1>
-          <p className="text-neutral-400">Manage your profile and track your orders</p>
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">My Dashboard</h1>
+            <p className="text-neutral-400">Manage your profile and track your orders</p>
+            {currentUser && (
+              <p className="text-sm text-green-400 mt-1">
+                Welcome back, {getUserData().firstName}! 
+                {/* {currentUser.emailVerified ? ' ✅ Verified' : ' ⚠️ Email not verified'} */}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300 hover:scale-105"
+          >
+            Logout
+          </button>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

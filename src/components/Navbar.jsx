@@ -15,6 +15,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import logo from "../assets/logo.jpg"
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { useCart } from '../context/myState';
 
 // NavBrand Component
 const NavBrand = () => {
@@ -108,6 +109,8 @@ const Form = () => {
 const Control = ({ isLoggedIn, setIsLoggedIn }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
+  const { getCartTotals } = useCart();
+  const { totalItems } = getCartTotals();
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -127,7 +130,12 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
     setIsLoggedIn(false);
+    
+    // Dispatch custom event to notify other components of auth state change
+    window.dispatchEvent(new Event('authStateChanged'));
+    
     navigate('/');
   };
 
@@ -141,59 +149,31 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
       {windowWidth > 780 && (
         <>
           <motion.div 
-            className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
+            className="relative w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
           >
             <Link to="/cart" className="w-full h-full flex items-center justify-center focus:outline-none">
               <ShoppingCartIcon className="text-white" />
             </Link>
+            {totalItems > 0 && (
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+              >
+                {totalItems > 99 ? '99+' : totalItems}
+              </motion.span>
+            )}
           </motion.div>
-          {isLoggedIn ? (
-            <motion.div 
-              className="relative group"
-              whileHover={{ scale: 1.05 }}
-            >
-              <motion.div 
-                className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleAuthClick}
-              >
-                <PersonIcon className="text-white" />
-              </motion.div>
-              {/* Dropdown menu for logged in user */}
-              <motion.div 
-                className="absolute right-0 top-full mt-2 w-48 bg-neutral-800 border border-neutral-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50"
-                initial={{ opacity: 0, y: -10 }}
-                whileHover={{ opacity: 1, y: 0 }}
-              >
-                <div className="py-2">
-                  <button
-                    onClick={handleAuthClick}
-                    className="w-full text-left px-4 py-2 text-white hover:bg-neutral-700 transition-colors duration-300"
-                  >
-                    Dashboard
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-white hover:bg-neutral-700 transition-colors duration-300"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          ) : (
-            <motion.div 
-              className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleAuthClick}
-            >
-              <PersonIcon className="text-white" />
-            </motion.div>
-          )}
+          <motion.div 
+            className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleAuthClick}
+          >
+            <PersonIcon className="text-white" />
+          </motion.div>
         </>
       )}
       <Link to="/contact" className="focus:outline-none">
@@ -214,6 +194,8 @@ const DrawerNav = ({ isLoggedIn }) => {
   const [state, setState] = useState({
     left: false,
   });
+  const { getCartTotals } = useCart();
+  const { totalItems } = getCartTotals();
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -289,10 +271,21 @@ const DrawerNav = ({ isLoggedIn }) => {
         >
           <Link to="/cart" className="no-underline">
             <div className="flex flex-col items-center gap-2">
-              <div className="w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+              <div className="relative w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
                 <ShoppingCartIcon className="text-white w-[30px] h-[30px]" />
+                {totalItems > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center"
+                  >
+                    {totalItems > 99 ? '99+' : totalItems}
+                  </motion.span>
+                )}
               </div>
-              <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">Cart</span>
+              <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">
+                Cart {totalItems > 0 && `(${totalItems})`}
+              </span>
             </div>
           </Link>
         </motion.div>
@@ -436,15 +429,33 @@ const Header = () => {
       const token = localStorage.getItem('authToken');
       setIsLoggedIn(!!token);
     };
+    
+    // Initial check
     checkAuthStatus();
 
     // Listen for storage changes to update auth state
-    const handleStorageChange = () => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'authToken') {
+        checkAuthStatus();
+      }
+    };
+    
+    // Listen for custom events when localStorage is updated from the same tab
+    const handleAuthChange = () => {
       checkAuthStatus();
     };
-    window.addEventListener('storage', handleStorageChange);
     
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('authStateChanged', handleAuthChange);
+    
+    // Also check periodically in case localStorage changes without event
+    const interval = setInterval(checkAuthStatus, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authStateChanged', handleAuthChange);
+      clearInterval(interval);
+    };
   }, []);
 
   return (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -55,31 +56,111 @@ const Login = () => {
     }
     
     setIsLoading(true);
-    // Simulate API call
+    setErrors({});
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Login attempt:', formData);
+      // Sign in user with Firebase Auth using helper function
+      const userCredential = await doSignInWithEmailAndPassword(
+        formData.email, 
+        formData.password
+      );
       
-      // Mock successful login - set auth token
-      localStorage.setItem('authToken', 'mock-jwt-token');
+      console.log('User signed in successfully:', userCredential.user);
+      
+      // Store user data in localStorage (optional, as Firebase handles auth state)
       localStorage.setItem('userData', JSON.stringify({
-        firstName: formData.email.split('@')[0],
-        lastName: 'User',
-        email: formData.email
+        firstName: userCredential.user.displayName?.split(' ')[0] || formData.email.split('@')[0],
+        lastName: userCredential.user.displayName?.split(' ')[1] || 'User',
+        email: userCredential.user.email,
+        uid: userCredential.user.uid
       }));
+      
+      // Set authToken for PrivateRoute
+      localStorage.setItem('authToken', userCredential.user.accessToken || 'authenticated');
+      
+      // Dispatch custom event to notify other components of auth state change
+      window.dispatchEvent(new Event('authStateChanged'));
       
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
+      
+      // Handle Firebase auth errors
+      let errorMessage = 'An error occurred during login';
+      
+      switch (error.code) {
+        case 'auth/user-not-found':
+          setErrors({ email: 'No account found with this email address. Please check your email or sign up.' });
+          break;
+        case 'auth/wrong-password':
+          setErrors({ password: 'Incorrect password. Please try again.' });
+          break;
+        case 'auth/invalid-email':
+          setErrors({ email: 'Please enter a valid email address.' });
+          break;
+        case 'auth/user-disabled':
+          setErrors({ general: 'This account has been disabled. Please contact support.' });
+          break;
+        case 'auth/too-many-requests':
+          setErrors({ general: 'Too many failed login attempts. Please try again later.' });
+          break;
+        case 'auth/network-request-failed':
+          setErrors({ general: 'Network error. Please check your internet connection and try again.' });
+          break;
+        case 'auth/invalid-credential':
+          setErrors({ general: 'Invalid email or password. Please check your credentials and try again.' });
+          break;
+        default:
+          setErrors({ general: errorMessage });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    // Google OAuth implementation would go here
-    console.log('Google login clicked');
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true);
+      setErrors({}); // Clear any previous errors
+      
+      const result = await doSignInWithGoogle();
+      
+      if (result && result.user) {
+        // Store user data in localStorage
+        localStorage.setItem('userData', JSON.stringify({
+          firstName: result.user.displayName?.split(' ')[0] || result.user.email.split('@')[0],
+          lastName: result.user.displayName?.split(' ')[1] || 'User',
+          email: result.user.email,
+          uid: result.user.uid
+        }));
+        
+        // Set authToken for PrivateRoute
+        localStorage.setItem('authToken', result.user.accessToken || 'authenticated');
+        
+        // Dispatch custom event to notify other components of auth state change
+        window.dispatchEvent(new Event('authStateChanged'));
+        
+        navigate('/dashboard');
+      } else {
+        throw new Error('Authentication failed - no user data received');
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      
+      // Handle specific error cases
+      if (error.code === 'auth/popup-closed-by-user') {
+        setErrors({ general: 'Google login was cancelled. Please try again.' });
+      } else if (error.code === 'auth/popup-blocked') {
+        setErrors({ general: 'Popup was blocked by browser. Please allow popups and try again.' });
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        setErrors({ general: 'Login was cancelled. Please try again.' });
+      } else {
+        setErrors({ general: 'Google login failed. Please try again or use email/password login.' });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -95,6 +176,13 @@ const Login = () => {
         </div>
 
         <div className="card p-8 animate-scale-in animation-delay-200 hover:shadow-2xl transition-all duration-300">
+          {/* Display general errors */}
+          {errors.general && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-sm text-red-400">{errors.general}</p>
+            </div>
+          )}
+
           {/* Google Login Button */}
           <button
             onClick={handleGoogleLogin}

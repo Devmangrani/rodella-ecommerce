@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { updateProfile } from 'firebase/auth';
+import { doCreateUserWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
 
 const Signup = () => {
+  // const context = useContext(MyContext);
+  // const { loading, setLoading } = context;
+  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -78,31 +84,110 @@ const Signup = () => {
     }
     
     setIsLoading(true);
-    // Simulate API call
+    setErrors({});
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Signup attempt:', formData);
+      // Create user with Firebase Auth using helper function
+      const userCredential = await doCreateUserWithEmailAndPassword(
+        formData.email, 
+        formData.password
+      );
       
-      // Mock successful signup - set auth token and user data
-      localStorage.setItem('authToken', 'mock-jwt-token');
+      // Update user profile with first and last name
+      await updateProfile(userCredential.user, {
+        displayName: `${formData.firstName} ${formData.lastName}`
+      });
+      
+      console.log('User created successfully:', userCredential.user);
+      
+      // Store user data in localStorage (optional, as Firebase handles auth state)
       localStorage.setItem('userData', JSON.stringify({
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email
+        email: formData.email,
+        uid: userCredential.user.uid
       }));
+      
+      // Set authToken for PrivateRoute
+      localStorage.setItem('authToken', userCredential.user.accessToken || 'authenticated');
+      
+      // Dispatch custom event to notify other components of auth state change
+      window.dispatchEvent(new Event('authStateChanged'));
       
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error('Signup error:', error);
+      
+      // Handle Firebase auth errors
+      let errorMessage = 'An error occurred during signup';
+      
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          setErrors({ email: 'This email is already registered. Please use a different email or try logging in.' });
+          break;
+        case 'auth/weak-password':
+          setErrors({ password: 'Password is too weak. Please choose a stronger password.' });
+          break;
+        case 'auth/invalid-email':
+          setErrors({ email: 'Please enter a valid email address.' });
+          break;
+        case 'auth/operation-not-allowed':
+          setErrors({ general: 'Email/password accounts are not enabled. Please contact support.' });
+          break;
+        case 'auth/network-request-failed':
+          setErrors({ general: 'Network error. Please check your internet connection and try again.' });
+          break;
+        default:
+          setErrors({ general: errorMessage });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSignup = () => {
-    // Google OAuth implementation would go here
-    console.log('Google signup clicked');
+  const handleGoogleSignup = async () => {
+    try {
+      setIsLoading(true);
+      setErrors({}); // Clear any previous errors
+      
+      const result = await doSignInWithGoogle();
+      
+      if (result && result.user) {
+        // Store user data in localStorage
+        localStorage.setItem('userData', JSON.stringify({
+          firstName: result.user.displayName?.split(' ')[0] || result.user.email.split('@')[0],
+          lastName: result.user.displayName?.split(' ')[1] || 'User',
+          email: result.user.email,
+          uid: result.user.uid
+        }));
+        
+        // Set authToken for PrivateRoute
+        localStorage.setItem('authToken', result.user.accessToken || 'authenticated');
+        
+        // Dispatch custom event to notify other components of auth state change
+        window.dispatchEvent(new Event('authStateChanged'));
+        
+        navigate('/dashboard');
+      } else {
+        throw new Error('Authentication failed - no user data received');
+      }
+    } catch (error) {
+      console.error('Google signup error:', error);
+      
+      // Handle specific error cases
+      if (error.code === 'auth/popup-closed-by-user') {
+        setErrors({ general: 'Google signup was cancelled. Please try again.' });
+      } else if (error.code === 'auth/popup-blocked') {
+        setErrors({ general: 'Popup was blocked by browser. Please allow popups and try again.' });
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        setErrors({ general: 'Signup was cancelled. Please try again.' });
+      } else {
+        setErrors({ general: 'Google signup failed. Please try again or use email/password signup.' });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -118,6 +203,13 @@ const Signup = () => {
         </div>
 
         <div className="card p-8 animate-scale-in animation-delay-200 hover:shadow-2xl transition-all duration-300">
+          {/* Display general errors */}
+          {errors.general && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="text-sm text-red-400">{errors.general}</p>
+            </div>
+          )}
+
           {/* Google Signup Button */}
           <button
             onClick={handleGoogleSignup}
