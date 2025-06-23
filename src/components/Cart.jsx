@@ -61,10 +61,10 @@ const CartItem = ({ item, index }) => {
 
           {/* Product Specifications */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-3 py-2 rounded-lg text-center">
+            {/* <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-3 py-2 rounded-lg text-center">
               <span className="block text-blue-300 text-xs font-medium">Area</span>
               <span className="text-white font-bold text-sm">{(item.area * item.quantity).toFixed(2)} m²</span>
-            </div>
+            </div> */}
             <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-3 py-2 rounded-lg text-center">
               <span className="block text-purple-300 text-xs font-medium">Weight</span>
               <span className="text-white font-bold text-sm">{(item.weight * item.quantity).toFixed(2)} kg</span>
@@ -214,10 +214,10 @@ const CartSummary = ({ totals }) => {
           <span className="text-neutral-300">Total Weight:</span>
           <span className="text-white font-semibold">{totals.totalWeight.toFixed(2)} kg</span>
         </div>
-        <div className="flex justify-between items-center py-2 border-b border-neutral-700/50">
+        {/* <div className="flex justify-between items-center py-2 border-b border-neutral-700/50">
           <span className="text-neutral-300">Total Area:</span>
           <span className="text-white font-semibold">{totals.totalArea.toFixed(2)} m²</span>
-        </div>
+        </div> */}
         <div className="flex justify-between items-center py-3 border-b border-neutral-700/50">
           <span className="text-neutral-300">Subtotal:</span>
           <span className="text-white font-semibold">₹{totals.totalPrice.toLocaleString()}</span>
@@ -249,14 +249,14 @@ const CartSummary = ({ totals }) => {
           Continue Shopping
         </motion.button>
         
-        <motion.button
+        {/* <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleClearCart}
           className="w-full bg-gradient-to-r from-red-600/20 to-red-700/20 hover:from-red-600/30 hover:to-red-700/30 border border-red-500/30 text-red-400 py-3 rounded-xl font-semibold transition-all duration-200"
         >
           Clear Cart
-        </motion.button>
+        </motion.button> */}
       </div>
     </motion.div>
   );
