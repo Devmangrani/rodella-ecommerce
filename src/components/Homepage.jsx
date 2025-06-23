@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import Header from './Navbar';
-import Footer from './Footer';
 
 const Homepage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -78,12 +76,7 @@ const Homepage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Navigation */}
-      <div className="absolute top-0 left-0 right-0 z-50 container mx-auto px-4 pt-2">
-        <Header />
-      </div>
-      
+    <div className="min-h-screen bg-black text-white overflow-hidden pt-20">
       
 
       {/* Products Section */}
@@ -142,9 +135,6 @@ const Homepage = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

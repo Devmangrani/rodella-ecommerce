@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Create Cart Context
 const CartContext = createContext();
@@ -17,24 +18,96 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Load cart from localStorage on component mount
+  // Load cart from localStorage on component mount (only if authenticated)
   useEffect(() => {
-    const savedCart = localStorage.getItem('rodella_cart');
-    if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
+    const loadCart = () => {
+      if (isAuthenticated()) {
+        const savedCart = localStorage.getItem('rodella_cart');
+        if (savedCart) {
+          try {
+            const parsedCart = JSON.parse(savedCart);
+            setCartItems(parsedCart);
+          } catch (error) {
+            console.error('Error loading cart from localStorage:', error);
+            localStorage.removeItem('rodella_cart');
+          }
+        }
+      } else {
+        setCartItems([]);
       }
-    }
+    };
+    
+    loadCart();
   }, []);
 
-  // Save cart to localStorage whenever cartItems changes
+  // Save cart to localStorage whenever cartItems changes (only if authenticated)
   useEffect(() => {
-    localStorage.setItem('rodella_cart', JSON.stringify(cartItems));
+    if (cartItems.length === 0) {
+      localStorage.removeItem('rodella_cart');
+    } else if (isAuthenticated()) {
+      localStorage.setItem('rodella_cart', JSON.stringify(cartItems));
+    }
   }, [cartItems]);
 
-  // Add item to cart
+  // Listen for authentication state changes
+  useEffect(() => {
+    const handleAuthChange = () => {
+      if (!isAuthenticated()) {
+        // Clear cart when user logs out
+        setCartItems([]);
+        localStorage.removeItem('rodella_cart');
+      }
+    };
+
+    window.addEventListener('authStateChanged', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthChange);
+    };
+  }, []);
+
+  // Check if user is authenticated
+  const isAuthenticated = () => {
+    const authToken = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
+    
+    // Both must exist for user to be considered authenticated
+    return !!(authToken && userData);
+  };
+
+  // Global add to cart function with authentication check
+  const addToCartWithAuth = (product, calculations, length = 1, navigate = null) => {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      // Store redirect flag to go to cart after login
+      localStorage.setItem('redirectToCartAfterLogin', 'true');
+      
+      // Redirect to login without alert
+      if (navigate) {
+        navigate('/login');
+      } else {
+        // Fallback navigation using window.location
+        window.location.href = '/login';
+      }
+      return false;
+    }
+
+    // User is authenticated, proceed with adding to cart
+    addToCart(product, calculations, length);
+    return true;
+  };
+
+  // Check if should redirect to cart after login
+  const checkCartRedirect = () => {
+    const shouldRedirect = localStorage.getItem('redirectToCartAfterLogin');
+    if (shouldRedirect && isAuthenticated()) {
+      localStorage.removeItem('redirectToCartAfterLogin');
+      return true;
+    }
+    return false;
+  };
+
+  // Add item to cart (internal function)
   const addToCart = (product, calculations, length = 1) => {
     const existingItemIndex = cartItems.findIndex(
       item => item.product.id === product.id && item.length === length
@@ -60,10 +133,10 @@ export const CartProvider = ({ children }) => {
         product,
         length,
         quantity: 1,
-        unitPrice: calculations.mrp,
-        totalPrice: calculations.mrp,
-        area: calculations.area,
-        weight: calculations.weight,
+        unitPrice: calculations.mrp || calculations.price || calculations.mass, // Handle different price field names
+        totalPrice: calculations.mrp || calculations.price || calculations.mass,
+        area: calculations.area || 0,
+        weight: calculations.weight || calculations.mass || 0,
         addedAt: new Date().toISOString()
       };
       setCartItems(prev => [...prev, newItem]);
@@ -150,6 +223,9 @@ export const CartProvider = ({ children }) => {
     cartItems,
     isCartOpen,
     addToCart,
+    addToCartWithAuth,
+    checkCartRedirect,
+    isAuthenticated,
     removeFromCart,
     updateQuantity,
     updateLength,

@@ -269,7 +269,7 @@ const Cart = () => {
   const totals = getCartTotals();
 
   return (
-    <div className="min-h-screen bg-black text-white py-8">
+    <div className="min-h-screen bg-black text-white pt-28 pb-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <motion.div

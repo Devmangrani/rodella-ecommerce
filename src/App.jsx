@@ -12,30 +12,24 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import UserDashboard from './components/UserDashboard';
 import Cart from './components/Cart';
+// import AuthDebug from './components/AuthDebug';
 import { CartProvider } from './context/myState';
 import PrivateRoute from './components/PrivateRoute';
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const isHomepage = location.pathname === '/';
   const isFullWidthPage = location.pathname === '/reinforcement'; // Add other full-width routes here if needed
 
-  if (isHomepage) {
-    return children;
-  }
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className={`${isFullWidthPage ? 'w-full' : 'container mx-auto px-4'} relative pt-2`}>
-        <div className={isFullWidthPage ? 'px-4' : ''}>
-          <Header />
-        </div>
-        <main className="mt-2 flex-grow">
+    <>
+      <Header />
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
           {children}
         </main>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 };
 
@@ -66,6 +60,7 @@ const App = () => {
               <Route path="/epoxy-system" element={<EpoxySystem />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              {/* <Route path="/debug" element={<AuthDebug />} /> */}
               <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
               <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
             </Routes>

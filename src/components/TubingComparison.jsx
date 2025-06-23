@@ -19,7 +19,7 @@ const TubingComparison = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans"
+      className="min-h-screen w-full bg-black text-white font-sans pt-20"
     >
       <div className="w-full h-full py-12 px-4 sm:px-6 lg:px-8">
         <motion.div

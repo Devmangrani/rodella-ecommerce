@@ -43,7 +43,7 @@ const EpoxySystem = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white py-20 px-4">
+    <div className="min-h-screen bg-black text-white pt-28 pb-20 px-4">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

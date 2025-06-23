@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
+import { useCart } from '../context/myState';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { checkCartRedirect } = useCart();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -81,8 +83,13 @@ const Login = () => {
       // Dispatch custom event to notify other components of auth state change
       window.dispatchEvent(new Event('authStateChanged'));
       
-      // Redirect to dashboard
-      navigate('/dashboard');
+      // Check if should redirect to cart after login
+      if (checkCartRedirect()) {
+        navigate('/cart');
+      } else {
+        // Redirect to dashboard
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Login error:', error);
       
@@ -141,7 +148,12 @@ const Login = () => {
         // Dispatch custom event to notify other components of auth state change
         window.dispatchEvent(new Event('authStateChanged'));
         
-        navigate('/dashboard');
+        // Check if should redirect to cart after login
+        if (checkCartRedirect()) {
+          navigate('/cart');
+        } else {
+          navigate('/dashboard');
+        }
       } else {
         throw new Error('Authentication failed - no user data received');
       }
@@ -164,7 +176,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 animate-fade-in-up">
         <div className="text-center animate-fade-in-down">
           <h2 className="text-3xl font-bold text-white mb-2 animate-slide-in-left">

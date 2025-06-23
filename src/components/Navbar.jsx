@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -109,8 +109,12 @@ const Form = () => {
 const Control = ({ isLoggedIn, setIsLoggedIn }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
+  const location = useLocation();
   const { getCartTotals } = useCart();
   const { totalItems } = getCartTotals();
+
+  const isCartPage = location.pathname === '/cart';
+  const isDashboardPage = location.pathname === '/dashboard' || location.pathname === '/login';
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -128,15 +132,32 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
     }
   };
 
+  const handleCartClick = () => {
+    if (isLoggedIn) {
+      // Navigate to cart
+      navigate('/cart');
+    } else {
+      // Store redirect flag and navigate to login
+      localStorage.setItem('redirectToCartAfterLogin', 'true');
+      navigate('/login');
+    }
+  };
+
   const handleLogout = () => {
+    // Clear ALL localStorage data
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
+    localStorage.removeItem('rodella_cart');
+    localStorage.removeItem('redirectToCartAfterLogin');
+    
+    // Update state immediately
     setIsLoggedIn(false);
     
     // Dispatch custom event to notify other components of auth state change
     window.dispatchEvent(new Event('authStateChanged'));
     
-    navigate('/');
+    // Force navigation to home page
+    navigate('/', { replace: true });
   };
 
   return (
@@ -149,13 +170,16 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
       {windowWidth > 780 && (
         <>
           <motion.div 
-            className="relative w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
+            className={`relative w-[45px] h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
+              isCartPage 
+                ? 'border-white bg-neutral-800/30' 
+                : 'border-neutral-700'
+            }`}
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleCartClick}
           >
-            <Link to="/cart" className="w-full h-full flex items-center justify-center focus:outline-none">
-              <ShoppingCartIcon className="text-white" />
-            </Link>
+            <ShoppingCartIcon className="text-white" />
             {totalItems > 0 && (
               <motion.span
                 initial={{ scale: 0 }}
@@ -167,7 +191,11 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
             )}
           </motion.div>
           <motion.div 
-            className="w-[45px] h-[45px] flex justify-center items-center border border-neutral-700 rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600"
+            className={`w-[45px] h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
+              isDashboardPage 
+                ? 'border-white bg-neutral-800/30' 
+                : 'border-neutral-700'
+            }`}
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleAuthClick}
@@ -194,6 +222,7 @@ const DrawerNav = ({ isLoggedIn }) => {
   const [state, setState] = useState({
     left: false,
   });
+  const navigate = useNavigate();
   const { getCartTotals } = useCart();
   const { totalItems } = getCartTotals();
 
@@ -202,6 +231,19 @@ const DrawerNav = ({ isLoggedIn }) => {
       return;
     }
     setState({ ...state, [anchor]: open });
+  };
+
+  const handleDrawerCartClick = () => {
+    if (isLoggedIn) {
+      // Navigate to cart
+      navigate('/cart');
+    } else {
+      // Store redirect flag and navigate to login
+      localStorage.setItem('redirectToCartAfterLogin', 'true');
+      navigate('/login');
+    }
+    // Close drawer
+    setState({ left: false });
   };
 
   const menuItems = [
@@ -267,27 +309,26 @@ const DrawerNav = ({ isLoggedIn }) => {
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.95 }}
-          className="group"
+          className="group cursor-pointer"
+          onClick={handleDrawerCartClick}
         >
-          <Link to="/cart" className="no-underline">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
-                <ShoppingCartIcon className="text-white w-[30px] h-[30px]" />
-                {totalItems > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center"
-                  >
-                    {totalItems > 99 ? '99+' : totalItems}
-                  </motion.span>
-                )}
-              </div>
-              <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">
-                Cart {totalItems > 0 && `(${totalItems})`}
-              </span>
+          <div className="flex flex-col items-center gap-2">
+            <div className="relative w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+              <ShoppingCartIcon className="text-white w-[30px] h-[30px]" />
+              {totalItems > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center"
+                >
+                  {totalItems > 99 ? '99+' : totalItems}
+                </motion.span>
+              )}
             </div>
-          </Link>
+            <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">
+              Cart {totalItems > 0 && `(${totalItems})`}
+            </span>
+          </div>
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
@@ -426,8 +467,19 @@ const Header = () => {
   // Check authentication status
   useEffect(() => {
     const checkAuthStatus = () => {
-      const token = localStorage.getItem('authToken');
-      setIsLoggedIn(!!token);
+      const authToken = localStorage.getItem('authToken');
+      const userData = localStorage.getItem('userData');
+      
+      // Both must exist for user to be considered authenticated
+      const isAuthenticated = !!(authToken && userData);
+      setIsLoggedIn(isAuthenticated);
+      
+      // Clean up stale data if not properly authenticated
+      if (!isAuthenticated) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('rodella_cart');
+      }
     };
     
     // Initial check
@@ -459,21 +511,23 @@ const Header = () => {
   }, []);
 
   return (
-    <motion.nav 
-      className="py-3 flex items-center justify-between bg-neutral-900 text-white rounded-2xl px-8 sticky w-full max-w-[96rem] mx-auto opacity-85 z-[999] top-0"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-    >
-      <NavBrand />
-      <NavLinks />
-      <div className="flex items-center gap-x-5">
-        <Control isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        <div className="lg:hidden">
-          <DrawerNav isLoggedIn={isLoggedIn} />
+    <div className="fixed top-0 left-0 right-0 z-[9999] px-4 pt-4">
+      <motion.nav 
+        className="py-3 flex items-center justify-between bg-neutral-900 text-white rounded-2xl px-8 w-full max-w-[1536px] mx-auto shadow-lg backdrop-blur-sm"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      >
+        <NavBrand />
+        <NavLinks />
+        <div className="flex items-center gap-x-5">
+          <Control isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <div className="lg:hidden">
+            <DrawerNav isLoggedIn={isLoggedIn} />
+          </div>
         </div>
-      </div>
-    </motion.nav>
+      </motion.nav>
+    </div>
   );
 };
 

@@ -141,17 +141,36 @@ const UserDashboard = () => {
   const handleLogout = async () => {
     try {
       await doSignOut();
+      
+      // Clear ALL localStorage data
+      localStorage.removeItem('authToken');
       localStorage.removeItem('userData');
-      navigate('/login');
+      localStorage.removeItem('rodella_cart');
+      localStorage.removeItem('redirectToCartAfterLogin');
+      
+      // Dispatch custom event to notify other components of auth state change
+      window.dispatchEvent(new Event('authStateChanged'));
+      
+      // Force navigation to home page
+      navigate('/', { replace: true });
     } catch (error) {
       console.error('Logout error:', error);
+      
+      // Even if Firebase logout fails, clear local data
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      localStorage.removeItem('rodella_cart');
+      localStorage.removeItem('redirectToCartAfterLogin');
+      
+      window.dispatchEvent(new Event('authStateChanged'));
+      navigate('/', { replace: true });
     }
   };
 
   // Show loading state while checking authentication
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-950 flex items-center justify-center pt-20">
         <div className="text-white text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <p>Loading dashboard...</p>
@@ -161,7 +180,7 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 py-8 px-4">
+    <div className="min-h-screen bg-neutral-950 pt-28 pb-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div 

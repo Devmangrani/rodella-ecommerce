@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import productsData from '../data/reinforcementProducts.json';
 import ProductCard from './ProductCard';
+import { useCart } from '../context/myState';
 
 const Reinforcement = () => {
   // State for selected categories
@@ -17,6 +19,10 @@ const Reinforcement = () => {
   
   // State to track current image index for each product
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+
+  // Navigation and cart hooks
+  const navigate = useNavigate();
+  const { addToCartWithAuth } = useCart();
 
   // Get all products based on selected categories
   const getFilteredProducts = () => {
@@ -81,7 +87,9 @@ const Reinforcement = () => {
   // Function to handle add to cart
   const handleAddToCart = (product, calculations) => {
     console.log('Adding to cart:', { product, calculations });
-    // Add your cart logic here
+    
+    // Use the global cart function with authentication check
+    addToCartWithAuth(product, calculations, productLengths[product.id] || 1, navigate);
   };
 
   const filteredProducts = getFilteredProducts();
@@ -91,7 +99,7 @@ const Reinforcement = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans"
+      className="min-h-screen w-full bg-black text-white font-sans pt-20"
     >
       <div className="w-full h-full py-6 sm:py-8 lg:py-12 px-3 sm:px-4 lg:px-8">
         <motion.div

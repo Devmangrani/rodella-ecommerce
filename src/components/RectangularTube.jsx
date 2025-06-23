@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/myState';
 
 const materials = {
   carbon_fiber: { density: 1.6, label: 'Carbon Fiber' },
@@ -435,6 +437,8 @@ const RectangularTube = () => {
   }));
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { addToCartWithAuth } = useCart();
 
   useEffect(() => {
     try {
@@ -471,8 +475,31 @@ const RectangularTube = () => {
   };
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    console.log('Adding to cart:', { ...tube, quantity });
+    // Create a product object for the tube
+    const product = {
+      id: `rectangular_tube_${tube.material}_${tube.size}_${tube.wall}`,
+      title: `Rectangular Tube - ${materials[tube.material].label}`,
+      category: 'Composite Tubes',
+      images: ['https://via.placeholder.com/300x200?text=Rectangular+Tube'], // Add actual image URL
+      details: {
+        material: materials[tube.material].label,
+        size: tube.size,
+        wall: `${tube.wall}mm`,
+        weight: `${results.mass}g`,
+      }
+    };
+
+    // Create calculations object
+    const calculations = {
+      area: parseFloat(results.area) || 0,
+      weight: parseFloat(results.mass) / 1000 || 0, // Convert to kg
+      mass: parseFloat(results.mass) || 0,
+      price: parseFloat(results.mass) || 0, // Using mass as price for now
+      mrp: parseFloat(results.mass) || 0
+    };
+
+    // Use the global cart function with authentication check
+    addToCartWithAuth(product, calculations, tube.length / 1000, navigate); // Convert mm to m
   };
 
   return (
@@ -480,7 +507,7 @@ const RectangularTube = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans"
+      className="min-h-screen w-full bg-black text-white font-sans pt-20"
     >
       <div className="w-full h-full py-12 px-4 sm:px-6 lg:px-8">
         <motion.div
