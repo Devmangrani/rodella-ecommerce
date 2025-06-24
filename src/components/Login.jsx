@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
 import { useCart } from '../context/myState';
+import { createOrUpdateUser } from '../firebase/firebase';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -66,6 +67,14 @@ const Login = () => {
         formData.email, 
         formData.password
       );
+      
+      // Store user in Firestore
+      await createOrUpdateUser({
+        uid: userCredential.user.uid,
+        name: userCredential.user.displayName || '',
+        email: userCredential.user.email || '',
+        phone: userCredential.user.phoneNumber || ''
+      });
       
       console.log('User signed in successfully:', userCredential.user);
       
@@ -134,6 +143,14 @@ const Login = () => {
       const result = await doSignInWithGoogle();
       
       if (result && result.user) {
+        // Store user in Firestore
+        await createOrUpdateUser({
+          uid: result.user.uid,
+          name: result.user.displayName || '',
+          email: result.user.email || '',
+          phone: result.user.phoneNumber || ''
+        });
+        
         // Store user data in localStorage
         localStorage.setItem('userData', JSON.stringify({
           firstName: result.user.displayName?.split(' ')[0] || result.user.email.split('@')[0],

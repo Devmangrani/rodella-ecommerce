@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { saveUserCart, fetchUserCart } from '../firebase/firebase';
 
 // Create Cart Context
 const CartContext = createContext();
@@ -17,54 +18,52 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartLoaded, setCartLoaded] = useState(false);
 
-  // Load cart from localStorage on component mount (only if authenticated)
+  // Helper to get current user UID
+  const getCurrentUid = () => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      try {
+        return JSON.parse(userData).uid;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  // Load cart from Firestore on login
   useEffect(() => {
-    const loadCart = () => {
+    const loadCart = async () => {
       if (isAuthenticated()) {
-        const savedCart = localStorage.getItem('rodella_cart');
-        if (savedCart) {
-          try {
-            const parsedCart = JSON.parse(savedCart);
-            setCartItems(parsedCart);
-          } catch (error) {
-            console.error('Error loading cart from localStorage:', error);
-            localStorage.removeItem('rodella_cart');
-          }
+        const uid = getCurrentUid();
+        if (uid) {
+          const firestoreCart = await fetchUserCart(uid);
+          setCartItems(firestoreCart);
         }
       } else {
         setCartItems([]);
       }
+      setCartLoaded(true);
     };
-    
+    window.addEventListener('authStateChanged', loadCart);
     loadCart();
+    return () => window.removeEventListener('authStateChanged', loadCart);
   }, []);
 
-  // Save cart to localStorage whenever cartItems changes (only if authenticated)
+  // Save cart to Firestore whenever cartItems changes (if authenticated and after initial load)
   useEffect(() => {
-    if (cartItems.length === 0) {
-      localStorage.removeItem('rodella_cart');
-    } else if (isAuthenticated()) {
-      localStorage.setItem('rodella_cart', JSON.stringify(cartItems));
-    }
-  }, [cartItems]);
-
-  // Listen for authentication state changes
-  useEffect(() => {
-    const handleAuthChange = () => {
-      if (!isAuthenticated()) {
-        // Clear cart when user logs out
-        setCartItems([]);
-        localStorage.removeItem('rodella_cart');
+    const saveCart = async () => {
+      if (isAuthenticated() && cartLoaded) {
+        const uid = getCurrentUid();
+        if (uid) {
+          await saveUserCart(uid, cartItems);
+        }
       }
     };
-
-    window.addEventListener('authStateChanged', handleAuthChange);
-    
-    return () => {
-      window.removeEventListener('authStateChanged', handleAuthChange);
-    };
-  }, []);
+    saveCart();
+  }, [cartItems, cartLoaded]);
 
   // Check if user is authenticated
   const isAuthenticated = () => {
@@ -232,7 +231,8 @@ export const CartProvider = ({ children }) => {
     clearCart,
     getCartTotals,
     toggleCart,
-    setIsCartOpen
+    setIsCartOpen,
+    cartLoaded
   };
 
   return (

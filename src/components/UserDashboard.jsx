@@ -5,18 +5,51 @@ import { Camera, Edit2, Package, MapPin, Calendar, CreditCard, Eye } from 'lucid
 import { auth } from '../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doSignOut } from '../firebase/auth';
+import { createOrUpdateUser } from '../firebase/firebase';
+import { getDoc, doc } from 'firebase/firestore';
+import { firedb } from '../firebase/firebase';
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   // Check Firebase authentication
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser(user);
         setLoading(false);
+        setProfileLoading(true);
+        // Fetch user profile from Firestore
+        const userRef = doc(firedb, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          setUserProfile(prev => ({
+            ...prev,
+            ...data,
+            phone: typeof data.phone === 'string' ? data.phone : '',
+            address: data.address || {
+              street: '', city: '', state: '', zipCode: '', country: ''
+            },
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || ''
+          }));
+        } else {
+          // If no Firestore data, initialize empty fields for user to fill
+          setUserProfile(prev => ({
+            ...prev,
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            address: { street: '', city: '', state: '', zipCode: '', country: '' }
+          }));
+        }
+        setProfileLoading(false);
       } else {
         navigate('/login');
       }
@@ -54,7 +87,7 @@ const UserDashboard = () => {
   const [userProfile, setUserProfile] = useState({
     ...getUserData(),
     profileImage: null,
-    emoji: '👤',
+    phone: '',
     address: {
       street: '',
       city: '',
@@ -92,8 +125,7 @@ const UserDashboard = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
-
-  const emojis = ['👤', '😊', '🙂', '😎', '🤔', '😋', '🥳', '🤗', '🧑‍💼', '👨‍💻', '👩‍💻', '🧑‍🎨'];
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -108,15 +140,6 @@ const UserDashboard = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleEmojiSelect = (emoji) => {
-    setUserProfile(prev => ({
-      ...prev,
-      emoji: emoji,
-      profileImage: null
-    }));
-    setShowEmojiPicker(false);
   };
 
   const handleAddressChange = (field, value) => {
@@ -164,6 +187,76 @@ const UserDashboard = () => {
       
       window.dispatchEvent(new Event('authStateChanged'));
       navigate('/', { replace: true });
+    }
+  };
+
+  const handleProfileSave = async () => {
+    setIsEditingProfile(false);
+    if (currentUser) {
+      // Only send non-empty fields to Firestore
+      const userData = {
+        uid: currentUser.uid,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
+        email: userProfile.email,
+        address: userProfile.address
+      };
+      if (userProfile.phone && userProfile.phone.trim()) {
+        userData.phone = userProfile.phone.trim();
+      }
+      await createOrUpdateUser(userData);
+      // Fetch latest user data from Firestore and update UI
+      const userRef = doc(firedb, 'users', currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        setUserProfile(prev => ({
+          ...prev,
+          ...data,
+          phone: typeof data.phone === 'string' ? data.phone : '',
+          address: data.address || {
+            street: '', city: '', state: '', zipCode: '', country: ''
+          },
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          email: data.email || ''
+        }));
+      }
+    }
+  };
+
+  const handleAddressSave = async () => {
+    setIsEditingAddress(false);
+    if (currentUser) {
+      // Only send non-empty fields to Firestore
+      const userData = {
+        uid: currentUser.uid,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
+        email: userProfile.email,
+        address: userProfile.address
+      };
+      if (userProfile.phone && userProfile.phone.trim()) {
+        userData.phone = userProfile.phone.trim();
+      }
+      await createOrUpdateUser(userData);
+      // Fetch latest user data from Firestore and update UI
+      const userRef = doc(firedb, 'users', currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        setUserProfile(prev => ({
+          ...prev,
+          ...data,
+          phone: typeof data.phone === 'string' ? data.phone : '',
+          address: data.address || {
+            street: '', city: '', state: '', zipCode: '', country: ''
+          },
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          email: data.email || ''
+        }));
+      }
     }
   };
 
@@ -216,92 +309,94 @@ const UserDashboard = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <div className="card p-6 mb-6">
-              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                <Edit2 size={20} />
-                Profile
-              </h2>
-
-              {/* Profile Image Section */}
-              <div className="flex flex-col items-center mb-6">
-                <div className="relative group">
-                  <div className="w-24 h-24 rounded-full bg-neutral-800 border-2 border-neutral-600 flex items-center justify-center overflow-hidden group-hover:border-neutral-500 transition-all duration-300">
-                    {userProfile.profileImage ? (
-                      <img 
-                        src={userProfile.profileImage} 
-                        alt="Profile" 
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-3xl">{userProfile.emoji}</span>
-                    )}
-                  </div>
-                  <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Camera size={20} className="text-white" />
-                  </div>
-                </div>
-
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm"
-                  >
-                    Upload Photo
-                  </button>
-                  <button
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm"
-                  >
-                    Choose Emoji
-                  </button>
-                </div>
-
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-
-                {showEmojiPicker && (
-                  <motion.div 
-                    className="mt-4 p-4 bg-neutral-800 rounded-lg grid grid-cols-6 gap-2"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {emojis.map((emoji, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleEmojiSelect(emoji)}
-                        className="w-10 h-10 text-xl hover:bg-neutral-700 rounded-lg transition-all duration-300 hover:scale-110"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                  <Edit2 size={20} />
+                  Profile
+                </h2>
+                <button
+                  onClick={() => {
+                    if (isEditingProfile) {
+                      handleProfileSave();
+                    } else {
+                      setIsEditingProfile(true);
+                    }
+                  }}
+                  className="text-sm text-neutral-400 hover:text-white transition-colors duration-300"
+                >
+                  {isEditingProfile ? 'Save' : 'Edit'}
+                </button>
               </div>
 
               {/* User Details */}
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-300 mb-1">First Name</label>
-                  <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                    {userProfile.firstName}
-                  </div>
+                  {isEditingProfile ? (
+                    <input
+                      type="text"
+                      value={userProfile.firstName}
+                      onChange={e => setUserProfile(prev => ({ ...prev, firstName: e.target.value }))}
+                      className="w-full px-4 py-3 min-h-[2.75rem] bg-neutral-900 border border-neutral-600 rounded-lg text-white focus:ring-2 focus:ring-neutral-600 focus:border-transparent transition-all duration-300"
+                      placeholder="First Name"
+                    />
+                  ) : (
+                    <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                      {userProfile.firstName && userProfile.firstName.trim() ? userProfile.firstName : 'Not added'}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-neutral-300 mb-1">Last Name</label>
-                  <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                    {userProfile.lastName}
-                  </div>
+                  {isEditingProfile ? (
+                    <input
+                      type="text"
+                      value={userProfile.lastName}
+                      onChange={e => setUserProfile(prev => ({ ...prev, lastName: e.target.value }))}
+                      className="w-full px-4 py-3 min-h-[2.75rem] bg-neutral-900 border border-neutral-600 rounded-lg text-white focus:ring-2 focus:ring-neutral-600 focus:border-transparent transition-all duration-300"
+                      placeholder="Last Name"
+                    />
+                  ) : (
+                    <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                      {userProfile.lastName && userProfile.lastName.trim() ? userProfile.lastName : 'Not added'}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-300 mb-1">Phone Number</label>
+                  {isEditingProfile ? (
+                    <input
+                      type="tel"
+                      value={userProfile.phone}
+                      onChange={e => setUserProfile(prev => ({ ...prev, phone: e.target.value }))}
+                      className="w-full px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white focus:ring-2 focus:ring-neutral-600 focus:border-transparent transition-all duration-300"
+                      placeholder="Phone Number"
+                    />
+                  ) : (
+                    profileLoading ? (
+                      <div className="w-full h-10 bg-neutral-800 rounded-lg animate-pulse" />
+                    ) : (
+                      <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                        {(userProfile.phone && userProfile.phone.trim()) ? userProfile.phone : 'Not added'}
+                      </div>
+                    )
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-neutral-300 mb-1">Email</label>
-                  <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                    {userProfile.email}
-                  </div>
+                  {isEditingProfile ? (
+                    <input
+                      type="email"
+                      value={userProfile.email}
+                      onChange={e => setUserProfile(prev => ({ ...prev, email: e.target.value }))}
+                      className="w-full px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white focus:ring-2 focus:ring-neutral-600 focus:border-transparent transition-all duration-300"
+                      placeholder="Email"
+                    />
+                  ) : (
+                    <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                      {userProfile.email}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -314,7 +409,13 @@ const UserDashboard = () => {
                   Delivery Address
                 </h2>
                 <button
-                  onClick={() => setIsEditingAddress(!isEditingAddress)}
+                  onClick={() => {
+                    if (isEditingAddress) {
+                      handleAddressSave();
+                    } else {
+                      setIsEditingAddress(true);
+                    }
+                  }}
                   className="text-sm text-neutral-400 hover:text-white transition-colors duration-300"
                 >
                   {isEditingAddress ? 'Save' : 'Edit'}
@@ -333,9 +434,13 @@ const UserDashboard = () => {
                       placeholder="Enter street address"
                     />
                   ) : (
-                    <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                      {userProfile.address.street || 'No address added'}
-                    </div>
+                    profileLoading ? (
+                      <div className="w-full h-10 bg-neutral-800 rounded-lg animate-pulse" />
+                    ) : (
+                      <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                        {userProfile.address.street || 'No address added'}
+                      </div>
+                    )
                   )}
                 </div>
 
@@ -351,9 +456,13 @@ const UserDashboard = () => {
                         placeholder="City"
                       />
                     ) : (
-                      <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                        {userProfile.address.city || 'N/A'}
-                      </div>
+                      profileLoading ? (
+                        <div className="w-full h-10 bg-neutral-800 rounded-lg animate-pulse" />
+                      ) : (
+                        <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                          {userProfile.address.city || 'N/A'}
+                        </div>
+                      )
                     )}
                   </div>
                   <div>
@@ -367,9 +476,13 @@ const UserDashboard = () => {
                         placeholder="State"
                       />
                     ) : (
-                      <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                        {userProfile.address.state || 'N/A'}
-                      </div>
+                      profileLoading ? (
+                        <div className="w-full h-10 bg-neutral-800 rounded-lg animate-pulse" />
+                      ) : (
+                        <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                          {userProfile.address.state || 'N/A'}
+                        </div>
+                      )
                     )}
                   </div>
                 </div>
@@ -386,9 +499,13 @@ const UserDashboard = () => {
                         placeholder="Zip Code"
                       />
                     ) : (
-                      <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                        {userProfile.address.zipCode || 'N/A'}
-                      </div>
+                      profileLoading ? (
+                        <div className="w-full h-10 bg-neutral-800 rounded-lg animate-pulse" />
+                      ) : (
+                        <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                          {userProfile.address.zipCode || 'N/A'}
+                        </div>
+                      )
                     )}
                   </div>
                   <div>
@@ -402,9 +519,13 @@ const UserDashboard = () => {
                         placeholder="Country"
                       />
                     ) : (
-                      <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
-                        {userProfile.address.country || 'N/A'}
-                      </div>
+                      profileLoading ? (
+                        <div className="w-full h-10 bg-neutral-800 rounded-lg animate-pulse" />
+                      ) : (
+                        <div className="px-4 py-3 bg-neutral-900 border border-neutral-600 rounded-lg text-white">
+                          {userProfile.address.country || 'N/A'}
+                        </div>
+                      )
                     )}
                   </div>
                 </div>
@@ -425,62 +546,62 @@ const UserDashboard = () => {
                 Order History
               </h2>
 
-              <div className="space-y-4">
-                {orders.map((order, index) => (
-                  <motion.div
-                    key={order.id}
-                    className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 hover:border-neutral-600 transition-all duration-300"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <h3 className="font-semibold text-white">{order.id}</h3>
-                          <div className="flex items-center gap-4 text-sm text-neutral-400">
-                            <span className="flex items-center gap-1">
-                              <Calendar size={14} />
-                              {new Date(order.date).toLocaleDateString()}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Package size={14} />
-                              {order.items} item{order.items > 1 ? 's' : ''}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CreditCard size={16} className="text-neutral-400" />
-                          <span className="font-semibold text-white">${order.total}</span>
-                        </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                          {order.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex justify-end">
-                      <button className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors duration-300">
-                        <Eye size={14} />
-                        View Details
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {orders.length === 0 && (
+              {orders.length === 0 ? (
                 <div className="text-center py-12">
                   <Package size={48} className="text-neutral-600 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
-                  <p className="text-neutral-400 mb-4">Start shopping to see your orders here</p>
+                  <p className="text-neutral-400 mb-4">Looks like you haven't ordered anything yet. Start shopping to fill it up!</p>
                   <Link 
                     to="/" 
                     className="inline-flex items-center px-4 py-2 bg-white text-black rounded-lg hover:bg-neutral-100 transition-all duration-300 hover:scale-105"
                   >
-                    Start Shopping
+                    Continue Shopping
                   </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {orders.map((order, index) => (
+                    <motion.div
+                      key={order.id}
+                      className="p-4 bg-neutral-800 rounded-lg border border-neutral-700 hover:border-neutral-600 transition-all duration-300"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-4">
+                          <div>
+                            <h3 className="font-semibold text-white">{order.id}</h3>
+                            <div className="flex items-center gap-4 text-sm text-neutral-400">
+                              <span className="flex items-center gap-1">
+                                <Calendar size={14} />
+                                {new Date(order.date).toLocaleDateString()}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Package size={14} />
+                                {order.items} item{order.items > 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center gap-2 mb-2">
+                            <CreditCard size={16} className="text-neutral-400" />
+                            <span className="font-semibold text-white">${order.total}</span>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                            {order.status}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-end">
+                        <button className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors duration-300">
+                          <Eye size={14} />
+                          View Details
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               )}
             </div>

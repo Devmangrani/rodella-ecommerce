@@ -262,11 +262,24 @@ const CartSummary = ({ totals }) => {
   );
 };
 
+// Simple Loading Spinner for Cart
+const CartLoading = () => (
+  <div className="flex flex-col items-center justify-center min-h-[300px]">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4" />
+    <p className="text-white text-lg">Loading cart...</p>
+  </div>
+);
+
 // Main Cart Component
 const Cart = () => {
-  const { cartItems, getCartTotals } = useCart();
+  const { cartItems, getCartTotals, cartLoaded } = useCart();
   const navigate = useNavigate();
   const totals = getCartTotals();
+
+  // If cart is not loaded yet, show simple loading
+  if (!cartLoaded) {
+    return <CartLoading />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white pt-28 pb-8">
@@ -302,7 +315,9 @@ const Cart = () => {
         </motion.div>
 
         {/* Cart Content */}
-        {cartItems.length === 0 ? (
+        {!cartLoaded ? (
+          <CartLoading />
+        ) : cartItems.length === 0 ? (
           <EmptyCart />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

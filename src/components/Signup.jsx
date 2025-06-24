@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
 import { doCreateUserWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
 import { useCart } from '../context/myState';
+import { createOrUpdateUser } from '../firebase/firebase';
 
 const Signup = () => {
   // const context = useContext(MyContext);
@@ -95,6 +96,14 @@ const Signup = () => {
         formData.password
       );
       
+      // Store user in Firestore
+      await createOrUpdateUser({
+        uid: userCredential.user.uid,
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: userCredential.user.email || '',
+        phone: userCredential.user.phoneNumber || ''
+      });
+      
       // Update user profile with first and last name
       await updateProfile(userCredential.user, {
         displayName: `${formData.firstName} ${formData.lastName}`
@@ -161,6 +170,14 @@ const Signup = () => {
       const result = await doSignInWithGoogle();
       
       if (result && result.user) {
+        // Store user in Firestore
+        await createOrUpdateUser({
+          uid: result.user.uid,
+          name: result.user.displayName || '',
+          email: result.user.email || '',
+          phone: result.user.phoneNumber || ''
+        });
+        
         // Store user data in localStorage
         localStorage.setItem('userData', JSON.stringify({
           firstName: result.user.displayName?.split(' ')[0] || result.user.email.split('@')[0],
