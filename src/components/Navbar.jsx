@@ -12,7 +12,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
-import logo from "../assets/logo.jpg"
+import logo from "/assets/logo.jpg"
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useCart } from '../context/myState';
@@ -250,6 +250,7 @@ const DrawerNav = ({ isLoggedIn }) => {
     { path: "/Composite-tubes", label: "Composite Tubes" },
     { path: "/composite-plates", label: "Composite Plates" },
     { path: "/reinforcement", label: "Reinforcement" },
+    { path: "/core-material", label: "Core Material" },
     { path: "/epoxy-system", label: "Epoxy System" },
   ];
 
@@ -434,6 +435,7 @@ const NavLinks = () => {
         { path: "/Composite-tubes", label: "Composite Tubes" },
         { path: "/composite-plates", label: "Composite Plates" },
         { path: "/reinforcement", label: "Reinforcement" },
+        { path: "/core-material", label: "Core Material" },
         { path: "/epoxy-system", label: "Epoxy System" },
       ].map((item, index) => (
         <motion.li

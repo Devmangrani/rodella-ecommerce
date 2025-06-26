@@ -1,0 +1,32 @@
+{
+  "rohacell": [
+    {
+      "id": 1,
+      "title": "Rohacell PMI Foam - 2mm",
+      "mrp": 250,
+      "images": [
+        "/assets/core1.jpeg",
+        "/assets/core2.jpeg"
+      ],
+      "details": {
+        "thickness": "2mm",
+        "density": "75 kg/m³",
+        "size": "600mm x 600mm"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Rohacell PMI Foam - 3mm",
+      "mrp": 375,
+      "images": [
+        "/assets/core2.jpeg",
+        "/assets/core1.jpeg"
+      ],
+      "details": {
+        "thickness": "3mm",
+        "density": "75 kg/m³",
+        "size": "600mm x 600mm"
+      }
+    }
+  ]
+} 

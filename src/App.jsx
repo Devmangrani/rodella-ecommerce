@@ -7,6 +7,7 @@ import ContactUs from './components/ContactUs';
 import TubingComparison from './components/TubingComparison';
 import CompositePlates from './components/CompositePlates';
 import Reinforcement from './components/Reinforcement';
+import CoreMaterial from './components/CoreMaterial';
 import EpoxySystem from './components/EpoxySystem';
 import Login from './components/Login';
 import Signup from './components/Signup';
@@ -57,6 +58,7 @@ const App = () => {
               <Route path="/Composite-tubes" element={<TubingComparison />} />
               <Route path="/composite-plates" element={<CompositePlates />} />
               <Route path="/reinforcement" element={<Reinforcement />} />
+              <Route path="/core-material" element={<CoreMaterial />} />
               <Route path="/epoxy-system" element={<EpoxySystem />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />

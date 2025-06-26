@@ -1,0 +1,190 @@
+{
+  "aerospaceGrade": [
+    {
+      "id": 1,
+      "title": "Aerospace Grade Epoxy - High Temperature",
+      "mrp": 4500,
+      "images": [
+        "/assets/epoxy-aerospace-1.jpg",
+        "/assets/epoxy-aerospace-2.jpg"
+      ],
+      "details": {
+        "serviceTemp": "300°C",
+        "potLife": "120 minutes",
+        "cureTime": "8 hours",
+        "viscosity": "800 mPa·s"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Aerospace Grade Epoxy - Low Outgassing",
+      "mrp": 5200,
+      "images": [
+        "/assets/epoxy-low-outgassing-1.jpg",
+        "/assets/epoxy-low-outgassing-2.jpg"
+      ],
+      "details": {
+        "serviceTemp": "250°C",
+        "potLife": "90 minutes",
+        "cureTime": "6 hours",
+        "viscosity": "600 mPa·s"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Aerospace Grade Epoxy - Radiation Resistant",
+      "mrp": 5800,
+      "images": [
+        "/assets/epoxy-radiation-1.jpg",
+        "/assets/epoxy-radiation-2.jpg"
+      ],
+      "details": {
+        "serviceTemp": "280°C",
+        "potLife": "150 minutes",
+        "cureTime": "12 hours",
+        "viscosity": "1000 mPa·s"
+      }
+    }
+  ],
+  "fastCure": [
+    {
+      "id": 4,
+      "title": "Fast Cure Epoxy - 5 Minute",
+      "mrp": 1800,
+      "images": [
+        "/assets/epoxy-fast-cure-1.jpg",
+        "/assets/epoxy-fast-cure-2.jpg"
+      ],
+      "details": {
+        "cureTime": "5 minutes",
+        "potLife": "3 minutes",
+        "serviceTemp": "120°C",
+        "viscosity": "300 mPa·s"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Fast Cure Epoxy - 15 Minute",
+      "mrp": 2200,
+      "images": [
+        "/assets/epoxy-fast-cure-15-1.jpg",
+        "/assets/epoxy-fast-cure-15-2.jpg"
+      ],
+      "details": {
+        "cureTime": "15 minutes",
+        "potLife": "8 minutes",
+        "serviceTemp": "150°C",
+        "viscosity": "400 mPa·s"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Fast Cure Epoxy - Room Temperature",
+      "mrp": 1600,
+      "images": [
+        "/assets/epoxy-room-temp-1.jpg",
+        "/assets/epoxy-room-temp-2.jpg"
+      ],
+      "details": {
+        "cureTime": "30 minutes",
+        "potLife": "10 minutes",
+        "serviceTemp": "100°C",
+        "viscosity": "250 mPa·s"
+      }
+    }
+  ],
+  "structuralAdhesives": [
+    {
+      "id": 7,
+      "title": "Structural Adhesive - High Peel Strength",
+      "mrp": 3200,
+      "images": [
+        "/assets/epoxy-structural-1.jpg",
+        "/assets/epoxy-structural-2.jpg"
+      ],
+      "details": {
+        "peelStrength": "45 N/mm",
+        "tensileStrength": "85 MPa",
+        "serviceTemp": "180°C",
+        "viscosity": "1200 mPa·s"
+      }
+    },
+    {
+      "id": 8,
+      "title": "Structural Adhesive - Fatigue Resistant",
+      "mrp": 3800,
+      "images": [
+        "/assets/epoxy-fatigue-1.jpg",
+        "/assets/epoxy-fatigue-2.jpg"
+      ],
+      "details": {
+        "fatigueLimit": "60 MPa",
+        "tensileStrength": "95 MPa",
+        "serviceTemp": "200°C",
+        "viscosity": "1500 mPa·s"
+      }
+    },
+    {
+      "id": 9,
+      "title": "Structural Adhesive - Gap Filling",
+      "mrp": 2800,
+      "images": [
+        "/assets/epoxy-gap-filling-1.jpg",
+        "/assets/epoxy-gap-filling-2.jpg"
+      ],
+      "details": {
+        "gapFill": "5mm",
+        "tensileStrength": "75 MPa",
+        "serviceTemp": "160°C",
+        "viscosity": "2000 mPa·s"
+      }
+    }
+  ],
+  "vacuumInfusion": [
+    {
+      "id": 10,
+      "title": "Vacuum Infusion Resin - Ultra Low Viscosity",
+      "mrp": 4200,
+      "images": [
+        "/assets/epoxy-vacuum-1.jpg",
+        "/assets/epoxy-vacuum-2.jpg"
+      ],
+      "details": {
+        "viscosity": "200 mPa·s",
+        "potLife": "180 minutes",
+        "cureTime": "24 hours",
+        "serviceTemp": "220°C"
+      }
+    },
+    {
+      "id": 11,
+      "title": "Vacuum Infusion Resin - Long Working Time",
+      "mrp": 4800,
+      "images": [
+        "/assets/epoxy-long-work-1.jpg",
+        "/assets/epoxy-long-work-2.jpg"
+      ],
+      "details": {
+        "viscosity": "300 mPa·s",
+        "potLife": "240 minutes",
+        "cureTime": "18 hours",
+        "serviceTemp": "200°C"
+      }
+    },
+    {
+      "id": 12,
+      "title": "Vacuum Infusion Resin - Void Free",
+      "mrp": 5500,
+      "images": [
+        "/assets/epoxy-void-free-1.jpg",
+        "/assets/epoxy-void-free-2.jpg"
+      ],
+      "details": {
+        "viscosity": "250 mPa·s",
+        "potLife": "200 minutes",
+        "cureTime": "20 hours",
+        "serviceTemp": "240°C"
+      }
+    }
+  ]
+} 

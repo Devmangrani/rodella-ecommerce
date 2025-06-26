@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import productsData from '../data/epoxyProducts.json';
+import productsData from '../data/coreMaterialProducts.json';
 import ProductCard from './ProductCard';
 import { useCart } from '../context/myState';
 
-const EpoxySystem = () => {
+const CoreMaterial = () => {
   // State to track length input for each product
   const [productLengths, setProductLengths] = useState({});
   
@@ -16,14 +16,14 @@ const EpoxySystem = () => {
   const navigate = useNavigate();
   const { addToCartWithAuth } = useCart();
 
-  // Get all products
+  // Get all products from all categories
   const getAllProducts = () => {
     let allProducts = [];
     
-    allProducts = [...allProducts, ...productsData.aerospaceGrade.map(p => ({ ...p, category: 'Aerospace Grade' }))];
-    allProducts = [...allProducts, ...productsData.fastCure.map(p => ({ ...p, category: 'Fast Cure Systems' }))];
-    allProducts = [...allProducts, ...productsData.structuralAdhesives.map(p => ({ ...p, category: 'Structural Adhesives' }))];
-    allProducts = [...allProducts, ...productsData.vacuumInfusion.map(p => ({ ...p, category: 'Vacuum Infusion' }))];
+    allProducts = [
+      ...allProducts, 
+      ...productsData.rohacell.map(p => ({ ...p, category: 'Rohacell PMI Foam' }))
+    ];
     
     return allProducts;
   };
@@ -74,7 +74,7 @@ const EpoxySystem = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Epoxy Systems
+            Core Materials
           </motion.h1>
           <motion.p 
             className="text-base sm:text-lg lg:text-xl text-neutral-400 max-w-3xl mx-auto mb-6 lg:mb-8 px-4"
@@ -82,7 +82,7 @@ const EpoxySystem = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Professional-grade epoxy systems and resins engineered for high-performance composite manufacturing.
+            High-quality core materials for composite sandwich structures.
           </motion.p>
         </motion.div>
 
@@ -90,33 +90,36 @@ const EpoxySystem = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className="w-full"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6">
-            {allProducts.map((product, index) => (
-              <ProductCard
-                key={`${product.category}-${product.id}`}
-                product={product}
-                index={index}
-                onAddToCart={handleAddToCart}
-                onLengthChange={handleLengthChange}
-                onImageChange={handleImageChange}
-                externalLength={productLengths[product.id] || 1}
-                externalImageIndex={currentImageIndex[product.id] || 0}
-                showCategory={true}
-                animationDelay={0.1}
-              />
-            ))}
-          </div>
+          {allProducts.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-neutral-400 text-base lg:text-lg mb-4">No products found</div>
+              <div className="text-neutral-500 text-sm">Please check back later for available products</div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6">
+              {allProducts.map((product, index) => (
+                <ProductCard
+                  key={`${product.category}-${product.id}`}
+                  product={product}
+                  index={index}
+                  onAddToCart={handleAddToCart}
+                  onLengthChange={handleLengthChange}
+                  onImageChange={handleImageChange}
+                  externalLength={productLengths[product.id] || 1}
+                  externalImageIndex={currentImageIndex[product.id] || 0}
+                  showCategory={true}
+                  animationDelay={0.1}
+                />
+              ))}
+            </div>
+          )}
         </motion.div>
-
-        
-
-        
       </div>
     </motion.div>
   );
 };
 
-export default EpoxySystem; 
+export default CoreMaterial; 

@@ -32,14 +32,24 @@ const ProductCard = ({
     const pricePerSqMeter = product.mrp; // Use product's specific MRP per sq meter
     const mrp = area * pricePerSqMeter;
     
-    // Extract GSM value from product weight details (e.g., "80 gsm" -> 80)
-    const gsmValue = parseInt(product.details.weight.match(/\d+/)[0]);
-    const weight = area * gsmValue; // weight in grams
+    // Handle different product types (reinforcement vs core materials)
+    let weight = 0;
+    
+    if (product.details.weight) {
+      // For reinforcement products (e.g., "80 gsm" -> 80)
+      const gsmValue = parseInt(product.details.weight.match(/\d+/)[0]);
+      weight = area * gsmValue; // weight in grams
+    } else if (product.details.thickness) {
+      // For core material products (e.g., "10mm" -> 10)
+      const thicknessValue = parseInt(product.details.thickness.match(/\d+/)[0]);
+      const density = product.details.density ? parseInt(product.details.density.match(/\d+/)[0]) : 100; // default density
+      weight = area * (thicknessValue / 1000) * density; // weight in kg (thickness in mm to m, then * density)
+    }
     
     return {
       area,
       mrp,
-      weight: weight / 1000 // convert to kg
+      weight: product.details.weight ? weight / 1000 : weight // convert to kg for reinforcement, already in kg for core materials
     };
   };
 
@@ -80,6 +90,11 @@ const ProductCard = ({
     'Glass Fiber': 'from-green-500/10 to-green-600/5 border-green-500/20 text-green-300',
     'Aramid': 'from-purple-500/10 to-purple-600/5 border-purple-500/20 text-purple-300',
     'Mixed Materials': 'from-orange-500/10 to-orange-600/5 border-orange-500/20 text-orange-300',
+    'PVC Foam': 'from-teal-500/10 to-teal-600/5 border-teal-500/20 text-teal-300',
+    'Aluminum Honeycomb': 'from-slate-500/10 to-slate-600/5 border-slate-500/20 text-slate-300',
+    'Balsa Wood': 'from-amber-500/10 to-amber-600/5 border-amber-500/20 text-amber-300',
+    'Syntactic Foam': 'from-emerald-500/10 to-emerald-600/5 border-emerald-500/20 text-emerald-300',
+    'Rohacell PMI Foam': 'from-rose-500/10 to-rose-600/5 border-rose-500/20 text-rose-300',
     'default': 'from-neutral-500/10 to-neutral-600/5 border-neutral-500/20 text-neutral-300'
   };
 
@@ -191,10 +206,16 @@ const ProductCard = ({
           </h4>
           <div className="grid grid-cols-3 gap-1.5">
             {[
+              // Handle both weight (reinforcement) and thickness (core materials)
               product.details.weight && { label: "Weight", value: product.details.weight, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
+              product.details.thickness && { label: "Thickness", value: product.details.thickness, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
+              // Handle both cell (reinforcement) and cellSize (core materials)
               product.details.cell && { label: "Cell Size", value: product.details.cell, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
-              product.details.width && { label: "Width", value: product.details.width, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" }
-            ].filter(Boolean).map((spec, idx) => (
+              product.details.cellSize && { label: "Cell Size", value: product.details.cellSize, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
+              // Handle both width (reinforcement) and size (core materials)
+              product.details.width && { label: "Width", value: product.details.width, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" },
+              product.details.size && { label: "Size", value: product.details.size, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" }
+            ].filter(Boolean).slice(0, 3).map((spec, idx) => (
               <div 
                 key={spec.label}
                 className={`bg-gradient-to-br ${spec.color} px-1.5 py-1.5 rounded-lg text-center`}
@@ -205,7 +226,15 @@ const ProductCard = ({
             ))}
           </div>
 
-          {/* Show weave information if available */}
+          {/* Show density information if available (core materials) */}
+          {product.details.density && (
+            <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
+              <span className="block text-indigo-300 text-xs font-medium">Density</span>
+              <span className="text-white font-semibold text-xs">{product.details.density}</span>
+            </div>
+          )}
+
+          {/* Show weave information if available (reinforcement) */}
           {product.details.weave && (
             <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
               <span className="block text-indigo-300 text-xs font-medium">Weave</span>
