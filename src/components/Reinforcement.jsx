@@ -1,17 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import productsData from '../data/reinforcementProducts.json';
 import ProductCard from './ProductCard';
 import { useCart } from '../context/myState';
 
 const Reinforcement = () => {
-  // State for selected categories
-  const [selectedCategories, setSelectedCategories] = useState({
-    carbonFiber: true,
-    // glassFiber: true,
-    aramid: true,
-    mixed: true
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Parse URL parameters
+  const urlParams = new URLSearchParams(location.search);
+  const categoryParam = urlParams.get('category');
+  const productParam = urlParams.get('product');
+
+  // State for selected categories - initialize based on URL params
+  const [selectedCategories, setSelectedCategories] = useState(() => {
+    if (categoryParam) {
+      // If a specific category is requested, only select that category
+      return {
+        carbonFiber: categoryParam === 'carbonFiber',
+        glassFiber: false,
+        aramid: categoryParam === 'aramid',
+        mixed: categoryParam === 'mixed'
+      };
+    }
+    // Default state - all categories selected
+    return {
+      carbonFiber: true,
+      glassFiber: false,
+      aramid: true,
+      mixed: true
+    };
   });
 
   // State to track length input for each product
@@ -21,8 +41,28 @@ const Reinforcement = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
 
   // Navigation and cart hooks
-  const navigate = useNavigate();
   const { addToCartWithAuth } = useCart();
+
+  // Effect to scroll to specific product when navigating from homepage
+  useEffect(() => {
+    if (productParam) {
+      // Wait for the component to render, then scroll to the product
+      setTimeout(() => {
+        const productElement = document.getElementById(`product-${productParam}`);
+        if (productElement) {
+          productElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+          // Add a highlight effect
+          productElement.classList.add('ring-2', 'ring-blue-500', 'ring-opacity-50');
+          setTimeout(() => {
+            productElement.classList.remove('ring-2', 'ring-blue-500', 'ring-opacity-50');
+          }, 3000);
+        }
+      }, 500);
+    }
+  }, [productParam]);
 
   // Get all products based on selected categories
   const getFilteredProducts = () => {
@@ -227,18 +267,19 @@ const Reinforcement = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 lg:gap-6">
                 {filteredProducts.map((product, index) => (
-                  <ProductCard
-                    key={`${product.category}-${product.id}`}
-                    product={product}
-                    index={index}
-                    onAddToCart={handleAddToCart}
-                    onLengthChange={handleLengthChange}
-                    onImageChange={handleImageChange}
-                    externalLength={productLengths[product.id] || 1}
-                    externalImageIndex={currentImageIndex[product.id] || 0}
-                    showCategory={true}
-                    animationDelay={0.1}
-                  />
+                  <div key={`${product.category}-${product.id}`} id={`product-${product.id}`}>
+                    <ProductCard
+                      product={product}
+                      index={index}
+                      onAddToCart={handleAddToCart}
+                      onLengthChange={handleLengthChange}
+                      onImageChange={handleImageChange}
+                      externalLength={productLengths[product.id] || 1}
+                      externalImageIndex={currentImageIndex[product.id] || 0}
+                      showCategory={true}
+                      animationDelay={0.1}
+                    />
+                  </div>
                 ))}
               </div>
             )}

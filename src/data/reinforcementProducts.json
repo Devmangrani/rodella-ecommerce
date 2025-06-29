@@ -42,74 +42,7 @@
       }
     }
   ],
-  "glassFiber": [
-    {
-      "id": 6,
-      "title": "E-Glass Ultra Light 50gsm",
-      "mrp": 180,
-      "images": ["/assets/glass50gsm.webp"],
-      "details": {
-        "weight": "50 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
-    },
-    {
-      "id": 7,
-      "title": "E-Glass Light 100gsm",
-      "mrp": 250,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "100 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
-    },
-    {
-      "id": 8,
-      "title": "E-Glass Medium 200gsm",
-      "mrp": 380,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "200 gsm",
-        "weave": "Plain/Axial/Satin",
-        "width": "1250mm"
-      }
-    },
-    {
-      "id": 9,
-      "title": "E-Glass Standard 400gsm",
-      "mrp": 520,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "400 gsm",
-        "weave": "Plain/Twill/Satin",
-        "width": "1250mm"
-      }
-    },
-    {
-      "id": 10,
-      "title": "E-Glass Heavy 600gsm",
-      "mrp": 680,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "600 gsm",
-        "weave": "Plain/Twill/Satin",
-        "width": "1270mm"
-      }
-    },
-    {
-      "id": 11,
-      "title": "E-Glass Extra Heavy 800gsm",
-      "mrp": 750,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "800 gsm",
-        "weave": "Plain/Twill/Satin",
-        "width": "1270mm"
-      }
-    }
-  ],
+ 
   "aramid": [
     {
       "id": 12,
@@ -121,62 +54,8 @@
         "weave": "Plain Weave",
         "width": "1000mm"
       }
-    },
-    {
-      "id": 13,
-      "title": "Aramid Light 58gsm",
-      "mrp": 1950,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "58 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
-    },
-    {
-      "id": 14,
-      "title": "Aramid Standard 100gsm",
-      "mrp": 2350,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "100 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
-    },
-    {
-      "id": 15,
-      "title": "Aramid Medium 200gsm",
-      "mrp": 2850,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "200 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
-    },
-    {
-      "id": 16,
-      "title": "Aramid Heavy 400gsm",
-      "mrp": 3450,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "400 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
-    },
-    {
-      "id": 17,
-      "title": "Aramid Extra Heavy 600gsm",
-      "mrp": 4150,
-      "images": ["/api/placeholder/300/200"],
-      "details": {
-        "weight": "600 gsm",
-        "weave": "Plain Weave",
-        "width": "1000mm"
-      }
     }
+  
   ],
   "mixed": [
     {
