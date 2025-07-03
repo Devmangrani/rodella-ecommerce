@@ -92,11 +92,16 @@ export const CartProvider = ({ children }) => {
     }
 
     // User is authenticated, proceed with adding to cart
-    // Check if this is a composite plate (quantity) or tube (length)
     if (product.isCompositePlate) {
-      addToCart(product, calculations, 1, quantityOrLength); // length=1, quantity=quantityOrLength
+      // For composite plates: quantityOrLength is the quantity, length is always 1
+      addToCart(product, calculations, 1, quantityOrLength);
+    } else if (product.isTubeProduct) {
+      // For tube products: quantityOrLength is the quantity, length comes from calculations
+      const length = calculations.length || 1; // Length in meters from calculations
+      addToCart(product, calculations, length, quantityOrLength);
     } else {
-      addToCart(product, calculations, quantityOrLength, 1); // length=quantityOrLength, quantity=1
+      // Fallback for other products
+      addToCart(product, calculations, quantityOrLength, 1);
     }
     return true;
   };

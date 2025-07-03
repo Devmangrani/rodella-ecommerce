@@ -3,12 +3,6 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/myState';
 
-const materials = {
-  carbon_fiber: { density: 1.6, label: 'Carbon Fiber' },
-  aluminum: { density: 2.7, label: 'Aluminum' },
-  steel: { density: 7.85, label: 'Steel' },
-};
-
 const tubeSizes = {
   '8x8': { width: 8, height: 8 },
   '10x10': { width: 10, height: 10 },
@@ -43,7 +37,7 @@ function convertToMM(value, unit) {
   return value;
 }
 
-function calculateResults({ material, size, wall, length, unit }) {
+function calculateResults({ material, size, wall, length, unit }, materials) {
   // Convert all to mm for calculation
   const { width, height } = tubeSizes[size];
   const wMM = convertToMM(Number(width), unit);
@@ -70,20 +64,17 @@ function calculateResults({ material, size, wall, length, unit }) {
     Ix: Ix.toFixed(0),
     Iy: Iy.toFixed(0),
     D: D.toFixed(2),
+    price: (mass * 2).toFixed(2), // Example price calculation
   };
 }
 
-const inputStyle = (active) =>
-  `w-20 px-2 py-1 rounded-lg bg-neutral-900/50 border border-neutral-700 text-center text-white text-lg focus:outline-none focus:ring-2 focus:ring-neutral-600 transition-all duration-300 hover:border-neutral-600 ${
-    active ? 'ring-2 ring-neutral-600' : ''
+const inputStyle = (hasError) =>
+  `w-24 px-3 py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-base focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 ${
+    hasError ? 'ring-2 ring-red-500/70' : ''
   }`;
 
-const selectButton = (active) =>
-  `px-6 py-3 rounded-xl text-base font-medium transition-all duration-300 transform hover:scale-105 ${
-    active 
-      ? 'bg-neutral-600 text-white shadow-lg shadow-neutral-600/20' 
-      : 'bg-neutral-900/50 text-neutral-300 border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50'
-  }`;
+const selectButton = () =>
+  `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500`;
 
 const TubeSVG = ({ size: tubeSize, wall }) => {
   const dimensions = tubeSizes[tubeSize] || tubeSizes['8x8'];
@@ -436,32 +427,44 @@ const TubeLengthSVG = ({ length, size, wall, unit }) => {
   );
 };
 
-const SquareTube = () => {
+const SquareTube = ({ selectedMaterial, onMaterialChange, materials, shapeType }) => {
   const [tube, setTube] = useState({
     ...defaultTube,
-    size: '8x8', // Ensure size is set in initial state
-    wall: 1 // Ensure wall thickness starts at 1mm
+    material: selectedMaterial || 'carbon_fiber',
+    size: '8x8',
+    wall: 1
   });
   const [results, setResults] = useState(() => calculateResults({
     ...defaultTube,
+    material: selectedMaterial || 'carbon_fiber',
     size: '8x8',
-    wall: 1 // Ensure wall thickness starts at 1mm
-  }));
+    wall: 1
+  }, materials));
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { addToCartWithAuth } = useCart();
 
   useEffect(() => {
+    if (selectedMaterial) {
+      setTube(prev => ({ ...prev, material: selectedMaterial }));
+    }
+  }, [selectedMaterial]);
+
+  useEffect(() => {
     try {
-      setResults(calculateResults(tube));
+      setResults(calculateResults(tube, materials));
     } catch (err) {
       setError('Error calculating results. Please check your inputs.');
       console.error('Calculation error:', err);
     }
-  }, [tube]);
+  }, [tube, materials]);
 
   const handleChange = (field, value) => {
+    if (field === 'material' && onMaterialChange) {
+      onMaterialChange(value);
+    }
+    
     try {
       if (field === 'wall') {
         const wallValue = Math.max(0.2, Math.min(10, parseFloat(value))); // Allow between 0.2mm and 10mm
@@ -492,12 +495,21 @@ const SquareTube = () => {
       id: `square_tube_${tube.material}_${tube.size}_${tube.wall}`,
       title: `Square Tube - ${materials[tube.material].label}`,
       category: 'Composite Tubes',
-      images: ['https://via.placeholder.com/300x200?text=Square+Tube'], // Add actual image URL
+      images: [materials[tube.material].bgImages[shapeType]], // Use shape-specific image
       details: {
         material: materials[tube.material].label,
         size: tube.size,
         wall: `${tube.wall}mm`,
         weight: `${results.mass}g`,
+        length: `${tube.length}mm`,
+      },
+      isTubeProduct: true,
+      tubeType: 'square',
+      dimensions: {
+        size: tube.size,
+        wallThickness: tube.wall,
+        length: tube.length,
+        unit: tube.unit
       }
     };
 
@@ -506,207 +518,196 @@ const SquareTube = () => {
       area: parseFloat(results.area) || 0,
       weight: parseFloat(results.mass) / 1000 || 0, // Convert to kg
       mass: parseFloat(results.mass) || 0,
-      price: parseFloat(results.mass) || 0, // Using mass as price for now
-      mrp: parseFloat(results.mass) || 0
+      price: parseFloat(results.price) || 0,
+      mrp: parseFloat(results.price) || 0,
+      quantity: quantity,
+      length: tube.length / 1000 // Convert mm to m and store in calculations
     };
 
     // Use the global cart function with authentication check
-    addToCartWithAuth(product, calculations, tube.length / 1000, navigate); // Convert mm to m
+    addToCartWithAuth(product, calculations, quantity, navigate);
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans pt-20"
-    >
-      <div className="w-full h-full py-12 px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <motion.h1 
-            className="text-4xl font-bold text-white mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+    <div className="w-full">
+      {/* Material Selection */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-neutral-200 mb-4 text-center sm:text-left">
+          Material Selection
+        </h3>
+        <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+          <label className="text-neutral-300 text-sm font-medium">Material:</label>
+          <select
+            className={selectButton()}
+            value={tube.material}
+            onChange={(e) => handleChange('material', e.target.value)}
           >
-            Square Tube
-          </motion.h1>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl p-6  border-neutral-800 w-full"
-        >
-          <div className="flex flex-col items-center">
+            <option value="carbon_fiber">Carbon Fiber</option>
+            <option value="glass_fiber">Glass Fiber</option>
+            <option value="carbon_kevlar">Carbon Kevlar</option>
+          </select>
           
-          <div className="formfield flex flex-wrap gap-2 mb-4 sm:mb-8 justify-center">
-            <div className="flex items-center gap-2">
-              <p className="text-neutral-300 text-sm">Material:</p>
-              <select
-                className={selectButton(false) + ' w-42 sm:w-42'}
-                value={tube.material}
-                onChange={(e) => handleChange('material', e.target.value)}
-              >
-                <option value="carbon_fiber">Carbon Fiber</option>
-                <option value="aluminum">Aluminum</option>
-                <option value="steel">Steel</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <p className="text-neutral-300 text-sm">Size:</p>
-              <select
-                className={selectButton(false) + ' w-42 sm:w-42'}
-                value={tube.size}
-                onChange={(e) => handleChange('size', e.target.value)}
-              >
-                {Object.keys(tubeSizes).map((size) => (
-                  <option key={size} value={size}>
-                    {size} mm
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <label className="text-neutral-300 text-sm font-medium">Size:</label>
+          <select
+            className={selectButton()}
+            value={tube.size}
+            onChange={(e) => handleChange('size', e.target.value)}
+          >
+            {Object.keys(tubeSizes).map((size) => (
+              <option key={size} value={size}>
+                {size} mm
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 sm:mb-8 w-full max-w-3xl">
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="formfield flex flex-col items-center"
-            >
-              <p className="text-neutral-300 text-sm mb-1">Wall Thickness</p>
+      {/* Specifications Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-4 lg:mb-6">
+        {/* Input Fields */}
+        <div className="space-y-4 lg:space-y-6">
+          <h3 className="text-lg font-semibold text-neutral-200 mb-3 lg:mb-4">
+            Dimensions
+          </h3>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="text-center">
+              <label className="block text-neutral-300 text-sm font-medium mb-2">
+                Wall Thickness (mm)
+              </label>
               <input
                 type="number"
                 step="0.1"
-                className={inputStyle(true)}
+                className={inputStyle(error.includes('Wall'))}
                 value={tube.wall}
                 onChange={(e) => handleChange('wall', e.target.value)}
                 autoComplete="off"
               />
-            </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="formfield flex flex-col items-center"
-            >
-              <p className="text-neutral-300 text-sm mb-1">Length (mm)</p>
+            </div>
+            
+            <div className="text-center">
+              <label className="block text-neutral-300 text-sm font-medium mb-2">
+                Length (mm)
+              </label>
               <input
                 type="number"
                 step="any"
                 max="1200"
-                className={`${inputStyle(true)} ${error ? 'border-red-500' : ''}`}
+                className={inputStyle(error.includes('Length'))}
                 value={tube.length}
                 onChange={(e) => handleChange('length', e.target.value)}
                 autoComplete="off"
               />
-            </motion.div>
+            </div>
           </div>
 
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-red-500 text-sm mb-4 text-center"
-            >
+            <div className="text-red-400 text-sm text-center bg-red-400/10 rounded-lg p-3">
               {error}
-            </motion.div>
+            </div>
           )}
 
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-12 w-full">
-            <motion.div 
-              className="flex-1 w-full max-w-[300px]"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              <p className="text-neutral-300 text-center mb-4 text-lg font-semibold">Cross Section View</p>
-              <TubeSVG size={tube.size} wall={Number(tube.wall)} />
-            </motion.div>
+          {/* Results */}
+          <div className="mt-6 lg:mt-8 space-y-3 lg:space-y-4">
+            <h3 className="text-lg font-semibold text-neutral-200">
+              Calculations
+            </h3>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
+                <p className="text-neutral-400 text-sm mb-1">Mass</p>
+                <p className="text-xl font-semibold text-white">
+                  {results.mass} <span className="text-sm text-neutral-400">grams</span>
+                </p>
+              </div>
+              
+              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
+                <p className="text-neutral-400 text-sm mb-1">Wall Thickness</p>
+                <p className="text-xl font-semibold text-white">
+                  {results.wall} <span className="text-sm text-neutral-400">mm</span>
+                </p>
+              </div>
+              
+              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
+                <p className="text-neutral-400 text-sm mb-1">Price</p>
+                <p className="text-xl font-semibold text-white">
+                  ₹{results.price}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <motion.div 
-              className="flex-1 w-full max-w-[600px]"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
-              <p className="text-neutral-300 text-center mb-4 text-lg font-semibold">Side View</p>
+        {/* 3D Visualization */}
+        <div className="flex flex-col items-center space-y-6">
+          <div className="w-full">
+            <h3 className="text-lg font-semibold text-neutral-200 mb-2 lg:mb-3 text-center">
+              Cross Section View
+            </h3>
+            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-3">
+              <TubeSVG size={tube.size} wall={Number(tube.wall)} />
+            </div>
+          </div>
+          
+          <div className="w-full">
+            <h3 className="text-lg font-semibold text-neutral-200 mb-2 lg:mb-3 text-center">
+              Side View
+            </h3>
+            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-3">
               <TubeLengthSVG 
                 length={Number(tube.length)} 
                 size={tube.size}
                 wall={Number(tube.wall)}
                 unit={tube.unit}
               />
-            </motion.div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-3xl mt-8 sm:mt-12">
-            <div className="bg-neutral-800/50 p-3 sm:p-4 rounded-lg">
-              <p className="text-neutral-300 text-sm">Wall Thickness</p>
-              <p className="text-lg sm:text-xl">{results.wall} mm</p>
-            </div>
-          
-            <div className="bg-neutral-800/50 p-3 sm:p-4 rounded-lg">
-              <p className="text-neutral-300 text-sm">Mass</p>
-              <p className="text-lg sm:text-xl">{results.mass} g</p>
-            </div>
-
-            <div className="bg-neutral-800/50 p-3 sm:p-4 rounded-lg">
-              <p className="text-neutral-300 text-sm">Price</p>
-              <p className="text-lg sm:text-xl">{results.mass} rs</p>
             </div>
           </div>
-
-          {/* Add to Cart Section */}
-          <div className="w-full max-w-3xl mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="flex items-center gap-2">
-              <p className="text-neutral-300 text-sm">Quantity:</p>
-              <div className="flex items-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-8 h-8 rounded-l-lg bg-neutral-900/50 border border-neutral-700 text-white hover:border-neutral-600 transition-all duration-300"
-                  onClick={() => handleQuantityChange(quantity - 1)}
-                >
-                  -
-                </motion.button>
-                <input
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={quantity}
-                  onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                  className="w-16 h-8 text-center bg-neutral-900/50 border-t border-b border-neutral-700 text-white focus:outline-none focus:border-neutral-600"
-                />
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-8 h-8 rounded-r-lg bg-neutral-900/50 border border-neutral-700 text-white hover:border-neutral-600 transition-all duration-300"
-                  onClick={() => handleQuantityChange(quantity + 1)}
-                >
-                  +
-                </motion.button>
-              </div>
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-2 rounded-lg bg-neutral-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-              onClick={handleAddToCart}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-              </svg>
-              Add to Cart
-            </motion.button>
-          </div>
-          </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+
+      {/* Add to Cart Section */}
+      <div className="border-t border-neutral-700 pt-3 sm:pt-4 lg:pt-5">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <span className="text-neutral-300 text-sm font-medium">Quantity:</span>
+            <div className="flex items-center">
+              <button
+                className="w-8 h-8 rounded-l-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
+                onClick={() => handleQuantityChange(quantity - 1)}
+              >
+                −
+              </button>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={quantity}
+                onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                className="w-16 h-8 text-center bg-neutral-800 text-white focus:outline-none focus:bg-neutral-700 transition-colors duration-200"
+              />
+              <button
+                className="w-8 h-8 rounded-r-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
+                onClick={() => handleQuantityChange(quantity + 1)}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full sm:w-auto px-8 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
+            onClick={handleAddToCart}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Add to Cart
+          </motion.button>
+        </div>
+      </div>
+    </div>
   );
 };
 

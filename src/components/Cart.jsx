@@ -10,18 +10,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Cart Item Component
 const CartItem = ({ item, index }) => {
-  const { updateQuantity, updateLength, removeFromCart } = useCart();
+  const { updateQuantity, removeFromCart } = useCart();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleQuantityChange = (newQuantity) => {
     setIsUpdating(true);
     updateQuantity(item.id, newQuantity);
-    setTimeout(() => setIsUpdating(false), 300);
-  };
-
-  const handleLengthChange = (newLength) => {
-    setIsUpdating(true);
-    updateLength(item.id, newLength);
     setTimeout(() => setIsUpdating(false), 300);
   };
 
@@ -76,6 +70,20 @@ const CartItem = ({ item, index }) => {
               </div>
             )}
             
+            {/* Show dimensions for tube products */}
+            {item.product.isTubeProduct && item.product.dimensions && (
+              <div className="bg-gradient-to-br from-yellow-500/8 to-yellow-600/4 border border-yellow-500/15 px-3 py-2 rounded-lg text-center">
+                <span className="block text-yellow-300 text-xs font-medium">Dimensions</span>
+                <span className="text-white font-bold text-xs">
+                  {item.product.tubeType === 'circular' ? (
+                    <>ID: {item.product.dimensions.innerDiameter}mm | Wall: {item.product.dimensions.wallThickness}mm | Length: {(item.product.dimensions.length / 1000).toFixed(1)}m</>
+                  ) : (
+                    <>Size: {item.product.dimensions.size}mm | Wall: {item.product.dimensions.wallThickness}mm | Length: {(item.product.dimensions.length / 1000).toFixed(1)}m</>
+                  )}
+                </span>
+              </div>
+            )}
+            
             <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-3 py-2 rounded-lg text-center">
               <span className="block text-purple-300 text-xs font-medium">Weight</span>
               <span className="text-white font-bold text-sm">{(item.weight * item.quantity).toFixed(2)} kg</span>
@@ -92,25 +100,8 @@ const CartItem = ({ item, index }) => {
 
           {/* Controls */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            {/* Length and Quantity Controls */}
+            {/* Quantity Controls */}
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Length Input - Only show for non-composite plates */}
-              {!item.product.isCompositePlate && (
-                <div className="flex items-center gap-2">
-                  <label className="text-sm font-medium text-neutral-300 whitespace-nowrap">
-                    Length (m):
-                  </label>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={item.length}
-                    onChange={(e) => handleLengthChange(e.target.value)}
-                    className="w-20 bg-neutral-700/60 border border-neutral-600/40 rounded-lg px-2 py-1 text-white text-sm focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 transition-all duration-200"
-                  />
-                </div>
-              )}
-
               {/* Quantity Controls */}
               <div className="flex items-center gap-2">
                 <label className="text-sm font-medium text-neutral-300 whitespace-nowrap">

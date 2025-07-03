@@ -4,8 +4,39 @@ import RectangularTube from './RectangularTube';
 import SquareTube from './SquareTube';
 import { motion } from 'framer-motion';
 
+const materials = {
+  carbon_fiber: { 
+    density: 1.6, 
+    label: 'Carbon Fiber',
+    bgImages: {
+      circular: '/assets/circular-tube-carbon-fiber.jpg',
+      rectangular: '/assets/carbon-fiber-rectangle-tubes.webp',
+      square: '/assets/carbon-fiber-square-tubes.jpg'
+    }
+  },
+  glass_fiber: { 
+    density: 2.7, 
+    label: 'Glass Fiber',
+    bgImages: {
+      circular: '/assets/glass-fiber-circular-tubes.jpeg',
+      rectangular: '/assets/rectangular-fiberglass-tube.webp',
+      square: '/assets/glass-fiber-square-tubes-.png'
+    }
+  },
+  carbon_kevlar: { 
+    density: 7.85, 
+    label: 'Carbon Kevlar',
+    bgImages: {
+      circular: '/assets/circular-tube-carbon-kevlar.jpg',
+      rectangular: '/assets/Rectangular-Carbon-fiber-tube.webp',
+      square: '/assets/sq-tube-carbon-kevlar.png'
+    }
+  },
+};
+
 const TubingComparison = () => {
   const [selectedShape, setSelectedShape] = useState('circular');
+  const [selectedMaterial, setSelectedMaterial] = useState('carbon_fiber');
 
   const selectButton = (active) =>
     `px-6 py-3 rounded-xl text-base font-medium transition-all duration-300 transform hover:scale-105 ${
@@ -14,77 +45,117 @@ const TubingComparison = () => {
         : 'bg-neutral-900/50 text-neutral-300 border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50'
     }`;
 
+  // Get the background image based on selected shape and material
+  const getCurrentBackgroundImage = () => {
+    return materials[selectedMaterial]?.bgImages?.[selectedShape] || materials[selectedMaterial]?.bgImages?.circular;
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans pt-20"
+      className="min-h-screen w-full bg-black text-white font-sans pt-20 relative"
     >
-      <div className="w-full h-full py-12 px-4 sm:px-6 lg:px-8">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out"
+        style={{ 
+          backgroundImage: `url(${getCurrentBackgroundImage()})`,
+          filter: 'blur(0.5px)',
+        }}
+      />
+      <div className="absolute inset-0 bg-black/70" />
+      
+      <div className="relative z-10 w-full min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <motion.h1 
-            className="text-4xl font-bold text-white mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
             Composite Tube Specifications
-          </motion.h1>
-          
-          <motion.div 
-            className="flex flex-wrap justify-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={selectButton(selectedShape === 'circular')}
-              onClick={() => setSelectedShape('circular')}
-            >
-              Circular Tube
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={selectButton(selectedShape === 'rectangular')}
-              onClick={() => setSelectedShape('rectangular')}
-            >
-              Rectangular Tube
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={selectButton(selectedShape === 'square')}
-              onClick={() => setSelectedShape('square')}
-            >
-              Square Tube
-            </motion.button>
-          </motion.div>
+          </h1>
+          <p className="text-neutral-400 text-sm sm:text-base max-w-2xl mx-auto">
+            Configure your custom composite tube dimensions and specifications
+          </p>
         </motion.div>
         
-        <motion.div
-          key={selectedShape}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl p-6 border border-neutral-800 w-full"
-        >
-          {selectedShape === 'circular' ? (
-            <CircularTube />
-          ) : selectedShape === 'rectangular' ? (
-            <RectangularTube />
-          ) : (
-            <SquareTube />
-          )}
-        </motion.div>
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-neutral-900/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 shadow-2xl"
+          >
+            {/* Shape Selection */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-neutral-200 mb-4 text-center sm:text-left">
+                Tube Shape Selection
+              </h3>
+              <div className="flex flex-wrap justify-center gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={selectButton(selectedShape === 'circular')}
+                  onClick={() => setSelectedShape('circular')}
+                >
+                  Circular Tube
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={selectButton(selectedShape === 'rectangular')}
+                  onClick={() => setSelectedShape('rectangular')}
+                >
+                  Rectangular Tube
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={selectButton(selectedShape === 'square')}
+                  onClick={() => setSelectedShape('square')}
+                >
+                  Square Tube
+                </motion.button>
+              </div>
+            </div>
+            
+            {/* Tube Component */}
+            <motion.div
+              key={selectedShape}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="w-full"
+            >
+              {selectedShape === 'circular' ? (
+                <CircularTube 
+                  selectedMaterial={selectedMaterial} 
+                  onMaterialChange={setSelectedMaterial}
+                  materials={materials}
+                  shapeType="circular"
+                />
+              ) : selectedShape === 'rectangular' ? (
+                <RectangularTube 
+                  selectedMaterial={selectedMaterial} 
+                  onMaterialChange={setSelectedMaterial}
+                  materials={materials}
+                  shapeType="rectangular"
+                />
+              ) : (
+                <SquareTube 
+                  selectedMaterial={selectedMaterial} 
+                  onMaterialChange={setSelectedMaterial}
+                  materials={materials}
+                  shapeType="square"
+                />
+              )}
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </motion.div>
   );
