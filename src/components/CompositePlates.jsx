@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/myState';
 
 const materials = {
-  carbon_fiber: { density: 1.6, label: 'Carbon Fiber', bgImage: '/assets/carbon-fiber-sheet1.jpg' },
+  carbon_fiber: { density: 1.6, label: 'Carbon Fiber', bgImage: '/assets/carbon-fiber-sheet.jpg' },
   glass_fiber: { density: 2.7, label: 'Glass Fiber', bgImage: '/assets/glass-fiber-sheet.png' },
   // steel: { density: 7.85, label: 'Steel', bgImage: '/assets/Steel plated.jpg' },
 };
@@ -270,13 +270,20 @@ const CompositePlates = () => {
       id: `composite_plate_${plate.material}_${plate.length}_${plate.breadth}_${plate.thickness}`,
       title: `Composite Plate - ${materials[plate.material].label}`,
       category: 'Composite Plates',
-      images: ['https://via.placeholder.com/300x200?text=Composite+Plate'],
+      images: [materials[plate.material].bgImage], // Use the actual material image
       details: {
         material: materials[plate.material].label,
         length: `${plate.length}mm`,
         breadth: `${plate.breadth}mm`,
         thickness: `${plate.thickness}mm`,
         weight: `${results.mass}g`,
+      },
+      isCompositePlate: true,
+      dimensions: {
+        length: plate.length,
+        breadth: plate.breadth,
+        thickness: plate.thickness,
+        unit: plate.unit
       }
     };
 
@@ -285,10 +292,11 @@ const CompositePlates = () => {
       weight: parseFloat(results.mass) / 1000 || 0,
       mass: parseFloat(results.mass) || 0,
       price: parseFloat(results.price) || 0,
-      mrp: parseFloat(results.price) || 0
+      mrp: parseFloat(results.price) || 0,
+      quantity: quantity
     };
 
-    addToCartWithAuth(product, calculations, 1, navigate);
+    addToCartWithAuth(product, calculations, quantity, navigate);
   };
 
   return (

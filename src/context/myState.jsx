@@ -75,7 +75,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // Global add to cart function with authentication check
-  const addToCartWithAuth = (product, calculations, length = 1, navigate = null) => {
+  const addToCartWithAuth = (product, calculations, quantityOrLength = 1, navigate = null) => {
     // Check if user is authenticated
     if (!isAuthenticated()) {
       // Store redirect flag to go to cart after login
@@ -92,7 +92,12 @@ export const CartProvider = ({ children }) => {
     }
 
     // User is authenticated, proceed with adding to cart
-    addToCart(product, calculations, length);
+    // Check if this is a composite plate (quantity) or tube (length)
+    if (product.isCompositePlate) {
+      addToCart(product, calculations, 1, quantityOrLength); // length=1, quantity=quantityOrLength
+    } else {
+      addToCart(product, calculations, quantityOrLength, 1); // length=quantityOrLength, quantity=1
+    }
     return true;
   };
 
@@ -107,7 +112,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // Add item to cart (internal function)
-  const addToCart = (product, calculations, length = 1) => {
+  const addToCart = (product, calculations, length = 1, quantity = 1) => {
     const existingItemIndex = cartItems.findIndex(
       item => item.product.id === product.id && item.length === length
     );
@@ -116,10 +121,11 @@ export const CartProvider = ({ children }) => {
       // If item already exists with same length, increase quantity
       const updatedItems = cartItems.map((item, index) => {
         if (index === existingItemIndex) {
+          const newQuantity = item.quantity + quantity;
           return {
             ...item,
-            quantity: item.quantity + 1,
-            totalPrice: (item.quantity + 1) * item.unitPrice
+            quantity: newQuantity,
+            totalPrice: newQuantity * item.unitPrice
           };
         }
         return item;
@@ -131,9 +137,9 @@ export const CartProvider = ({ children }) => {
         id: `${product.id}_${length}_${Date.now()}`, // Unique ID for cart item
         product,
         length,
-        quantity: 1,
+        quantity: quantity, // Use the passed quantity instead of hardcoding 1
         unitPrice: calculations.mrp || calculations.price || calculations.mass, // Handle different price field names
-        totalPrice: calculations.mrp || calculations.price || calculations.mass,
+        totalPrice: quantity * (calculations.mrp || calculations.price || calculations.mass),
         area: calculations.area || 0,
         weight: calculations.weight || calculations.mass || 0,
         addedAt: new Date().toISOString()

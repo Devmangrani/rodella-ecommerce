@@ -65,6 +65,17 @@ const CartItem = ({ item, index }) => {
               <span className="block text-blue-300 text-xs font-medium">Area</span>
               <span className="text-white font-bold text-sm">{(item.area * item.quantity).toFixed(2)} m²</span>
             </div> */}
+            
+            {/* Show dimensions for composite plates */}
+            {item.product.isCompositePlate && item.product.dimensions && (
+              <div className="bg-gradient-to-br from-cyan-500/8 to-cyan-600/4 border border-cyan-500/15 px-3 py-2 rounded-lg text-center">
+                <span className="block text-cyan-300 text-xs font-medium">Dimensions</span>
+                <span className="text-white font-bold text-xs">
+                  {item.product.dimensions.length} × {item.product.dimensions.breadth} × {item.product.dimensions.thickness} mm
+                </span>
+              </div>
+            )}
+            
             <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-3 py-2 rounded-lg text-center">
               <span className="block text-purple-300 text-xs font-medium">Weight</span>
               <span className="text-white font-bold text-sm">{(item.weight * item.quantity).toFixed(2)} kg</span>
@@ -83,20 +94,22 @@ const CartItem = ({ item, index }) => {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             {/* Length and Quantity Controls */}
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Length Input */}
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-neutral-300 whitespace-nowrap">
-                  Length (m):
-                </label>
-                <input
-                  type="number"
-                  min="0.1"
-                  step="0.1"
-                  value={item.length}
-                  onChange={(e) => handleLengthChange(e.target.value)}
-                  className="w-20 bg-neutral-700/60 border border-neutral-600/40 rounded-lg px-2 py-1 text-white text-sm focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 transition-all duration-200"
-                />
-              </div>
+              {/* Length Input - Only show for non-composite plates */}
+              {!item.product.isCompositePlate && (
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-neutral-300 whitespace-nowrap">
+                    Length (m):
+                  </label>
+                  <input
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={item.length}
+                    onChange={(e) => handleLengthChange(e.target.value)}
+                    className="w-20 bg-neutral-700/60 border border-neutral-600/40 rounded-lg px-2 py-1 text-white text-sm focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 transition-all duration-200"
+                  />
+                </div>
+              )}
 
               {/* Quantity Controls */}
               <div className="flex items-center gap-2">
