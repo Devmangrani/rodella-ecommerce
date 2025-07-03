@@ -101,18 +101,19 @@ const CoreMaterial = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6">
               {allProducts.map((product, index) => (
-                <ProductCard
-                  key={`${product.category}-${product.id}`}
-                  product={product}
-                  index={index}
-                  onAddToCart={handleAddToCart}
-                  onLengthChange={handleLengthChange}
-                  onImageChange={handleImageChange}
-                  externalLength={productLengths[product.id] || 1}
-                  externalImageIndex={currentImageIndex[product.id] || 0}
-                  showCategory={true}
-                  animationDelay={0.1}
-                />
+                <div key={`${product.category}-${product.id}`} id={`product-${product.id}`}>
+                  <ProductCard
+                    product={product}
+                    index={index}
+                    onAddToCart={handleAddToCart}
+                    onLengthChange={handleLengthChange}
+                    onImageChange={handleImageChange}
+                    externalLength={productLengths[product.id] || 1}
+                    externalImageIndex={currentImageIndex[product.id] || 0}
+                    showCategory={true}
+                    animationDelay={0.1}
+                  />
+                </div>
               ))}
             </div>
           )}

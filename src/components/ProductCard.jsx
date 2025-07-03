@@ -14,7 +14,8 @@ const ProductCard = ({
   onLengthChange = () => {},
   externalLength = null,
   externalImageIndex = null,
-  onImageChange = () => {}
+  onImageChange = () => {},
+  simple = false
 }) => {
   // Internal state for length and image index (used if external state not provided)
   const [internalLength, setInternalLength] = useState(defaultLength);
@@ -115,17 +116,17 @@ const ProductCard = ({
         delay: index * animationDelay,
         ease: "easeOut"
       }}
-      className={`bg-gradient-to-br from-neutral-800/70 to-neutral-900/50 border border-neutral-700/40 rounded-xl p-4 hover:border-neutral-600/60 transition-all duration-300 shadow-lg hover:shadow-xl w-full max-w-full h-auto ${customClassName}`}
+      className={`bg-gradient-to-br from-neutral-800/70 to-neutral-900/50 border border-neutral-700/40 rounded-xl p-4 hover:border-neutral-600/60 transition-all duration-300 shadow-lg hover:shadow-xl w-full max-w-full h-auto w-[370px] h-[560px] flex flex-col ${customClassName}`}
     >
       {/* Category Badge */}
-      {showCategory && product.category && (
+      {showCategory && product.category && !simple && (
         <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-3 bg-gradient-to-r ${getCategoryColor(product.category)} border`}>
           {product.category}
         </div>
       )}
 
       {/* Product Image with Navigation */}
-      <div className="relative aspect-video bg-gradient-to-br from-neutral-700/50 to-neutral-800/50 rounded-lg mb-3 overflow-hidden group">
+      <div className="relative aspect-video bg-gradient-to-br from-neutral-700/50 to-neutral-800/50 rounded-lg mb-3 overflow-hidden group w-full h-[240px]">
         <img 
           src={product.images[currentImageIndex]} 
           alt={`${product.title} - Image ${currentImageIndex + 1}`}
@@ -133,7 +134,7 @@ const ProductCard = ({
         />
         
         {/* Navigation Buttons */}
-        {product.images.length > 1 && (
+        {product.images.length > 1 && !simple && (
           <>
             {/* Previous Button */}
             <button
@@ -158,99 +159,115 @@ const ProductCard = ({
         )}
       </div>
         
-      <div className="space-y-3">
-        {/* Product Title */}
-        <h3 className="text-base font-bold text-white leading-tight">
-          {product.title}
-        </h3>
-        
-        {/* Length Input */}
-        {showLengthInput && (
-          <div className="flex items-center gap-2">
-            <label className="text-xs font-semibold text-neutral-300 whitespace-nowrap flex-shrink-0">
-              Length (m):
-            </label>
-            <input
-              type="number"
-              min="0.1"
-              step="0.1"
-              placeholder="1.0"
-              value={currentLength}
-              onChange={(e) => handleLengthChange(e.target.value)}
-              className="w-18 bg-neutral-700/60 border border-neutral-600/40 rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 transition-all duration-200"
-            />
-          </div>
-        )}
-
-        {/* Calculated Values */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-2 py-1.5 rounded-lg text-center">
-            <span className="block text-blue-300 text-xs font-medium">Area</span>
-            <span className="text-white font-bold text-xs">{calculations.area.toFixed(2)} m²</span>
-          </div>
-          <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-2 py-1.5 rounded-lg text-center">
-            <span className="block text-purple-300 text-xs font-medium">Weight</span>
-            <span className="text-white font-bold text-xs">{calculations.weight.toFixed(2)} kg</span>
-          </div>
-          <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/6 border border-green-500/20 px-2 py-1.5 rounded-lg text-center">
-            <span className="block text-green-300 text-xs font-medium">Total MRP</span>
-            <span className="text-green-400 font-bold text-xs">₹{calculations.mrp.toLocaleString()}</span>
+      {/* Simple Card: Only Title and Price */}
+      {simple ? (
+        <div className="flex flex-col flex-1 justify-between">
+          <h3 className="text-lg font-bold text-white leading-tight mb-1">{product.title}</h3>
+          <div className="mt-2">
+            <div className="text-2xl font-bold text-green-400 mb-2">₹{product.mrp.toLocaleString()}</div>
+            <button
+              onClick={() => onAddToCart(product, { mrp: product.mrp })}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 rounded-xl font-semibold text-xs transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
-        
-        {/* Specifications */}
-        <div className="space-y-2">
-          <h4 className="text-xs font-semibold text-neutral-300 flex items-center gap-2">
-            <span className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
-            Specifications
-          </h4>
-          <div className="grid grid-cols-3 gap-1.5">
-            {[
-              // Handle both weight (reinforcement) and thickness (core materials)
-              product.details.weight && { label: "Weight", value: product.details.weight, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
-              product.details.thickness && { label: "Thickness", value: product.details.thickness, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
-              // Handle both cell (reinforcement) and cellSize (core materials)
-              product.details.cell && { label: "Cell Size", value: product.details.cell, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
-              product.details.cellSize && { label: "Cell Size", value: product.details.cellSize, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
-              // Handle both width (reinforcement) and size (core materials)
-              product.details.width && { label: "Width", value: product.details.width, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" },
-              product.details.size && { label: "Size", value: product.details.size, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" }
-            ].filter(Boolean).slice(0, 3).map((spec, idx) => (
-              <div 
-                key={spec.label}
-                className={`bg-gradient-to-br ${spec.color} px-1.5 py-1.5 rounded-lg text-center`}
-              >
-                <span className="block text-neutral-400 text-xs leading-tight">{spec.label}</span>
-                <span className="text-white font-semibold text-xs leading-tight">{spec.value}</span>
+      ) : (
+        <div className="space-y-3">
+          {/* Product Title */}
+          <h3 className="text-base font-bold text-white leading-tight">
+            {product.title}
+          </h3>
+          
+          {/* Length Input */}
+          {showLengthInput && (
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-neutral-300 whitespace-nowrap flex-shrink-0">
+                Length (m):
+              </label>
+              <input
+                type="number"
+                min="0.1"
+                step="0.1"
+                placeholder="1.0"
+                value={currentLength}
+                onChange={(e) => handleLengthChange(e.target.value)}
+                className="w-18 bg-neutral-700/60 border border-neutral-600/40 rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/20 transition-all duration-200"
+              />
+            </div>
+          )}
+
+          {/* Calculated Values */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-2 py-1.5 rounded-lg text-center">
+              <span className="block text-blue-300 text-xs font-medium">Area</span>
+              <span className="text-white font-bold text-xs">{calculations.area.toFixed(2)} m²</span>
+            </div>
+            <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-2 py-1.5 rounded-lg text-center">
+              <span className="block text-purple-300 text-xs font-medium">Weight</span>
+              <span className="text-white font-bold text-xs">{calculations.weight.toFixed(2)} kg</span>
+            </div>
+            <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/6 border border-green-500/20 px-2 py-1.5 rounded-lg text-center">
+              <span className="block text-green-300 text-xs font-medium">Total MRP</span>
+              <span className="text-green-400 font-bold text-xs">₹{calculations.mrp.toLocaleString()}</span>
+            </div>
+          </div>
+          
+          {/* Specifications */}
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold text-neutral-300 flex items-center gap-2">
+              <span className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+              Specifications
+            </h4>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                // Handle both weight (reinforcement) and thickness (core materials)
+                product.details.weight && { label: "Weight", value: product.details.weight, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
+                product.details.thickness && { label: "Thickness", value: product.details.thickness, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
+                // Handle both cell (reinforcement) and cellSize (core materials)
+                product.details.cell && { label: "Cell Size", value: product.details.cell, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
+                product.details.cellSize && { label: "Cell Size", value: product.details.cellSize, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
+                // Handle both width (reinforcement) and size (core materials)
+                product.details.width && { label: "Width", value: product.details.width, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" },
+                product.details.size && { label: "Size", value: product.details.size, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" }
+              ].filter(Boolean).slice(0, 3).map((spec, idx) => (
+                <div 
+                  key={spec.label}
+                  className={`bg-gradient-to-br ${spec.color} px-1.5 py-1.5 rounded-lg text-center`}
+                >
+                  <span className="block text-neutral-400 text-xs leading-tight">{spec.label}</span>
+                  <span className="text-white font-semibold text-xs leading-tight">{spec.value}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Show density information if available (core materials) */}
+            {product.details.density && (
+              <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
+                <span className="block text-indigo-300 text-xs font-medium">Density</span>
+                <span className="text-white font-semibold text-xs">{product.details.density}</span>
               </div>
-            ))}
+            )}
+
+            {/* Show weave information if available (reinforcement) */}
+            {product.details.weave && (
+              <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
+                <span className="block text-indigo-300 text-xs font-medium">Weave</span>
+                <span className="text-white font-semibold text-xs">{product.details.weave}</span>
+              </div>
+            )}
           </div>
-
-          {/* Show density information if available (core materials) */}
-          {product.details.density && (
-            <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
-              <span className="block text-indigo-300 text-xs font-medium">Density</span>
-              <span className="text-white font-semibold text-xs">{product.details.density}</span>
-            </div>
-          )}
-
-          {/* Show weave information if available (reinforcement) */}
-          {product.details.weave && (
-            <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
-              <span className="block text-indigo-300 text-xs font-medium">Weave</span>
-              <span className="text-white font-semibold text-xs">{product.details.weave}</span>
-            </div>
-          )}
+          
+          {/* Add to Cart Button */}
+          <button
+            onClick={() => onAddToCart(product, calculations)}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 rounded-xl font-semibold text-xs transition-all duration-200 shadow-lg hover:shadow-xl mt-4"
+          >
+            Add to Cart
+          </button>
         </div>
-        
-        {/* Add to Cart Button */}
-        <button
-          onClick={() => onAddToCart(product, calculations)}
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 rounded-xl font-semibold text-xs transition-all duration-200 shadow-lg hover:shadow-xl mt-4"
-        >
-          Add to Cart
-        </button>
-      </div>
+      )}
     </motion.div>
   );
 };

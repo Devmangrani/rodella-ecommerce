@@ -404,24 +404,17 @@ const CircularTube = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans pt-16"
-      style={{
-        backgroundImage: 'url(/assets/circular-tube.webp)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'scroll'
-      }}
+      className="min-h-screen w-full bg-black text-white font-sans pt-20"
     >
-      <div className="w-full h-full py-6 px-4 sm:px-6 lg:px-8">
+      <div className="w-full h-full py-12 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-8"
+          className="text-center mb-12"
         >
           <motion.h1 
-            className="text-4xl font-bold text-white mb-6"
+            className="text-4xl font-bold text-white mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -434,7 +427,7 @@ const CircularTube = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-neutral-900/80 backdrop-blur-sm rounded-2xl p-6 border-neutral-800 w-full"
+          className="bg-neutral-900/50 backdrop-blur-sm rounded-2xl p-6  border-neutral-800 w-full"
         >
           <div className="flex flex-col items-center">
           

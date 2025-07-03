@@ -3,213 +3,196 @@ import { Link } from "react-router-dom";
 import {
   FaTwitter,
   FaLinkedin,
-  FaInstagram,
   FaEnvelope,
   FaPhone,
-  FaYoutube,
+  FaMapMarkerAlt,
+  FaRocket,
+  FaChevronRight,
 } from "react-icons/fa";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-black text-white border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-  
+    <footer className="relative bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-900/20 to-transparent"></div>
+      </div>
 
-       
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Products */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 text-gray-400">
-              Our Products
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  to="/Composite-tubes"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Composite Tubes
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/composite-plates"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Composite Plates
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/reinforcement"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Reinforcement Materials
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/epoxy-system"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Epoxy Systems
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/custom-solutions"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Custom Solutions
-                </Link>
-              </li>
-            </ul>
-          </div>
 
-          {/* Materials */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 text-gray-400">
-              Materials
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  to="/materials/carbon-fiber"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Carbon Fiber
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/materials/fiberglass"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Fiberglass
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/materials/carbon-kevlar"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Carbon-Kevlar
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/materials/prepregs"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Prepregs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/materials/hybrid"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Hybrid Composites
-                </Link>
-              </li>
-            </ul>
-          </div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        
 
-          {/* Contact Us */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 text-gray-400">
-              Contact Us
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="mailto:info@rodella.com"
-                  className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center"
-                >
-                  <FaEnvelope className="mr-2 text-sm" />
-                  info@rodella.com
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+91628163817"
-                  className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center"
-                >
-                  <FaPhone className="mr-2 text-sm" />
-                  (+91) 628163817
-                </a>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Get Quote
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/support"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  Technical Support
-                </Link>
-              </li>
-            </ul>
+        {/* Main Content Grid */}
+        <div className="py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+            
+            {/* Products Section */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white mb-6">
+                Our Products
+              </h3>
+              <nav className="space-y-4">
+                {[
+                  { to: "/Composite-tubes", label: "Composite Tubes" },
+                  { to: "/composite-plates", label: "Composite Plates" },
+                  { to: "/reinforcement", label: "Reinforcement Materials" },
+                  { to: "/epoxy-system", label: "Epoxy Systems" },
+                  { to: "/core-material", label: "Core Materials" },
+                ].map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className="group flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-1 focus:outline-none"
+                  >
+                    <FaChevronRight className="text-blue-400 text-xs mr-3 group-hover:mr-4 transition-all duration-300" />
+                    <span className="group-hover:text-blue-300 transition-colors duration-300">
+                      {item.label}
+                    </span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Materials Section */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white mb-6">
+                Materials
+              </h3>
+              <nav className="space-y-4">
+                {[
+                  { to: "http://localhost:5173/reinforcement?category=carbonFiber&product=3", label: "Carbon Fiber" },
+                  { to: "http://localhost:5173/reinforcement?category=aramid&product=12", label: "Aramid" },
+                  { to: "http://localhost:5173/reinforcement?category=aramid&product=12", label: "Mixed Materials" },
+                  { to: "/contact", label: "Custom Solutions" },
+                ].map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className="group flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-1 focus:outline-none"
+                  >
+                    <FaChevronRight className="text-cyan-400 text-xs mr-3 group-hover:mr-4 transition-all duration-300" />
+                    <span className="group-hover:text-cyan-300 transition-colors duration-300">
+                      {item.label}
+                    </span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Contact Section */}
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-white mb-6">
+                Contact Us
+              </h3>
+              <div className="space-y-4">
+                
+                {/* Email */}
+                <div className="group">
+                  <a
+                    href="mailto:RodellaAerospace@gmail.com"
+                    className="flex items-center space-x-3 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 hover:border-gray-600 transition-all duration-300 focus:outline-none"
+                  >
+                    <div className="flex-shrink-0 w-8 h-8 bg-red-600 rounded-md flex items-center justify-center">
+                      <FaEnvelope className="text-white text-sm" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-400 mb-1">Email</p>
+                      <p className="text-sm break-all">
+                        RodellaAerospace@gmail.com
+                      </p>
+                    </div>
+                  </a>
+                </div>
+
+                {/* Phone */}
+                <div className="group">
+                  <a
+                    href="tel:+91628163817"
+                    className="flex items-center space-x-3 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 hover:border-gray-600 transition-all duration-300 focus:outline-none"
+                  >
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-md flex items-center justify-center">
+                      <FaPhone className="text-white text-sm" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-400 mb-1">Phone</p>
+                      <p className="text-sm">
+                        (+91) 628163817
+                      </p>
+                    </div>
+                  </a>
+                </div>
+
+                {/* Location */}
+                <div className="group">
+                  <div className="flex items-center space-x-3 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
+                      <FaMapMarkerAlt className="text-white text-sm" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-400 mb-1">Location</p>
+                      <p className="text-sm">
+                        Bhopal, Madhya Pradesh
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              Copyright © {currentYear} Rodella Composites. All rights reserved. Made with precision and care.
-            </p>
-            <div className="flex flex-wrap items-center space-x-6 text-sm">
+        <div className="border-t border-gray-700/50 py-8">
+          <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
+            
+            {/* Copyright */}
+            <div className="text-center lg:text-left">
+              <p className="text-gray-400 text-sm">
+                Copyright © {currentYear} Rodella Aerospace Labs. All rights reserved.
+              </p>
+              <p className="text-gray-500 text-xs mt-1">
+                Innovating the future of aerospace composites
+              </p>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex items-center space-x-6">
+              <span className="text-gray-400 text-sm font-medium hidden sm:block">Follow Us:</span>
               <div className="flex items-center space-x-4">
                 <a
-                  href="https://www.linkedin.com/company/rodella-composites/"
+                  href="https://www.linkedin.com/company/roedlla-aerospace-labs/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                  className="group relative w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center hover:from-blue-500 hover:to-blue-600 transition-all duration-300 hover:scale-110 hover:rotate-3 focus:outline-none"
+                  aria-label="LinkedIn"
                 >
-                  <FaLinkedin className="w-5 h-5" />
+                  <FaLinkedin className="text-white text-lg group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </a>
                 <a
-                  href="#"
+                  href="https://twitter.com/rodellaaero"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                  className="group relative w-12 h-12 bg-gradient-to-br from-sky-500 to-blue-600 rounded-full flex items-center justify-center hover:from-sky-400 hover:to-blue-500 transition-all duration-300 hover:scale-110 hover:-rotate-3 focus:outline-none"
+                  aria-label="Twitter"
                 >
-                  <FaTwitter className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                >
-                  <FaInstagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                >
-                  <FaYoutube className="w-5 h-5" />
+                  <FaTwitter className="text-white text-lg group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </a>
               </div>
             </div>
+
           </div>
         </div>
+
       </div>
+
+
     </footer>
   );
 };
