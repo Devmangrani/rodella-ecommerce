@@ -46,12 +46,12 @@
   "aramid": [
     {
       "id": 12,
-      "title": "Aramid - 200gsm",
+      "title": "Aramid - 200gsm Plain Weave",
       "mrp": 1500,
       "images": ["/assets/Aramid200gsm1.jpeg", "/assets/Aramid200gsm2.jpeg", "/assets/Aramid200gsm3.jpeg"],
       "details": {
         "weight": "52 gsm",
-        "weave": "Plain Weave",
+        
         "width": "1000mm"
       }
     }
@@ -60,12 +60,12 @@
   "mixed": [
     {
       "id": 18,
-      "title": "Carbon - Aramid mixed 3K in 200GSM",
+      "title": "Carbon - Aramid mixed 3K in 200GSM 3K Mixed Weave",
       "mrp": 1500,
       "images": ["/assets/Carbon-Aramidmixed3K200GSM1.jpeg", "/assets/Carbon-Aramidmixed3K200GSM2.jpeg"],
       "details": {
         "weight": "200 gsm",
-        "weave": "3K Mixed Weave",
+        
         "width": "1000mm"
       }
     }

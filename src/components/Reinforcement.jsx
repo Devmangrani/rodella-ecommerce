@@ -128,8 +128,35 @@ const Reinforcement = () => {
   const handleAddToCart = (product, calculations) => {
     console.log('Adding to cart:', { product, calculations });
     
+    // Extract quantity from calculations, default to 1 if not provided
+    const quantity = calculations.quantity || 1;
+    
+    // Get the length for this product (convert to mm for consistency)
+    const lengthInMeters = productLengths[product.id] || 1;
+    const lengthInMM = lengthInMeters * 1000;
+    
+    // Create enhanced product object with reinforcement-specific information
+    const enhancedProduct = {
+      ...product,
+      isReinforcementProduct: true,
+      dimensions: {
+        width: 1000, // Fixed width for reinforcement materials (from JSON data)
+        length: lengthInMM, // Length in mm
+        lengthInMeters: lengthInMeters, // Also store in meters for display
+        weight: product.details.weight,
+        unit: 'mm'
+      }
+    };
+    
+    // Enhance calculations with length information and ensure quantity is included
+    const enhancedCalculations = {
+      ...calculations,
+      lengthInMeters: lengthInMeters,
+      quantity: quantity
+    };
+    
     // Use the global cart function with authentication check
-    addToCartWithAuth(product, calculations, productLengths[product.id] || 1, navigate);
+    addToCartWithAuth(enhancedProduct, enhancedCalculations, quantity, navigate);
   };
 
   const filteredProducts = getFilteredProducts();

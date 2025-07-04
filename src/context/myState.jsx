@@ -99,6 +99,14 @@ export const CartProvider = ({ children }) => {
       // For tube products: quantityOrLength is the quantity, length comes from calculations
       const length = calculations.length || 1; // Length in meters from calculations
       addToCart(product, calculations, length, quantityOrLength);
+    } else if (product.isReinforcementProduct) {
+      // For reinforcement products: quantityOrLength is the quantity, length comes from calculations
+      const length = calculations.lengthInMeters || 1; // Length in meters from calculations
+      addToCart(product, calculations, length, quantityOrLength);
+    } else if (product.isCoreProduct) {
+      // For core products: quantityOrLength is the quantity, length comes from calculations
+      const length = calculations.lengthInMeters || 1; // Length in meters from calculations
+      addToCart(product, calculations, length, quantityOrLength);
     } else {
       // Fallback for other products
       addToCart(product, calculations, quantityOrLength, 1);

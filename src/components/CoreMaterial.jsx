@@ -48,8 +48,43 @@ const CoreMaterial = () => {
   const handleAddToCart = (product, calculations) => {
     console.log('Adding to cart:', { product, calculations });
     
+    // Extract quantity from calculations, default to 1 if not provided
+    const quantity = calculations.quantity || 1;
+    
+    // Get the length for this product (convert to mm for consistency)
+    const lengthInMeters = productLengths[product.id] || 1;
+    const lengthInMM = lengthInMeters * 1000;
+    
+    // Extract dimensions from product details
+    const sizeMatch = product.details.size ? product.details.size.match(/(\d+)mm x (\d+)mm/) : null;
+    const width = sizeMatch ? parseInt(sizeMatch[1]) : 600; // Default 600mm
+    const height = sizeMatch ? parseInt(sizeMatch[2]) : 600; // Default 600mm
+    const thickness = product.details.thickness ? parseInt(product.details.thickness.match(/\d+/)[0]) : 2; // Default 2mm
+    
+    // Create enhanced product object with core material-specific information
+    const enhancedProduct = {
+      ...product,
+      isCoreProduct: true,
+      dimensions: {
+        width: width, // Width from product size
+        height: height, // Height from product size  
+        thickness: thickness, // Thickness in mm
+        length: lengthInMM, // Length in mm (user input)
+        lengthInMeters: lengthInMeters, // Also store in meters for display
+        density: product.details.density,
+        unit: 'mm'
+      }
+    };
+    
+    // Enhance calculations with length information and ensure quantity is included
+    const enhancedCalculations = {
+      ...calculations,
+      lengthInMeters: lengthInMeters,
+      quantity: quantity
+    };
+    
     // Use the global cart function with authentication check
-    addToCartWithAuth(product, calculations, productLengths[product.id] || 1, navigate);
+    addToCartWithAuth(enhancedProduct, enhancedCalculations, quantity, navigate);
   };
 
   const allProducts = getAllProducts();
@@ -99,9 +134,9 @@ const CoreMaterial = () => {
               <div className="text-neutral-500 text-sm">Please check back later for available products</div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-4 lg:gap-8 auto-rows-fr">
               {allProducts.map((product, index) => (
-                <div key={`${product.category}-${product.id}`} id={`product-${product.id}`}>
+                <div key={`${product.category}-${product.id}`} id={`product-${product.id}`} className="flex">
                   <ProductCard
                     product={product}
                     index={index}

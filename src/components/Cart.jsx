@@ -84,6 +84,26 @@ const CartItem = ({ item, index }) => {
               </div>
             )}
             
+            {/* Show dimensions for reinforcement products */}
+            {item.product.isReinforcementProduct && item.product.dimensions && (
+              <div className="bg-gradient-to-br from-emerald-500/8 to-emerald-600/4 border border-emerald-500/15 px-3 py-2 rounded-lg text-center">
+                <span className="block text-emerald-300 text-xs font-medium">Dimensions</span>
+                <span className="text-white font-bold text-xs">
+                  Width: {item.product.dimensions.width}mm | Length: {item.product.dimensions.lengthInMeters}m 
+                </span>
+              </div>
+            )}
+            
+            {/* Show dimensions for core products */}
+            {item.product.isCoreProduct && item.product.dimensions && (
+              <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-3 py-2 rounded-lg text-center">
+                <span className="block text-indigo-300 text-xs font-medium">Dimensions</span>
+                <span className="text-white font-bold text-xs">
+                  {item.product.dimensions.width} × {item.product.dimensions.height} × {item.product.dimensions.thickness}mm | Length: {item.product.dimensions.lengthInMeters}m
+                </span>
+              </div>
+            )}
+            
             <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-3 py-2 rounded-lg text-center">
               <span className="block text-purple-300 text-xs font-medium">Weight</span>
               <span className="text-white font-bold text-sm">{(item.weight * item.quantity).toFixed(2)} kg</span>
