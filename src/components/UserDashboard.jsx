@@ -5,7 +5,7 @@ import { Camera, Edit2, Package, MapPin, Calendar, CreditCard, Eye } from 'lucid
 import { auth } from '../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doSignOut } from '../firebase/auth';
-import { createOrUpdateUser } from '../firebase/firebase';
+import { createOrUpdateUser, fetchUserOrders } from '../firebase/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 import { firedb } from '../firebase/firebase';
 
@@ -14,6 +14,8 @@ const UserDashboard = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
 
   // Check Firebase authentication
   useEffect(() => {
@@ -22,6 +24,8 @@ const UserDashboard = () => {
         setCurrentUser(user);
         setLoading(false);
         setProfileLoading(true);
+        setOrdersLoading(true);
+        
         // Fetch user profile from Firestore
         const userRef = doc(firedb, 'users', user.uid);
         const userSnap = await getDoc(userRef);
@@ -50,6 +54,16 @@ const UserDashboard = () => {
           }));
         }
         setProfileLoading(false);
+        
+        // Fetch user orders from Firestore
+        try {
+          const userOrders = await fetchUserOrders(user.uid);
+          setOrders(userOrders);
+        } catch (error) {
+          console.error('Error fetching orders:', error);
+          setOrders([]);
+        }
+        setOrdersLoading(false);
       } else {
         navigate('/login');
       }
@@ -97,31 +111,6 @@ const UserDashboard = () => {
     }
   });
 
-  // Mock order history
-  const [orders] = useState([
-    {
-      id: 'ORD-2024-001',
-      date: '2024-01-15',
-      total: 299.99,
-      status: 'Delivered',
-      items: 3
-    },
-    {
-      id: 'ORD-2024-002',
-      date: '2024-01-20',
-      total: 149.50,
-      status: 'Shipped',
-      items: 2
-    },
-    {
-      id: 'ORD-2024-003',
-      date: '2024-01-25',
-      total: 89.99,
-      status: 'Processing',
-      items: 1
-    }
-  ]);
-
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
@@ -157,8 +146,36 @@ const UserDashboard = () => {
       case 'Delivered': return 'text-green-400 bg-green-400/10';
       case 'Shipped': return 'text-blue-400 bg-blue-400/10';
       case 'Processing': return 'text-yellow-400 bg-yellow-400/10';
+      case 'Completed': return 'text-green-400 bg-green-400/10';
+      case 'Cancelled': return 'text-red-400 bg-red-400/10';
       default: return 'text-neutral-400 bg-neutral-400/10';
     }
+  };
+
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
+    
+    // Handle Firestore Timestamp
+    if (date.toDate && typeof date.toDate === 'function') {
+      return date.toDate().toLocaleDateString();
+    }
+    
+    // Handle regular Date object or string
+    return new Date(date).toLocaleDateString();
+  };
+
+  const formatOrderTotal = (total) => {
+    if (typeof total === 'number') {
+      return total.toFixed(2);
+    }
+    return total || '0.00';
+  };
+
+  const getOrderItemsCount = (items) => {
+    if (Array.isArray(items)) {
+      return items.reduce((total, item) => total + (item.quantity || 1), 0);
+    }
+    return items || 0;
   };
 
   const handleLogout = async () => {
@@ -546,7 +563,19 @@ const UserDashboard = () => {
                 Order History
               </h2>
 
-              {orders.length === 0 ? (
+              {ordersLoading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="p-4 bg-neutral-800 rounded-lg border border-neutral-700">
+                      <div className="animate-pulse space-y-3">
+                        <div className="h-4 bg-neutral-700 rounded w-1/4"></div>
+                        <div className="h-3 bg-neutral-700 rounded w-1/2"></div>
+                        <div className="h-3 bg-neutral-700 rounded w-1/3"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : orders.length === 0 ? (
                 <div className="text-center py-12">
                   <Package size={48} className="text-neutral-600 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
@@ -571,15 +600,15 @@ const UserDashboard = () => {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h3 className="font-semibold text-white">{order.id}</h3>
+                            <h3 className="font-semibold text-white">Order #{order.id.slice(-8).toUpperCase()}</h3>
                             <div className="flex items-center gap-4 text-sm text-neutral-400">
                               <span className="flex items-center gap-1">
                                 <Calendar size={14} />
-                                {new Date(order.date).toLocaleDateString()}
+                                {formatDate(order.createdAt)}
                               </span>
                               <span className="flex items-center gap-1">
                                 <Package size={14} />
-                                {order.items} item{order.items > 1 ? 's' : ''}
+                                {getOrderItemsCount(order.items)} item{getOrderItemsCount(order.items) > 1 ? 's' : ''}
                               </span>
                             </div>
                           </div>
@@ -587,7 +616,7 @@ const UserDashboard = () => {
                         <div className="text-right">
                           <div className="flex items-center gap-2 mb-2">
                             <CreditCard size={16} className="text-neutral-400" />
-                            <span className="font-semibold text-white">${order.total}</span>
+                            <span className="font-semibold text-white">${formatOrderTotal(order.total)}</span>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                             {order.status}

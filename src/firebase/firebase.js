@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, orderBy, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -45,6 +45,109 @@ export const fetchUserCart = async (uid) => {
     return cartSnap.data().items || [];
   }
   return [];
+};
+
+// Save order to Firestore
+export const saveOrder = async (orderData) => {
+  if (!orderData || !orderData.uid) return null;
+  
+  const order = {
+    ...orderData,
+    createdAt: new Date(),
+    status: orderData.status || 'Processing'
+  };
+  
+  try {
+    const ordersRef = collection(firedb, "orders");
+    const docRef = await addDoc(ordersRef, order);
+    return docRef.id;
+  } catch (error) {
+    console.error("Error saving order:", error);
+    throw error;
+  }
+};
+
+// Fetch orders for a specific user
+export const fetchUserOrders = async (uid) => {
+  if (!uid) return [];
+  
+  try {
+    const ordersRef = collection(firedb, "orders");
+    const q = query(
+      ordersRef, 
+      where("uid", "==", uid),
+      orderBy("createdAt", "desc")
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const orders = [];
+    
+    querySnapshot.forEach((doc) => {
+      orders.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+    
+    return orders;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return [];
+  }
+};
+
+// Update order status
+export const updateOrderStatus = async (orderId, status) => {
+  if (!orderId || !status) return;
+  
+  try {
+    const orderRef = doc(firedb, "orders", orderId);
+    await setDoc(orderRef, { 
+      status: status,
+      updatedAt: new Date()
+    }, { merge: true });
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    throw error;
+  }
+};
+
+// Sample function to create test orders (for demonstration purposes)
+export const createSampleOrder = async (uid) => {
+  if (!uid) return null;
+  
+  const sampleOrder = {
+    uid: uid,
+    items: [
+      {
+        id: "1",
+        name: "Carbon Fiber Sheet 200GSM",
+        price: 299.99,
+        quantity: 2,
+        image: "/assets/carbon-fiber-sheet.jpg"
+      },
+      {
+        id: "2", 
+        name: "Epoxy Resin System",
+        price: 149.50,
+        quantity: 1,
+        image: "/assets/Epoxy.png"
+      }
+    ],
+    total: 749.48,
+    status: "Completed",
+    shippingAddress: {
+      street: "123 Main St",
+      city: "Anytown", 
+      state: "CA",
+      zipCode: "12345",
+      country: "USA"
+    },
+    paymentMethod: "Credit Card",
+    orderNotes: "Sample order for testing"
+  };
+  
+  return await saveOrder(sampleOrder);
 };
 
 export { firedb, auth }; 
