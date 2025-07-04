@@ -15,7 +15,11 @@ const ProductCard = ({
   externalLength = null,
   externalImageIndex = null,
   onImageChange = () => {},
-  simple = false
+  simple = false,
+  // New props for epoxy products
+  isEpoxyProduct = false,
+  onSizeChange = () => {},
+  selectedSize = '1L'
 }) => {
   // Internal state for length, quantity and image index (used if external state not provided)
   const [internalLength, setInternalLength] = useState(defaultLength);
@@ -28,6 +32,18 @@ const ProductCard = ({
 
   // Function to calculate product details based on length
   const calculateProductDetails = (product, length) => {
+    // For epoxy products, use size-specific pricing
+    if (isEpoxyProduct && product.sizes) {
+      const sizeInfo = product.sizes[selectedSize];
+      const price = sizeInfo ? sizeInfo.price : product.mrp;
+      return {
+        area: 1, // Not applicable for epoxy products
+        mrp: price,
+        weight: 1 // Not applicable for epoxy products
+      };
+    }
+
+    // Original calculation for other products
     const lengthInMeters = parseFloat(length) || 1;
     const widthInMeters = 1; // 1000mm = 1m
     const area = lengthInMeters * widthInMeters; // sq meters
@@ -64,6 +80,11 @@ const ProductCard = ({
       // Use internal state
       setInternalLength(length);
     }
+  };
+
+  // Function to handle size change for epoxy products
+  const handleSizeChange = (size) => {
+    onSizeChange(product.id, size);
   };
 
   // Function to handle quantity change
@@ -103,6 +124,10 @@ const ProductCard = ({
     'Balsa Wood': 'from-amber-500/10 to-amber-600/5 border-amber-500/20 text-amber-300',
     'Syntactic Foam': 'from-emerald-500/10 to-emerald-600/5 border-emerald-500/20 text-emerald-300',
     'Rohacell PMI Foam': 'from-rose-500/10 to-rose-600/5 border-rose-500/20 text-rose-300',
+    // New epoxy categories
+    'Resins': 'from-blue-500/10 to-blue-600/5 border-blue-500/20 text-blue-300',
+    'Adhesives': 'from-purple-500/10 to-purple-600/5 border-purple-500/20 text-purple-300',
+    'Gelcoats': 'from-orange-500/10 to-orange-600/5 border-orange-500/20 text-orange-300',
     'default': 'from-neutral-500/10 to-neutral-600/5 border-neutral-500/20 text-neutral-300'
   };
 
@@ -137,7 +162,7 @@ const ProductCard = ({
         <img 
           src={product.images[currentImageIndex]} 
           alt={`${product.title} - Image ${currentImageIndex + 1}`}
-          className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500 ease-out"
+          className="w-full h-full object-contain hover:scale-[1.02] transition-transform duration-500 ease-out"
         />
         
         {/* Navigation Buttons */}
@@ -222,8 +247,32 @@ const ProductCard = ({
             {product.title}
           </h3>
           
-          {/* Length Input */}
-          {showLengthInput && (
+          {/* Size Selection for Epoxy Products */}
+          {isEpoxyProduct && product.sizes && (
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-300">
+                Size:
+              </label>
+              <div className="flex gap-2">
+                {Object.keys(product.sizes).map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => handleSizeChange(size)}
+                    className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 border ${
+                      selectedSize === size
+                        ? 'bg-blue-600 border-blue-500 text-white shadow-lg'
+                        : 'bg-neutral-700/80 border-neutral-600/50 text-neutral-300 hover:bg-neutral-600/80 hover:border-neutral-500/70'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Length Input (only for non-epoxy products) */}
+          {showLengthInput && !isEpoxyProduct && (
             <div className="flex items-center gap-3">
               <label className="text-xs font-semibold text-neutral-300 whitespace-nowrap">
                 Length (m):
@@ -281,66 +330,79 @@ const ProductCard = ({
             </div>
           </div>
 
-          {/* Calculated Values */}
-          <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-            <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
-              <span className="block text-blue-300 text-xs font-medium">Area</span>
-              <span className="text-white font-bold text-xs">{calculations.area.toFixed(2)} m²</span>
+          {/* Calculated Values (only for non-epoxy products) */}
+          {!isEpoxyProduct && (
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+              <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
+                <span className="block text-blue-300 text-xs font-medium">Area</span>
+                <span className="text-white font-bold text-xs">{calculations.area.toFixed(2)} m²</span>
+              </div>
+              <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
+                <span className="block text-purple-300 text-xs font-medium">Weight</span>
+                <span className="text-white font-bold text-xs">{calculations.weight.toFixed(2)} kg</span>
+              </div>
+              <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/6 border border-green-500/20 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
+                <span className="block text-green-300 text-xs font-medium">Total MRP</span>
+                <span className="text-green-400 font-bold text-xs">₹{calculations.mrp.toLocaleString()}</span>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
-              <span className="block text-purple-300 text-xs font-medium">Weight</span>
-              <span className="text-white font-bold text-xs">{calculations.weight.toFixed(2)} kg</span>
+          )}
+
+          {/* Price Display for Epoxy Products */}
+          {isEpoxyProduct && (
+            <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/6 border border-green-500/20 px-3 py-2 rounded-lg text-center">
+              <span className="block text-green-300 text-xs font-medium">Price ({selectedSize})</span>
+              <span className="text-green-400 font-bold text-sm">₹{calculations.mrp.toLocaleString()}</span>
             </div>
-            <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/6 border border-green-500/20 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
-              <span className="block text-green-300 text-xs font-medium">Total MRP</span>
-              <span className="text-green-400 font-bold text-xs">₹{calculations.mrp.toLocaleString()}</span>
-            </div>
-          </div>
+          )}
           
-          {/* Specifications */}
-          <div className="flex-1 space-y-2 min-h-0">
-            <h4 className="text-xs font-semibold text-neutral-300 flex items-center gap-2">
-              <span className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
-              Specifications
-            </h4>
-            <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
-              {[
-                // Handle both weight (reinforcement) and thickness (core materials)
-                product.details.weight && { label: "Weight", value: product.details.weight, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
-                product.details.thickness && { label: "Thickness", value: product.details.thickness, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
-                // Handle both cell (reinforcement) and cellSize (core materials)
-                product.details.cell && { label: "Cell Size", value: product.details.cell, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
-                product.details.cellSize && { label: "Cell Size", value: product.details.cellSize, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
-                // Handle both width (reinforcement) and size (core materials)
-                product.details.width && { label: "Width", value: product.details.width, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" },
-                product.details.size && { label: "Size", value: product.details.size, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" }
-              ].filter(Boolean).slice(0, 3).map((spec, idx) => (
-                <div 
-                  key={spec.label}
-                  className={`bg-gradient-to-br ${spec.color} px-1 sm:px-1.5 py-1.5 rounded-lg text-center`}
-                >
-                  <span className="block text-neutral-400 text-xs leading-tight">{spec.label}</span>
-                  <span className="text-white font-semibold text-xs leading-tight">{spec.value}</span>
-                </div>
-              ))}
+          {/* Specifications (only for non-epoxy products) */}
+          {!isEpoxyProduct && (
+            <div className="flex-1 space-y-2 min-h-0">
+              <h4 className="text-xs font-semibold text-neutral-300 flex items-center gap-2">
+                <span className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+                Specifications
+              </h4>
+              <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
+                {[
+                  // Original specifications for non-epoxy products
+                  product.details.weight && { label: "Weight", value: product.details.weight, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
+                  product.details.thickness && { label: "Thickness", value: product.details.thickness, color: "from-orange-500/8 to-red-500/4 border-orange-500/15" },
+                  product.details.cell && { label: "Cell Size", value: product.details.cell, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
+                  product.details.cellSize && { label: "Cell Size", value: product.details.cellSize, color: "from-cyan-500/8 to-blue-500/4 border-cyan-500/15" },
+                  product.details.width && { label: "Width", value: product.details.width, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" },
+                  product.details.size && { label: "Size", value: product.details.size, color: "from-violet-500/8 to-purple-500/4 border-violet-500/15" }
+                ].filter(Boolean).slice(0, 6).map((spec, index) => (
+                  <div 
+                    key={spec.label}
+                    className={`bg-gradient-to-br ${spec.color} px-1 sm:px-1.5 py-1.5 rounded-lg text-center`}
+                  >
+                    <span className="block text-neutral-400 text-xs leading-tight">{spec.label}</span>
+                    <span className="text-white font-semibold text-xs leading-tight">{spec.value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Additional specifications for different product types */}
+              <>
+                {/* Show density information if available (core materials) */}
+                {product.details.density && (
+                  <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
+                    <span className="block text-indigo-300 text-xs font-medium">Density</span>
+                    <span className="text-white font-semibold text-xs">{product.details.density}</span>
+                  </div>
+                )}
+
+                {/* Show weave information if available (reinforcement) */}
+                {product.details.weave && (
+                  <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
+                    <span className="block text-indigo-300 text-xs font-medium">Weave</span>
+                    <span className="text-white font-semibold text-xs">{product.details.weave}</span>
+                  </div>
+                )}
+              </>
             </div>
-
-            {/* Show density information if available (core materials) */}
-            {product.details.density && (
-              <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
-                <span className="block text-indigo-300 text-xs font-medium">Density</span>
-                <span className="text-white font-semibold text-xs">{product.details.density}</span>
-              </div>
-            )}
-
-            {/* Show weave information if available (reinforcement) */}
-            {product.details.weave && (
-              <div className="bg-gradient-to-br from-indigo-500/8 to-indigo-600/4 border border-indigo-500/15 px-2 py-1.5 rounded-lg">
-                <span className="block text-indigo-300 text-xs font-medium">Weave</span>
-                <span className="text-white font-semibold text-xs">{product.details.weave}</span>
-              </div>
-            )}
-          </div>
+          )}
           
           {/* Add to Cart Button */}
           <div className="mt-auto pt-2">

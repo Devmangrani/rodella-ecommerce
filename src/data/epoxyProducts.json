@@ -1,12 +1,101 @@
 {
-  "aerospaceGrade": [
+  "resins": [
     {
       "id": 1,
-      "title": "Alpha System 103 Crystal Clear Epoxy Resin Kit 1.5 kg",
-      "mrp": 4500,
+      "title": "Compund 556",
+      "mrp": 2800,
+      "sizes": {
+        "1L": { "price": 2800, "id": "11-1L" },
+        "500ml": { "price": 1500, "id": "11-500ml" },
+        "250ml": { "price": 800, "id": "11-250ml" }
+      },
       "images": [
-        "/assets/epoxy-aerospace-1.jpg",
-        "/assets/epoxy-aerospace-2.jpg"
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "serviceTemp": "85°C",
+        "potLife": "45 minutes",
+        "cureTime": "24 hours",
+        "viscosity": "650 mPa·s"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Compund 5052",
+      "mrp": 3500,
+      "sizes": {
+        "1L": { "price": 3500, "id": "14-1L" },
+        "500ml": { "price": 1900, "id": "14-500ml" },
+        "250ml": { "price": 1000, "id": "14-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "serviceTemp": "120°C",
+        "potLife": "90 minutes",
+        "cureTime": "16 hours",
+        "viscosity": "450 mPa·s"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Compund 2201 (HIFC)",
+      "mrp": 3200,
+      "sizes": {
+        "1L": { "price": 3200, "id": "17-1L" },
+        "500ml": { "price": 1700, "id": "17-500ml" },
+        "250ml": { "price": 900, "id": "17-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "serviceTemp": "100°C",
+        "potLife": "60 minutes",
+        "cureTime": "12 hours",
+        "viscosity": "500 mPa·s",
+        "waterResistance": "Excellent"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Compund 856 (EPCH)",
+      "mrp": 4800,
+      "sizes": {
+        "1L": { "price": 4800, "id": "20-1L" },
+        "500ml": { "price": 2600, "id": "20-500ml" },
+        "250ml": { "price": 1400, "id": "20-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "serviceTemp": "200°C",
+        "potLife": "75 minutes",
+        "cureTime": "20 hours",
+        "viscosity": "750 mPa·s"
+      }
+    }
+  ],
+  "adhesives": [
+    
+    {
+      "id": 5,
+      "title": "Cyroacronitrile (Low Viscosity)",
+      "mrp": 4500,
+      "sizes": {
+        "1L": { "price": 4500, "id": "1-1L" },
+        "500ml": { "price": 2400, "id": "1-500ml" },
+        "250ml": { "price": 1300, "id": "1-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
       ],
       "details": {
         "serviceTemp": "300°C",
@@ -14,56 +103,107 @@
         "cureTime": "8 hours",
         "viscosity": "800 mPa·s"
       }
-    }
-  ],
-  "fastCure": [
+    },
     {
-      "id": 4,
-      "title": "Alpha Fast Cure Epoxy 5 Minute Kit 1 kg",
-      "mrp": 1800,
-      "images": [
-        "/assets/epoxy-fast-cure-1.jpg",
-        "/assets/epoxy-fast-cure-2.jpg"
-      ],
-      "details": {
-        "cureTime": "5 minutes",
-        "potLife": "3 minutes",
-        "serviceTemp": "120°C",
-        "viscosity": "300 mPa·s"
-      }
-    }
-  ],
-  "structuralAdhesives": [
-    {
-      "id": 7,
-      "title": "Alpha Structural Adhesive High Peel Strength 1 kg",
-      "mrp": 3200,
-      "images": [
-        "/assets/epoxy-structural-1.jpg",
-        "/assets/epoxy-structural-2.jpg"
-      ],
-      "details": {
-        "peelStrength": "45 N/mm",
-        "tensileStrength": "85 MPa",
-        "serviceTemp": "180°C",
-        "viscosity": "1200 mPa·s"
-      }
-    }
-  ],
-  "vacuumInfusion": [
-    {
-      "id": 10,
-      "title": "Alpha Vacuum Infusion Resin Ultra Low Viscosity 1 kg",
+      "id": 6,
+      "title": "Cyroacronitrile (High Viscosity)",
       "mrp": 4200,
+      "sizes": {
+        "1L": { "price": 4200, "id": "10-1L" },
+        "500ml": { "price": 2300, "id": "10-500ml" },
+        "250ml": { "price": 1200, "id": "10-250ml" }
+      },
       "images": [
-        "/assets/epoxy-vacuum-1.jpg",
-        "/assets/epoxy-vacuum-2.jpg"
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
       ],
       "details": {
         "viscosity": "200 mPa·s",
         "potLife": "180 minutes",
         "cureTime": "24 hours",
         "serviceTemp": "220°C"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Compund (4852)",
+      "mrp": 4200,
+      "sizes": {
+        "1L": { "price": 4200, "id": "10-1L" },
+        "500ml": { "price": 2300, "id": "10-500ml" },
+        "250ml": { "price": 1200, "id": "10-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "viscosity": "200 mPa·s",
+        "potLife": "180 minutes",
+        "cureTime": "24 hours",
+        "serviceTemp": "220°C"
+      }
+    },
+    {
+        "id": 8,
+      "title": "Compund (56A/56B)",
+      "mrp": 4200,
+      "sizes": {
+        "1L": { "price": 4200, "id": "10-1L" },
+        "500ml": { "price": 2300, "id": "10-500ml" },
+        "250ml": { "price": 1200, "id": "10-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "viscosity": "200 mPa·s",
+        "potLife": "180 minutes",
+        "cureTime": "24 hours",
+        "serviceTemp": "220°C"
+      }
+    }
+  ],
+  "gelcoats": [
+    {
+      "id": 9,
+      "title": "Tooling gelcoats 45",
+      "mrp": 2500,
+      "sizes": {
+        "1L": { "price": 2500, "id": "30-1L" },
+        "500ml": { "price": 1350, "id": "30-500ml" },
+        "250ml": { "price": 750, "id": "30-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "finish": "High Gloss",
+        "uvResistance": "Excellent",
+        "cureTime": "2-4 hours",
+        "viscosity": "3000 mPa·s"
+      }
+    },
+    {
+      "id": 10,
+      "title": "Skinning gelcoats white",
+      "mrp": 3000,
+      "sizes": {
+        "1L": { "price": 3000, "id": "31-1L" },
+        "500ml": { "price": 1600, "id": "31-500ml" },
+        "250ml": { "price": 850, "id": "31-250ml" }
+      },
+      "images": [
+        "/assets/Epoxy.png",
+        "/assets/Epoxy.png"
+      ],
+      "details": {
+        "finish": "Premium Gloss",
+        "scratchResistance": "High",
+        "cureTime": "3-5 hours",
+        "viscosity": "2800 mPa·s"
       }
     }
   ]

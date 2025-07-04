@@ -34,7 +34,7 @@ const CartItem = ({ item, index }) => {
             <img 
               src={item.product.images[0]} 
               alt={item.product.title}
-              className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+              className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
             />
           </div>
         </div>
@@ -55,11 +55,6 @@ const CartItem = ({ item, index }) => {
 
           {/* Product Specifications */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {/* <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-3 py-2 rounded-lg text-center">
-              <span className="block text-blue-300 text-xs font-medium">Area</span>
-              <span className="text-white font-bold text-sm">{(item.area * item.quantity).toFixed(2)} m²</span>
-            </div> */}
-            
             {/* Show dimensions for composite plates */}
             {item.product.isCompositePlate && item.product.dimensions && (
               <div className="bg-gradient-to-br from-cyan-500/8 to-cyan-600/4 border border-cyan-500/15 px-3 py-2 rounded-lg text-center">
@@ -104,10 +99,22 @@ const CartItem = ({ item, index }) => {
               </div>
             )}
             
-            <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-3 py-2 rounded-lg text-center">
-              <span className="block text-purple-300 text-xs font-medium">Weight</span>
-              <span className="text-white font-bold text-sm">{(item.weight * item.quantity).toFixed(2)} kg</span>
-            </div>
+            {/* Show selected size for epoxy products */}
+            {item.product.isEpoxyProduct && item.product.selectedSize && (
+              <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-3 py-2 rounded-lg text-center">
+                <span className="block text-blue-300 text-xs font-medium">Selected Size</span>
+                <span className="text-white font-bold text-sm">{item.product.selectedSize}</span>
+              </div>
+            )}
+            
+            {/* Show weight only for non-epoxy products */}
+            {!item.product.isEpoxyProduct && (
+              <div className="bg-gradient-to-br from-purple-500/8 to-purple-600/4 border border-purple-500/15 px-3 py-2 rounded-lg text-center">
+                <span className="block text-purple-300 text-xs font-medium">Weight</span>
+                <span className="text-white font-bold text-sm">{(item.weight * item.quantity).toFixed(2)} kg</span>
+              </div>
+            )}
+            
             <div className="bg-gradient-to-br from-orange-500/8 to-orange-600/4 border border-orange-500/15 px-3 py-2 rounded-lg text-center">
               <span className="block text-orange-300 text-xs font-medium">Unit Price</span>
               <span className="text-white font-bold text-sm">₹{item.unitPrice.toLocaleString()}</span>
@@ -325,14 +332,13 @@ const CartSummary = ({ totals }) => {
           <span className="text-neutral-300">Total Items:</span>
           <span className="text-white font-semibold">{totals.totalItems}</span>
         </div>
-        <div className="flex justify-between items-center py-2 border-b border-neutral-700/50">
-          <span className="text-neutral-300">Total Weight:</span>
-          <span className="text-white font-semibold">{totals.totalWeight.toFixed(2)} kg</span>
-        </div>
-        {/* <div className="flex justify-between items-center py-2 border-b border-neutral-700/50">
-          <span className="text-neutral-300">Total Area:</span>
-          <span className="text-white font-semibold">{totals.totalArea.toFixed(2)} m²</span>
-        </div> */}
+        {/* Show weight only if there are non-epoxy products */}
+        {totals.totalWeight > 0 && (
+          <div className="flex justify-between items-center py-2 border-b border-neutral-700/50">
+            <span className="text-neutral-300">Total Weight:</span>
+            <span className="text-white font-semibold">{totals.totalWeight.toFixed(2)} kg</span>
+          </div>
+        )}
         <div className="flex justify-between items-center py-3 border-b border-neutral-700/50">
           <span className="text-neutral-300">Subtotal:</span>
           <span className="text-white font-semibold">₹{totals.totalPrice.toLocaleString()}</span>

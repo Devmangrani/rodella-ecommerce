@@ -107,6 +107,9 @@ export const CartProvider = ({ children }) => {
       // For core products: quantityOrLength is the quantity, length comes from calculations
       const length = calculations.lengthInMeters || 1; // Length in meters from calculations
       addToCart(product, calculations, length, quantityOrLength);
+    } else if (product.isEpoxyProduct) {
+      // For epoxy products: quantityOrLength is the quantity, no length needed
+      addToCart(product, calculations, 1, quantityOrLength);
     } else {
       // Fallback for other products
       addToCart(product, calculations, quantityOrLength, 1);
@@ -126,12 +129,22 @@ export const CartProvider = ({ children }) => {
 
   // Add item to cart (internal function)
   const addToCart = (product, calculations, length = 1, quantity = 1) => {
+    // For epoxy products, use selectedSize in the unique key instead of length
+    const uniqueKey = product.isEpoxyProduct 
+      ? `${product.id}_${product.selectedSize || '1L'}`
+      : `${product.id}_${length}`;
+    
     const existingItemIndex = cartItems.findIndex(
-      item => item.product.id === product.id && item.length === length
+      item => {
+        if (product.isEpoxyProduct) {
+          return item.product.id === product.id && item.product.selectedSize === product.selectedSize;
+        }
+        return item.product.id === product.id && item.length === length;
+      }
     );
 
     if (existingItemIndex >= 0) {
-      // If item already exists with same length, increase quantity
+      // If item already exists with same specifications, increase quantity
       const updatedItems = cartItems.map((item, index) => {
         if (index === existingItemIndex) {
           const newQuantity = item.quantity + quantity;
@@ -147,7 +160,7 @@ export const CartProvider = ({ children }) => {
     } else {
       // Add new item to cart
       const newItem = {
-        id: `${product.id}_${length}_${Date.now()}`, // Unique ID for cart item
+        id: `${uniqueKey}_${Date.now()}`, // Unique ID for cart item
         product,
         length,
         quantity: quantity, // Use the passed quantity instead of hardcoding 1
