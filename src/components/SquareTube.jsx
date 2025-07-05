@@ -62,7 +62,7 @@ function calculateResults({ material, size, wall, length, unit }, materials) {
   if (material === 'carbon_fiber') {
     // Convert mass from grams to kilograms and apply Carbon Fiber Square tube rate
     const massInKg = mass / 1000;
-    const basePrice = massInKg * 16500; // 1,650 per kg for Carbon Fiber Square tube
+    const basePrice = massInKg * 1650; // 1,650 per kg for Carbon Fiber Square tube
     price = basePrice * 1.10; // Add 10% margin
   }
   
@@ -88,8 +88,8 @@ const selectButton = () =>
 const TubeSVG = ({ size: tubeSize, wall }) => {
   const dimensions = tubeSizes[tubeSize] || tubeSizes['8x8'];
   const { width, height } = dimensions;
-  const svgSize = 300;
-  const padding = 60;
+  const svgSize = 180; // Reduced size for mobile
+  const padding = 40;
   
   // Calculate outer dimensions by adding wall thickness to inner dimensions
   const outerWidth = width + wall * 2;
@@ -291,8 +291,8 @@ const TubeSVG = ({ size: tubeSize, wall }) => {
 const TubeLengthSVG = ({ length, size, wall, unit }) => {
   const dimensions = tubeSizes[size] || tubeSizes['8x8'];
   const { width, height } = dimensions;
-  const svgHeight = 300;
-  const maxWidth = Math.min(window.innerWidth - 40, 600);
+  const svgHeight = 180; // Reduced height for mobile
+  const maxWidth = Math.min(window.innerWidth - 40, 400);
   const scale = Math.min(maxWidth / length, 1);
   const scaledLength = length * scale;
   const centerX = (maxWidth - scaledLength) / 2;
@@ -540,14 +540,14 @@ const SquareTube = ({ selectedMaterial, onMaterialChange, materials, shapeType }
   return (
     <div className="w-full">
       {/* Material Selection */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-neutral-200 mb-4 text-center sm:text-left">
+      <div className="mb-6">
+        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
           Material Selection
         </h3>
-        <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-          <label className="text-neutral-300 text-sm font-medium">Material:</label>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center sm:justify-start">
+          <label className="text-neutral-200 text-sm font-semibold">Material:</label>
           <select
-            className={selectButton()}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500 border border-neutral-700"
             value={tube.material}
             onChange={(e) => handleChange('material', e.target.value)}
           >
@@ -556,9 +556,9 @@ const SquareTube = ({ selectedMaterial, onMaterialChange, materials, shapeType }
             <option value="carbon_kevlar">Carbon Kevlar</option>
           </select>
           
-          <label className="text-neutral-300 text-sm font-medium">Size:</label>
+          <label className="text-neutral-200 text-sm font-semibold ml-2">Size:</label>
           <select
-            className={selectButton()}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500 border border-neutral-700"
             value={tube.size}
             onChange={(e) => handleChange('size', e.target.value)}
           >
@@ -571,105 +571,102 @@ const SquareTube = ({ selectedMaterial, onMaterialChange, materials, shapeType }
         </div>
       </div>
 
-      {/* Specifications Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-4 lg:mb-6">
-        {/* Input Fields */}
-        <div className="space-y-4 lg:space-y-6">
-          <h3 className="text-lg font-semibold text-neutral-200 mb-3 lg:mb-4">
-            Dimensions
-          </h3>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="text-center">
-              <label className="block text-neutral-300 text-sm font-medium mb-2">
-                Wall Thickness (mm)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                className={inputStyle(error.includes('Wall'))}
-                value={tube.wall}
-                onChange={(e) => handleChange('wall', e.target.value)}
-                autoComplete="off"
-              />
-            </div>
-            
-            <div className="text-center">
-              <label className="block text-neutral-300 text-sm font-medium mb-2">
-                Length (mm)
-              </label>
-              <input
-                type="number"
-                step="any"
-                max="1200"
-                className={inputStyle(error.includes('Length'))}
-                value={tube.length}
-                onChange={(e) => handleChange('length', e.target.value)}
-                autoComplete="off"
-              />
-            </div>
+      {/* Dimensions */}
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+          Dimensions
+        </h3>
+        
+        <div className="flex flex-wrap justify-center sm:justify-start items-end gap-3 sm:gap-4">
+          <div className="text-center">
+            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+              Wall (mm)
+            </label>
+            <input
+              type="number"
+              step="0.1"
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              value={tube.wall}
+              onChange={(e) => handleChange('wall', e.target.value)}
+              autoComplete="off"
+            />
           </div>
-
-          {error && (
-            <div className="text-red-400 text-sm text-center bg-red-400/10 rounded-lg p-3">
-              {error}
-            </div>
-          )}
-
-          {/* Results */}
-          <div className="mt-6 lg:mt-8 space-y-3 lg:space-y-4">
-            <h3 className="text-lg font-semibold text-neutral-200">
-              Calculations
-            </h3>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
-                <p className="text-neutral-400 text-sm mb-1">Mass</p>
-                <p className="text-xl font-semibold text-white">
-                  {results.mass} <span className="text-sm text-neutral-400">grams</span>
-                </p>
-              </div>
-              
-              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
-                <p className="text-neutral-400 text-sm mb-1">Wall Thickness</p>
-                <p className="text-xl font-semibold text-white">
-                  {results.wall} <span className="text-sm text-neutral-400">mm</span>
-                </p>
-              </div>
-              
-              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
-                <p className="text-neutral-400 text-sm mb-1">Price</p>
-                <p className="text-xl font-semibold text-white">
-                  ₹{results.price}
-                </p>
-              </div>
-            </div>
+          
+          <div className="text-center">
+            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+              Length (mm)
+            </label>
+            <input
+              type="number"
+              step="any"
+              max="1200"
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              value={tube.length}
+              onChange={(e) => handleChange('length', e.target.value)}
+              autoComplete="off"
+            />
           </div>
         </div>
 
-        {/* 3D Visualization */}
-        <div className="flex flex-col items-center space-y-6">
-          <div className="w-full">
-            <h3 className="text-lg font-semibold text-neutral-200 mb-2 lg:mb-3 text-center">
-              Cross Section View
-            </h3>
-            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-3">
-              <TubeSVG size={tube.size} wall={Number(tube.wall)} />
-            </div>
+        {error && (
+          <div className="text-red-400 text-xs sm:text-sm text-center bg-red-400/10 rounded-lg p-2 mt-3">
+            {error}
+          </div>
+        )}
+      </div>
+
+      {/* Calculations */}
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+          Calculations
+        </h3>
+        
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+            <p className="text-neutral-400 text-xs mb-1">Mass</p>
+            <p className="text-sm sm:text-lg font-semibold text-white">
+              {results.mass} <span className="text-xs text-neutral-400">g</span>
+            </p>
           </div>
           
-          <div className="w-full">
-            <h3 className="text-lg font-semibold text-neutral-200 mb-2 lg:mb-3 text-center">
-              Side View
-            </h3>
-            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-3">
-              <TubeLengthSVG 
-                length={Number(tube.length)} 
-                size={tube.size}
-                wall={Number(tube.wall)}
-                unit={tube.unit}
-              />
-            </div>
+          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+            <p className="text-neutral-400 text-xs mb-1">Wall</p>
+            <p className="text-sm sm:text-lg font-semibold text-white">
+              {results.wall} <span className="text-xs text-neutral-400">mm</span>
+            </p>
+          </div>
+          
+          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+            <p className="text-neutral-400 text-xs mb-1">Price</p>
+            <p className="text-sm sm:text-lg font-semibold text-white">
+              ₹{results.price}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Visualizations */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+        <div className="w-full">
+          <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
+            Cross Section
+          </h3>
+          <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
+            <TubeSVG size={tube.size} wall={Number(tube.wall)} />
+          </div>
+        </div>
+        
+        <div className="w-full">
+          <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
+            Side View
+          </h3>
+          <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
+            <TubeLengthSVG 
+              length={Number(tube.length)} 
+              size={tube.size}
+              wall={Number(tube.wall)}
+              unit={tube.unit}
+            />
           </div>
         </div>
       </div>

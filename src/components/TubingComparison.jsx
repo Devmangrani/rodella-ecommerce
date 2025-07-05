@@ -91,34 +91,46 @@ const TubingComparison = () => {
             className="bg-neutral-900/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 shadow-2xl"
           >
             {/* Shape Selection */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold text-neutral-200 mb-4 text-center sm:text-left">
+            <div className="mb-6">
+              <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
                 Tube Shape Selection
               </h3>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={selectButton(selectedShape === 'circular')}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    selectedShape === 'circular'
+                      ? 'bg-neutral-600 text-white shadow-lg shadow-neutral-600/20' 
+                      : 'bg-neutral-900/50 text-neutral-300 border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50'
+                  }`}
                   onClick={() => setSelectedShape('circular')}
                 >
-                  Circular Tube
+                  Circular
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={selectButton(selectedShape === 'rectangular')}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    selectedShape === 'rectangular'
+                      ? 'bg-neutral-600 text-white shadow-lg shadow-neutral-600/20' 
+                      : 'bg-neutral-900/50 text-neutral-300 border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50'
+                  }`}
                   onClick={() => setSelectedShape('rectangular')}
                 >
-                  Rectangular Tube
+                  Rectangular
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={selectButton(selectedShape === 'square')}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    selectedShape === 'square'
+                      ? 'bg-neutral-600 text-white shadow-lg shadow-neutral-600/20' 
+                      : 'bg-neutral-900/50 text-neutral-300 border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50'
+                  }`}
                   onClick={() => setSelectedShape('square')}
                 >
-                  Square Tube
+                  Square
                 </motion.button>
               </div>
             </div>

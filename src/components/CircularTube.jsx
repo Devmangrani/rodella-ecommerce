@@ -72,8 +72,8 @@ const selectButton = () =>
   `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500`;
 
 const TubeSVG = ({ outside, inside }) => {
-  const size = 300;
-  const maxOuterDiameter = 280; // Maximum visual size for outer circle
+  const size = 180; // Reduced size for mobile
+  const maxOuterDiameter = 160; // Maximum visual size for outer circle
   
   // Calculate scaling factor to maintain proportions
   const scale = maxOuterDiameter / Math.max(outside, 1);
@@ -165,8 +165,8 @@ const TubeSVG = ({ outside, inside }) => {
 };
 
 const TubeLengthSVG = ({ length, outside, inside, unit }) => {
-  const height = 300;
-  const maxWidth = Math.min(window.innerWidth - 40, 600); // Make width responsive to screen size
+  const height = 180; // Reduced height for mobile
+  const maxWidth = Math.min(window.innerWidth - 40, 400); // Reduced max width for mobile
   
   // Limit the visual inner diameter to 102mm
   const maxVisualInside = 102;
@@ -421,14 +421,14 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
   return (
     <div className="w-full">
       {/* Material Selection */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-neutral-200 mb-4 text-center sm:text-left">
+      <div className="mb-6">
+        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
           Material Selection
         </h3>
-        <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
-          <label className="text-neutral-300 text-sm font-medium">Material:</label>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center sm:justify-start">
+          <label className="text-neutral-200 text-sm font-semibold">Material:</label>
           <select
-            className={selectButton()}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500 border border-neutral-700"
             value={tube.material}
             onChange={(e) => handleChange('material', e.target.value)}
           >
@@ -439,124 +439,121 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
         </div>
       </div>
 
-      {/* Specifications Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-4 lg:mb-6">
-        {/* Input Fields */}
-        <div className="space-y-4 lg:space-y-6">
-          <h3 className="text-lg font-semibold text-neutral-200 mb-3 lg:mb-4">
-            Dimensions
-          </h3>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="text-center">
-              <label className="block text-neutral-300 text-sm font-medium mb-2">
-                Wall Thickness (mm)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                min="0.2"
-                max="10"
-                className={inputStyle(error.includes('Wall'))}
-                value={tube.wall}
-                onChange={(e) => handleChange('wall', parseFloat(e.target.value))}
-                autoComplete="off"
-              />
-            </div>
-            
-            <div className="text-center">
-              <label className="block text-neutral-300 text-sm font-medium mb-2">
-                Inner Diameter (mm)
-              </label>
-              <select
-                className={inputStyle(error.includes('Inside'))}
-                value={tube.inside}
-                onChange={(e) => handleChange('inside', parseFloat(e.target.value))}
-              >
-                {insideDiameters.map((diameter) => (
-                  <option key={diameter} value={diameter}>
-                    {diameter}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="text-center">
-              <label className="block text-neutral-300 text-sm font-medium mb-2">
-                Length (mm)
-              </label>
-              <input
-                type="number"
-                step="any"
-                max="1100"
-                className={inputStyle(error.includes('Length'))}
-                value={tube.length}
-                onChange={(e) => handleChange('length', e.target.value)}
-                autoComplete="off"
-              />
-            </div>
+      {/* Dimensions */}
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+          Dimensions
+        </h3>
+        
+        <div className="flex flex-wrap justify-center sm:justify-start items-end gap-3 sm:gap-4">
+          <div className="text-center">
+            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+              Wall (mm)
+            </label>
+            <input
+              type="number"
+              step="0.1"
+              min="0.2"
+              max="10"
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              value={tube.wall}
+              onChange={(e) => handleChange('wall', parseFloat(e.target.value))}
+              autoComplete="off"
+            />
           </div>
-
-          {error && (
-            <div className="text-red-400 text-sm text-center bg-red-400/10 rounded-lg p-3">
-              {error}
-            </div>
-          )}
-
-          {/* Results */}
-          <div className="mt-6 lg:mt-8 space-y-3 lg:space-y-4">
-            <h3 className="text-lg font-semibold text-neutral-200">
-              Calculations
-            </h3>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
-                <p className="text-neutral-400 text-sm mb-1">Mass</p>
-                <p className="text-xl font-semibold text-white">
-                  {results.mass} <span className="text-sm text-neutral-400">grams</span>
-                </p>
-              </div>
-              
-              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
-                <p className="text-neutral-400 text-sm mb-1">Wall Thickness</p>
-                <p className="text-xl font-semibold text-white">
-                  {results.wall} <span className="text-sm text-neutral-400">mm</span>
-                </p>
-              </div>
-              
-              <div className="bg-neutral-800/50 rounded-lg p-4 text-center">
-                <p className="text-neutral-400 text-sm mb-1">Price</p>
-                <p className="text-xl font-semibold text-white">
-                  ₹{results.price}
-                </p>
-              </div>
-            </div>
+          
+          <div className="text-center">
+            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+              Inner Ø (mm)
+            </label>
+            <select
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              value={tube.inside}
+              onChange={(e) => handleChange('inside', parseFloat(e.target.value))}
+            >
+              {insideDiameters.map((diameter) => (
+                <option key={diameter} value={diameter}>
+                  {diameter}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="text-center">
+            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+              Length (mm)
+            </label>
+            <input
+              type="number"
+              step="any"
+              max="1100"
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              value={tube.length}
+              onChange={(e) => handleChange('length', e.target.value)}
+              autoComplete="off"
+            />
           </div>
         </div>
 
-        {/* 3D Visualization */}
-        <div className="flex flex-col items-center space-y-6">
-          <div className="w-full">
-            <h3 className="text-lg font-semibold text-neutral-200 mb-2 lg:mb-3 text-center">
-              Cross Section View
-            </h3>
-            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-3">
-              <TubeSVG outside={Number(results.outside)} inside={Number(tube.inside)} />
-            </div>
+        {error && (
+          <div className="text-red-400 text-xs sm:text-sm text-center bg-red-400/10 rounded-lg p-2 mt-3">
+            {error}
+          </div>
+        )}
+      </div>
+
+      {/* Calculations */}
+      <div className="mb-4">
+        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+          Calculations
+        </h3>
+        
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+            <p className="text-neutral-400 text-xs mb-1">Mass</p>
+            <p className="text-sm sm:text-lg font-semibold text-white">
+              {results.mass} <span className="text-xs text-neutral-400">g</span>
+            </p>
           </div>
           
-          <div className="w-full">
-            <h3 className="text-lg font-semibold text-neutral-200 mb-2 lg:mb-3 text-center">
-              Side View
-            </h3>
-            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-3">
-              <TubeLengthSVG 
-                length={Number(tube.length)} 
-                outside={Number(results.outside)} 
-                inside={Number(tube.inside)}
-                unit={tube.unit}
-              />
-            </div>
+          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+            <p className="text-neutral-400 text-xs mb-1">Wall</p>
+            <p className="text-sm sm:text-lg font-semibold text-white">
+              {results.wall} <span className="text-xs text-neutral-400">mm</span>
+            </p>
+          </div>
+          
+          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+            <p className="text-neutral-400 text-xs mb-1">Price</p>
+            <p className="text-sm sm:text-lg font-semibold text-white">
+              ₹{results.price}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Visualizations */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
+        <div className="w-full">
+          <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
+            Cross Section
+          </h3>
+          <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
+            <TubeSVG outside={Number(results.outside)} inside={Number(tube.inside)} />
+          </div>
+        </div>
+        
+        <div className="w-full">
+          <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
+            Side View
+          </h3>
+          <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
+            <TubeLengthSVG 
+              length={Number(tube.length)} 
+              outside={Number(results.outside)} 
+              inside={Number(tube.inside)}
+              unit={tube.unit}
+            />
           </div>
         </div>
       </div>
