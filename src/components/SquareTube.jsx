@@ -57,6 +57,15 @@ function calculateResults({ material, size, wall, length, unit }, materials) {
   // Deflection (simplified, not real-world accurate)
   const D = (0.9 * 9.81 * Math.pow(lenMM, 3)) / (3 * 200 * Math.min(Ix, Iy));
   
+  // Calculate price based on material and mass
+  let price = 0;
+  if (material === 'carbon_fiber') {
+    // Convert mass from grams to kilograms and apply Carbon Fiber Square tube rate
+    const massInKg = mass / 1000;
+    const basePrice = massInKg * 16500; // 1,650 per kg for Carbon Fiber Square tube
+    price = basePrice * 1.10; // Add 10% margin
+  }
+  
   return {
     wall: wallMM.toFixed(3),
     area: area.toFixed(2),
@@ -64,7 +73,7 @@ function calculateResults({ material, size, wall, length, unit }, materials) {
     Ix: Ix.toFixed(0),
     Iy: Iy.toFixed(0),
     D: D.toFixed(2),
-    price: (mass * 2).toFixed(2), // Example price calculation
+    price: price.toFixed(2),
   };
 }
 
