@@ -1,15 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaEnvelope, FaWhatsapp } from "react-icons/fa";
+import { useForm, ValidationError } from '@formspree/react';
 
 const ContactUs = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
+  const [state, handleSubmit] = useForm("mzzgqeqo");
   const [isFormFocused, setIsFormFocused] = useState(false);
   const sectionRefs = useRef([]);
   const heroRef = useRef(null);
@@ -46,16 +40,72 @@ const ContactUs = () => {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  // Show success message if form was submitted successfully
+  if (state.succeeded) {
+    return (
+      <section className="pt-20 bg-black min-h-screen flex items-center justify-center">
+        <div className="container mx-auto max-w-2xl px-4 text-white">
+          <div className="relative overflow-hidden">
+            {/* Background gradient effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-transparent to-gray-800/30 rounded-2xl"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-gray-600/20 via-transparent to-gray-500/20 rounded-2xl blur-sm"></div>
+            
+            {/* Main content */}
+            <div className="relative bg-black/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-12 text-center space-y-8 animate-fade-in">
+              {/* Success icon with animation */}
+              <div className="relative mx-auto w-20 h-20 mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-full animate-pulse-slow"></div>
+                <div className="relative w-full h-full bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/25">
+                  <svg 
+                    className="w-10 h-10 text-white animate-bounce-subtle" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2.5} 
+                      d="M5 13l4 4L19 7" 
+                    />
+                  </svg>
+                </div>
+              </div>
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    setFormData({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "" });
-  };
+              {/* Heading */}
+              <div className="space-y-4">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-300">
+                  Message Sent!
+                </h2>
+                <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-gray-400 to-transparent mx-auto"></div>
+              </div>
+
+              {/* Description */}
+              <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-md mx-auto">
+                Thank you for reaching out. We've received your message and will get back to you soon!
+              </p>
+
+              {/* Action button */}
+              <div className="pt-4">
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="group relative px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-medium rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-gray-500/25"
+                >
+                  <span className="relative z-10">Send Another Message</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+              </div>
+
+              {/* Decorative elements */}
+              <div className="absolute top-4 right-4 w-2 h-2 bg-gray-500/30 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-4 left-4 w-1.5 h-1.5 bg-gray-400/40 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+              <div className="absolute top-8 left-8 w-1 h-1 bg-gray-600/50 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="pt-20 bg-black">
@@ -117,13 +167,17 @@ const ContactUs = () => {
                     <input 
                       type="text"
                       name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
                       placeholder="John" 
                       className="w-full p-3 rounded-md border bg-black/50 hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 text-gray-100"
                       onFocus={() => setIsFormFocused(true)}
                       onBlur={() => setIsFormFocused(false)}
                       required
+                    />
+                    <ValidationError 
+                      prefix="First Name" 
+                      field="firstName"
+                      errors={state.errors}
+                      className="text-red-400 text-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -131,13 +185,17 @@ const ContactUs = () => {
                     <input 
                       type="text"
                       name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
                       placeholder="Doe" 
                       className="w-full p-3 rounded-md border bg-black/50 hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 text-gray-100"
                       onFocus={() => setIsFormFocused(true)}
                       onBlur={() => setIsFormFocused(false)}
                       required
+                    />
+                    <ValidationError 
+                      prefix="Last Name" 
+                      field="lastName"
+                      errors={state.errors}
+                      className="text-red-400 text-sm"
                     />
                   </div>
                 </div>
@@ -146,13 +204,17 @@ const ContactUs = () => {
                   <input 
                     type="email"
                     name="email"
-                    value={formData.email}
-                    onChange={handleChange}
                     placeholder="john@example.com" 
                     className="w-full p-3 rounded-md border bg-black/50 hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 text-gray-100"
                     onFocus={() => setIsFormFocused(true)}
                     onBlur={() => setIsFormFocused(false)}
                     required
+                  />
+                  <ValidationError 
+                    prefix="Email" 
+                    field="email"
+                    errors={state.errors}
+                    className="text-red-400 text-sm"
                   />
                 </div>
                 <div className="space-y-2">
@@ -160,8 +222,6 @@ const ContactUs = () => {
                   <input 
                     type="tel"
                     name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
                     placeholder="+91 78143 21156" 
                     className="w-full p-3 rounded-md border bg-black/50 hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 text-gray-100"
                     onFocus={() => setIsFormFocused(true)}
@@ -169,26 +229,41 @@ const ContactUs = () => {
                     pattern="[0-9]{10}"
                     title="Please enter a valid 10-digit phone number"
                   />
+                  <ValidationError 
+                    prefix="Phone" 
+                    field="phone"
+                    errors={state.errors}
+                    className="text-red-400 text-sm"
+                  />
                 </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm text-gray-100 font-medium">Message</label>
                   <textarea
                     name="message"
-                    value={formData.message}
-                    onChange={handleChange}
                     className="w-full min-h-[150px] p-3 rounded-md border bg-black/50 hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300 text-gray-100"
                     placeholder="Your message..."
                     onFocus={() => setIsFormFocused(true)}
                     onBlur={() => setIsFormFocused(false)}
                     required
                   />
+                  <ValidationError 
+                    prefix="Message" 
+                    field="message"
+                    errors={state.errors}
+                    className="text-red-400 text-sm"
+                  />
                 </div>
                 <button 
                   type="submit" 
-                  className="text-white bg-neutral-600 hover:bg-neutral-700 transition-colors duration-300 px-6 py-3 rounded-md text-lg sm:text-xl w-full text-center opacity-90 hover:opacity-100"
+                  disabled={state.submitting}
+                  className={`text-white transition-colors duration-300 px-6 py-3 rounded-md text-lg sm:text-xl w-full text-center ${
+                    state.submitting 
+                      ? 'bg-neutral-500 cursor-not-allowed opacity-70' 
+                      : 'bg-neutral-600 hover:bg-neutral-700 opacity-90 hover:opacity-100'
+                  }`}
                 >
-                  Send Message
+                  {state.submitting ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>
