@@ -30,7 +30,7 @@ const NavBrand = () => {
 
   return (
     <motion.div 
-      className="flex items-center gap-x-2 sm:gap-x-3 relative"
+      className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4 relative"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -42,7 +42,7 @@ const NavBrand = () => {
           className="h-[40px] w-auto mr-2.5 object-contain transition-transform duration-300 group-hover:scale-110"
         /> */}
         <motion.h3 
-          className="text-base sm:text-lg lg:text-xl text-white font-medium tracking-wide group-hover:text-neutral-300 transition-colors duration-300"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-white font-medium tracking-wide group-hover:text-neutral-300 transition-colors duration-300"
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
@@ -78,7 +78,11 @@ const Form = () => {
     <motion.form
       onSubmit={handleFormSubmit}
       className={`flex justify-center items-center relative mx-auto self-center ${
-        windowWidth <= 600 ? 'w-[160px] sm:w-[200px]' : windowWidth <= 768 ? 'w-[250px]' : 'w-full'
+        windowWidth <= 480 ? 'w-[160px]' : 
+        windowWidth <= 600 ? 'w-[200px]' : 
+        windowWidth <= 768 ? 'w-[250px]' : 
+        windowWidth <= 1024 ? 'w-[300px]' : 
+        'w-full'
       }`}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -90,16 +94,16 @@ const Form = () => {
         value={searchInput}
         onChange={handleChange}
         required
-        className="w-full h-[36px] sm:h-[40px] lg:h-[45px] outline-none pl-4 sm:pl-6 pr-12 text-xs sm:text-sm border border-neutral-700 rounded-xl sm:rounded-2xl bg-neutral-900/50 text-white placeholder-neutral-500 transition-all duration-300 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.1)] focus:border-neutral-600"
+        className="w-full h-[36px] sm:h-[40px] md:h-[42px] lg:h-[45px] outline-none pl-4 sm:pl-5 md:pl-6 pr-12 text-xs sm:text-sm md:text-base border border-neutral-700 rounded-xl sm:rounded-2xl bg-neutral-900/50 text-white placeholder-neutral-500 transition-all duration-300 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.1)] focus:border-neutral-600"
         whileFocus={{ scale: 1.02 }}
       />
       <motion.button
         type="submit"
-        className="absolute h-[36px] sm:h-[40px] lg:h-[45px] w-[40px] sm:w-[45px] lg:w-[50px] bg-neutral-800 text-white right-0 font-bold border border-neutral-700 rounded-r-xl sm:rounded-r-2xl flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-700"
+        className="absolute h-[36px] sm:h-[40px] md:h-[42px] lg:h-[45px] w-[40px] sm:w-[45px] md:w-[48px] lg:w-[50px] bg-neutral-800 text-white right-0 font-bold border border-neutral-700 rounded-r-xl sm:rounded-r-2xl flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-700"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <SearchIcon fontSize={windowWidth <= 480 ? "small" : "medium"} />
+        <SearchIcon fontSize={windowWidth <= 480 ? "small" : windowWidth <= 768 ? "medium" : "medium"} />
       </motion.button>
     </motion.form>
   );
@@ -162,15 +166,15 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
     <motion.div 
-      className="flex items-center gap-x-3 sm:gap-x-5"
+      className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4 xl:gap-x-5"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
-      {windowWidth > 780 && (
+      {windowWidth > 1024 && (
         <>
           <motion.div 
-            className={`relative w-[45px] h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
+            className={`relative w-[40px] h-[40px] md:w-[45px] md:h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
               isCartPage 
                 ? 'border-white bg-neutral-800/30' 
                 : 'border-neutral-700'
@@ -179,7 +183,7 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
             whileTap={{ scale: 0.95 }}
             onClick={handleCartClick}
           >
-            <ShoppingCartIcon className="text-white" />
+            <ShoppingCartIcon className="text-white text-[20px] md:text-[24px]" />
             {totalItems > 0 && (
               <motion.span
                 initial={{ scale: 0 }}
@@ -191,7 +195,7 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
             )}
           </motion.div>
           <motion.div 
-            className={`w-[45px] h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
+            className={`w-[40px] h-[40px] md:w-[45px] md:h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
               isDashboardPage 
                 ? 'border-white bg-neutral-800/30' 
                 : 'border-neutral-700'
@@ -200,20 +204,19 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
             whileTap={{ scale: 0.95 }}
             onClick={handleAuthClick}
           >
-            <PersonIcon className="text-white" />
+            <PersonIcon className="text-white text-[20px] md:text-[24px]" />
           </motion.div>
         </>
       )}
       {/* Only show Contact Us button on larger screens (when drawer is not used) */}
-      {windowWidth > 780 && (
+      {windowWidth > 1024 && (
         <Link to="/contact" className="focus:outline-none">
           <motion.div 
-            className="bg-neutral-100 text-black px-3 sm:px-4 py-2 shadow-lg rounded-2xl flex items-center hover:bg-neutral-200 transition-all duration-300 focus:ring-2 focus:ring-neutral-600 focus:ring-offset-2 focus:ring-offset-neutral-900 text-sm sm:text-base"
+            className="bg-neutral-100 text-black px-3 md:px-4 lg:px-5 py-2 md:py-2.5 shadow-lg rounded-2xl flex items-center hover:bg-neutral-200 transition-all duration-300 focus:ring-2 focus:ring-neutral-600 focus:ring-offset-2 focus:ring-offset-neutral-900 text-sm md:text-base font-medium"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="hidden sm:inline">Contact Us</span>
-            <span className="sm:hidden">Contact</span>
+            Contact Us
           </motion.div>
         </Link>
       )}
@@ -260,18 +263,18 @@ const DrawerNav = ({ isLoggedIn }) => {
 
   const list = (anchor) => (
     <Box
-      className="w-[260px] sm:w-[280px] bg-neutral-900 h-full text-white"
+      className="w-[280px] sm:w-[320px] md:w-[360px] bg-neutral-900 h-full text-white"
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-6 md:p-8">
         <div className="search__drawer mb-4 sm:mb-6">
-         
+          
         </div>
       </div>
       <Divider className="bg-neutral-800" />
-      <List className="px-3 sm:px-4">
+      <List className="px-3 sm:px-4 md:px-6">
         {menuItems.map((item, index) => (
           <motion.div
             key={item.path}
@@ -279,11 +282,11 @@ const DrawerNav = ({ isLoggedIn }) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <ListItem disablePadding className="my-1">
+            <ListItem disablePadding className="my-2">
               <ListItemButton
                 component={Link}
                 to={item.path}
-                className="rounded-xl hover:bg-neutral-800/50 transition-all duration-300 py-3"
+                className="rounded-xl hover:bg-neutral-800/50 transition-all duration-300 py-3 md:py-4"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -292,7 +295,7 @@ const DrawerNav = ({ isLoggedIn }) => {
               >
                 <ListItemText>
                   <motion.span
-                    className="text-white hover:text-white transition-colors duration-300 text-sm sm:text-base"
+                    className="text-white hover:text-white transition-colors duration-300 text-sm sm:text-base md:text-lg"
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
@@ -304,9 +307,9 @@ const DrawerNav = ({ isLoggedIn }) => {
           </motion.div>
         ))}
       </List>
-      <Divider className="bg-neutral-800 my-4" />
+      <Divider className="bg-neutral-800 my-4 md:my-6" />
       <motion.div 
-        className="flex justify-center items-center gap-6 sm:gap-8 py-6 sm:py-8"
+        className="flex justify-center items-center gap-6 sm:gap-8 md:gap-10 py-6 sm:py-8 md:py-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.4 }}
@@ -318,19 +321,19 @@ const DrawerNav = ({ isLoggedIn }) => {
           onClick={handleDrawerCartClick}
         >
           <div className="flex flex-col items-center gap-2">
-            <div className="relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
-              <ShoppingCartIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px]" />
+            <div className="relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+              <ShoppingCartIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]" />
               {totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 flex items-center justify-center"
                 >
                   {totalItems > 99 ? '99+' : totalItems}
                 </motion.span>
               )}
             </div>
-            <span className="text-neutral-400 text-xs sm:text-sm group-hover:text-white transition-colors duration-300">
+            <span className="text-neutral-400 text-xs sm:text-sm md:text-base group-hover:text-white transition-colors duration-300">
               Cart {totalItems > 0 && `(${totalItems})`}
             </span>
           </div>
@@ -342,10 +345,10 @@ const DrawerNav = ({ isLoggedIn }) => {
         >
           <Link to={isLoggedIn ? "/dashboard" : "/login"} className="no-underline">
             <div className="flex flex-col items-center gap-2">
-              <div className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
-                <PersonIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px]" />
+              <div className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+                <PersonIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]" />
               </div>
-              <span className="text-neutral-400 text-xs sm:text-sm group-hover:text-white transition-colors duration-300">
+              <span className="text-neutral-400 text-xs sm:text-sm md:text-base group-hover:text-white transition-colors duration-300">
                 {isLoggedIn ? "Dashboard" : "Account"}
               </span>
             </div>
@@ -353,14 +356,14 @@ const DrawerNav = ({ isLoggedIn }) => {
         </motion.div>
       </motion.div>
       <motion.div 
-        className="px-4 sm:px-6 py-4"
+        className="px-4 sm:px-6 md:px-8 py-4 md:py-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.5 }}
       >
         <Link to="/contact" className="no-underline">
           <motion.div 
-            className="bg-neutral-100 text-black px-4 py-2.5 sm:py-3 shadow-lg rounded-2xl flex items-center justify-center hover:bg-neutral-200 transition-all duration-300 text-sm sm:text-base font-medium"
+            className="bg-neutral-100 text-black px-4 md:px-6 py-2.5 sm:py-3 md:py-4 shadow-lg rounded-2xl flex items-center justify-center hover:bg-neutral-200 transition-all duration-300 text-sm sm:text-base md:text-lg font-medium"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -424,13 +427,13 @@ const NavLinks = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (windowWidth <= 780) {
+  if (windowWidth <= 1024) {
     return null;
   }
 
   return (
     <motion.ul 
-      className="gap-x-2 lg:flex items-center hidden"
+      className="gap-x-1 md:gap-x-2 xl:flex items-center hidden"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
@@ -451,7 +454,7 @@ const NavLinks = () => {
         >
           <Link
             to={item.path}
-            className="flex items-center gap-1 hover:bg-white/5 cursor-pointer px-4 py-2 rounded-2xl text-white hover:text-white transition-all duration-300"
+            className="flex items-center gap-1 hover:bg-white/5 cursor-pointer px-2 md:px-3 lg:px-4 py-2 rounded-2xl text-white hover:text-white transition-all duration-300 text-sm lg:text-base"
           >
             <motion.span
               whileHover={{ scale: 1.05, x: 2 }}
@@ -559,20 +562,20 @@ const Header = () => {
   }, []);
 
   return (
-    <div className={`fixed top-0 left-0 right-0 z-[9999] px-2 sm:px-4 pt-2 sm:pt-4 transition-transform duration-300 ease-in-out ${
+    <div className={`fixed top-0 left-0 right-0 z-[9999] px-2 sm:px-4 md:px-6 pt-2 sm:pt-4 transition-transform duration-300 ease-in-out ${
       isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
     }`}>
       <motion.nav 
-        className="py-2 sm:py-3 flex items-center justify-between bg-neutral-900 text-white rounded-xl sm:rounded-2xl px-3 sm:px-6 lg:px-8 w-full max-w-[1536px] mx-auto shadow-lg backdrop-blur-sm"
+        className="py-2 sm:py-3 md:py-4 flex items-center justify-between bg-neutral-900 text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-6 lg:px-8 w-full max-w-[1536px] mx-auto shadow-lg backdrop-blur-sm"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <NavBrand />
         <NavLinks />
-        <div className="flex items-center gap-x-2 sm:gap-x-3 lg:gap-x-5">
+        <div className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4 xl:gap-x-5">
           <Control isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <DrawerNav isLoggedIn={isLoggedIn} />
           </div>
         </div>

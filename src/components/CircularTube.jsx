@@ -71,9 +71,8 @@ const inputStyle = (hasError) =>
 const selectButton = () =>
   `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500`;
 
-const TubeSVG = ({ outside, inside }) => {
-  const size = 180; // Reduced size for mobile
-  const maxOuterDiameter = 160; // Maximum visual size for outer circle
+const TubeSVG = ({ outside, inside, size = 180 }) => {
+  const maxOuterDiameter = size * 0.99; // Adjust the visual scaling proportionally
   
   // Calculate scaling factor to maintain proportions
   const scale = maxOuterDiameter / Math.max(outside, 1);
@@ -159,172 +158,6 @@ const TubeSVG = ({ outside, inside }) => {
         >
           OD: {outside} mm
         </motion.text>
-      </svg>
-    </motion.div>
-  );
-};
-
-const TubeLengthSVG = ({ length, outside, inside, unit }) => {
-  const height = 180; // Reduced height for mobile
-  const maxWidth = Math.min(window.innerWidth - 40, 400); // Reduced max width for mobile
-  
-  // Limit the visual inner diameter to 102mm
-  const maxVisualInside = 102;
-  const visualInside = Math.min(inside, maxVisualInside);
-  
-  // Calculate wall thickness for visual representation
-  const wall = (outside - inside) / 2;
-  const visualOutside = visualInside + (2 * wall);
-  
-  const tubeHeight = visualOutside * 2;
-  
-  // Limit the visual length to 485mm
-  const maxVisualLength = 485;
-  const visualLength = Math.min(length, maxVisualLength);
-  
-  // Scale the length to fit within maxWidth while maintaining proportions
-  const scale = Math.min(maxWidth / visualLength, 1);
-  const scaledLength = visualLength * scale;
-  
-  // Calculate center position for small lengths
-  const centerX = (maxWidth - scaledLength) / 2;
-  
-  // Calculate measurement position based on tube height
-  const measurementY = (height - tubeHeight) / 2 - 30; // Position above the tube
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className="relative w-full flex justify-center overflow-x-auto"
-    >
-      <svg width={maxWidth} height={height} viewBox={`0 0 ${maxWidth} ${height}`} className="min-w-[300px]">
-        {/* Tube body with gradient for 3D effect */}
-        <defs>
-          <linearGradient id="tubeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: '#fff', stopOpacity: 1 }} />
-            <stop offset="50%" style={{ stopColor: '#fff', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#fff', stopOpacity: 1 }} />
-          </linearGradient>
-          <linearGradient id="innerTubeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: '#000', stopOpacity: 1 }} />
-            <stop offset="50%" style={{ stopColor: '#111', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#000', stopOpacity: 1 }} />
-          </linearGradient>
-          <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: '#fff', stopOpacity: 0.5 }} />
-            <stop offset="50%" style={{ stopColor: '#fff', stopOpacity: 0.5 }} />
-            <stop offset="100%" style={{ stopColor: '#fff', stopOpacity: 0.5 }} />
-          </linearGradient>
-        </defs>
-        
-        {/* Length measurement line and text - positioned above tube */}
-        <motion.line
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.4 }}
-          x1={centerX}
-          y1={measurementY + 15}
-          x2={centerX + scaledLength}
-          y2={measurementY + 15}
-          stroke="#a3a3a3"
-          strokeWidth="2"
-          strokeDasharray="5,5"
-        />
-        
-        <motion.text
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.5 }}
-          x={centerX + scaledLength / 2}
-          y={measurementY}
-          textAnchor="middle"
-          fill="#a3a3a3"
-          fontSize="16"
-          fontWeight="bold"
-        >
-          {length} {unit}
-        </motion.text>
-
-        {/* Wall thickness measurement line and text */}
-        <motion.line
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.4 }}
-          x1={centerX - 30}
-          y1={(height - tubeHeight) / 2}
-          x2={centerX - 30}
-          y2={(height - tubeHeight) / 2 + wall * 2}
-          stroke="#a3a3a3"
-          strokeWidth="2"
-          strokeDasharray="5,5"
-        />
-        
-        <motion.text
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.5 }}
-          x={centerX - 45}
-          y={(height - tubeHeight) / 2 + wall}
-          textAnchor="middle"
-          fill="#a3a3a3"
-          fontSize="16"
-          fontWeight="bold"
-          transform={`rotate(-90 ${centerX - 45} ${(height - tubeHeight) / 2 + wall})`}
-        >
-          T: {wall.toFixed(1)} {unit}
-        </motion.text>
-        
-        {/* Tube body */}
-        <motion.rect
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          x={centerX}
-          y={(height - tubeHeight) / 2}
-          width={scaledLength}
-          height={tubeHeight}
-          fill="url(#tubeGradient)"
-          rx={0}
-        />
-        
-        {/* Inner tube */}
-        <motion.rect
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          x={centerX}
-          y={(height - visualInside * 2) / 2}
-          width={scaledLength}
-          height={visualInside * 2}
-          fill="url(#innerTubeGradient)"
-          rx={0}
-        />
-        
-        {/* Top highlight */}
-        <motion.rect
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
-          x={centerX}
-          y={(height - tubeHeight) / 2}
-          width={scaledLength}
-          height={2}
-          fill="url(#highlightGradient)"
-        />
-        
-        {/* Bottom highlight */}
-        <motion.rect
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
-          x={centerX}
-          y={(height + tubeHeight) / 2 - 2}
-          width={scaledLength}
-          height={2}
-          fill="url(#highlightGradient)"
-        />
       </svg>
     </motion.div>
   );
@@ -420,184 +253,186 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
 
   return (
     <div className="w-full">
-      {/* Material Selection */}
-      <div className="mb-6">
-        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
-          Material Selection
-        </h3>
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center sm:justify-start">
-          <label className="text-neutral-200 text-sm font-semibold">Material:</label>
-          <select
-            className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500 border border-neutral-700"
-            value={tube.material}
-            onChange={(e) => handleChange('material', e.target.value)}
-          >
-            <option value="carbon_fiber">Carbon Fiber</option>
-            <option value="glass_fiber">Glass Fiber</option>
-            <option value="carbon_kevlar">Carbon Kevlar</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Dimensions */}
-      <div className="mb-4">
-        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
-          Dimensions
-        </h3>
-        
-        <div className="flex flex-wrap justify-center sm:justify-start items-end gap-3 sm:gap-4">
-          <div className="text-center">
-            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
-              Wall (mm)
-            </label>
-            <input
-              type="number"
-              step="0.1"
-              min="0.2"
-              max="10"
-              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
-              value={tube.wall}
-              onChange={(e) => handleChange('wall', parseFloat(e.target.value))}
-              autoComplete="off"
-            />
-          </div>
-          
-          <div className="text-center">
-            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
-              Inner Ø (mm)
-            </label>
-            <select
-              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
-              value={tube.inside}
-              onChange={(e) => handleChange('inside', parseFloat(e.target.value))}
-            >
-              {insideDiameters.map((diameter) => (
-                <option key={diameter} value={diameter}>
-                  {diameter}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div className="text-center">
-            <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
-              Length (mm)
-            </label>
-            <input
-              type="number"
-              step="any"
-              max="1100"
-              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
-              value={tube.length}
-              onChange={(e) => handleChange('length', e.target.value)}
-              autoComplete="off"
-            />
-          </div>
-        </div>
-
-        {error && (
-          <div className="text-red-400 text-xs sm:text-sm text-center bg-red-400/10 rounded-lg p-2 mt-3">
-            {error}
-          </div>
-        )}
-      </div>
-
-      {/* Calculations */}
-      <div className="mb-4">
-        <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
-          Calculations
-        </h3>
-        
-        <div className="grid grid-cols-3 gap-2 sm:gap-4">
-          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
-            <p className="text-neutral-400 text-xs mb-1">Mass</p>
-            <p className="text-sm sm:text-lg font-semibold text-white">
-              {results.mass} <span className="text-xs text-neutral-400">g</span>
-            </p>
-          </div>
-          
-          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
-            <p className="text-neutral-400 text-xs mb-1">Wall</p>
-            <p className="text-sm sm:text-lg font-semibold text-white">
-              {results.wall} <span className="text-xs text-neutral-400">mm</span>
-            </p>
-          </div>
-          
-          <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
-            <p className="text-neutral-400 text-xs mb-1">Price</p>
-            <p className="text-sm sm:text-lg font-semibold text-white">
-              ₹{results.price}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Visualizations */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
-        <div className="w-full">
-          <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
-            Cross Section
-          </h3>
-          <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
-            <TubeSVG outside={Number(results.outside)} inside={Number(tube.inside)} />
-          </div>
-        </div>
-        
-        <div className="w-full">
-          <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
-            Side View
-          </h3>
-          <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
-            <TubeLengthSVG 
-              length={Number(tube.length)} 
-              outside={Number(results.outside)} 
-              inside={Number(tube.inside)}
-              unit={tube.unit}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Add to Cart Section */}
-      <div className="border-t border-neutral-700 pt-3 sm:pt-4 lg:pt-5">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <span className="text-neutral-300 text-sm font-medium">Quantity:</span>
-            <div className="flex items-center">
-              <button
-                className="w-8 h-8 rounded-l-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
-                onClick={() => handleQuantityChange(quantity - 1)}
+      <div className="lg:grid lg:grid-cols-2 lg:gap-8 bg-black/60 backdrop-blur-md rounded-lg p-4 sm:p-6 shadow-2xl border border-neutral-600/70">
+        {/* Left Column - Controls and Data */}
+        <div className="lg:col-span-1">
+          {/* Material Selection */}
+          <div className="mb-6">
+            <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+              Material Selection
+            </h3>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center sm:justify-start">
+              <label className="text-neutral-200 text-sm font-semibold">Material:</label>
+              <select
+                className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-neutral-800/70 text-neutral-200 hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-neutral-500 border border-neutral-700"
+                value={tube.material}
+                onChange={(e) => handleChange('material', e.target.value)}
               >
-                −
-              </button>
-              <input
-                type="number"
-                min="1"
-                max="100"
-                value={quantity}
-                onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                className="w-16 h-8 text-center bg-neutral-800 text-white focus:outline-none focus:bg-neutral-700 transition-colors duration-200"
-              />
-              <button
-                className="w-8 h-8 rounded-r-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
-                onClick={() => handleQuantityChange(quantity + 1)}
-              >
-                +
-              </button>
+                <option value="carbon_fiber">Carbon Fiber</option>
+                <option value="glass_fiber">Glass Fiber</option>
+                <option value="carbon_kevlar">Carbon Kevlar</option>
+              </select>
             </div>
           </div>
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-8 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
-            onClick={handleAddToCart}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            Add to Cart
-          </motion.button>
+          {/* Dimensions */}
+          <div className="mb-4">
+            <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+              Dimensions
+            </h3>
+            
+            <div className="flex flex-wrap justify-center sm:justify-start items-end gap-3 sm:gap-4">
+              <div className="text-center">
+                <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+                  Wall (mm)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0.2"
+                  max="10"
+                  className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+                  value={tube.wall}
+                  onChange={(e) => handleChange('wall', parseFloat(e.target.value))}
+                  autoComplete="off"
+                />
+              </div>
+              
+              <div className="text-center">
+                <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+                  Inner Ø (mm)
+                </label>
+                <select
+                  className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+                  value={tube.inside}
+                  onChange={(e) => handleChange('inside', parseFloat(e.target.value))}
+                >
+                  {insideDiameters.map((diameter) => (
+                    <option key={diameter} value={diameter}>
+                      {diameter}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="text-center">
+                <label className="block text-neutral-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
+                  Length (mm)
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  max="1100"
+                  className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+                  value={tube.length}
+                  onChange={(e) => handleChange('length', e.target.value)}
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="text-red-400 text-xs sm:text-sm text-center bg-red-400/10 rounded-lg p-2 mt-3">
+                {error}
+              </div>
+            )}
+          </div>
+
+          {/* Calculations */}
+          <div className="mb-4 lg:mb-6">
+            <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
+              Calculations
+            </h3>
+            
+            <div className="grid grid-cols-3 gap-2 lg:gap-3">
+              <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+                <p className="text-neutral-400 text-xs mb-1">Mass</p>
+                <p className="text-sm sm:text-lg font-semibold text-white">
+                  {results.mass} <span className="text-xs text-neutral-400">g</span>
+                </p>
+              </div>
+              
+              <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+                <p className="text-neutral-400 text-xs mb-1">Wall</p>
+                <p className="text-sm sm:text-lg font-semibold text-white">
+                  {results.wall} <span className="text-xs text-neutral-400">mm</span>
+                </p>
+              </div>
+              
+              <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
+                <p className="text-neutral-400 text-xs mb-1">Price</p>
+                <p className="text-sm sm:text-lg font-semibold text-white">
+                  ₹{results.price}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Cross Section Visualization - Mobile/Small screens only */}
+          <div className="mb-4 lg:hidden">
+            <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
+              Cross Section
+            </h3>
+            <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
+              <TubeSVG outside={Number(results.outside)} inside={Number(tube.inside)} size={180} />
+            </div>
+          </div>
+
+          {/* Add to Cart Section */}
+          <div className="border-t border-neutral-700 pt-3 sm:pt-4 lg:pt-5">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="text-neutral-300 text-sm font-medium">Quantity:</span>
+                <div className="flex items-center">
+                  <button
+                    className="w-8 h-8 rounded-l-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
+                    onClick={() => handleQuantityChange(quantity - 1)}
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={quantity}
+                    onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                    className="w-16 h-8 text-center bg-neutral-800 text-white focus:outline-none focus:bg-neutral-700 transition-colors duration-200"
+                  />
+                  <button
+                    className="w-8 h-8 rounded-r-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
+                    onClick={() => handleQuantityChange(quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full sm:w-auto px-8 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
+                onClick={handleAddToCart}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Add to Cart
+              </motion.button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Visualization (Large screens only) */}
+        <div className="hidden lg:col-span-1 lg:flex lg:items-center lg:justify-center">
+          {/* Cross Section Visualization */}
+          <div className="lg:w-full">
+            <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center lg:mb-4">
+              Cross Section
+            </h3>
+            <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-4" style={{ height: '320px' }}>
+              <TubeSVG outside={Number(results.outside)} inside={Number(tube.inside)} size={280} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

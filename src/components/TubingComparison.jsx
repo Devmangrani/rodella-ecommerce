@@ -10,26 +10,26 @@ const materials = {
     label: 'Carbon Fiber',
     bgImages: {
       circular: '/assets/circular-tube-carbon-fiber.jpg',
-      rectangular: '/assets/carbon-fiber-rectangle-tubes.webp',
-      square: '/assets/carbon-fiber-square-tubes.jpg'
+      rectangular: '/assets/Rectangular-Carbon-fiber-tube.webp',
+      square: '/assets/carbon-fiber-square-tubes.webp'
     }
   },
   glass_fiber: { 
     density: 2.7, 
     label: 'Glass Fiber',
     bgImages: {
-      circular: '/assets/glass-fiber-circular-tubes.jpeg',
-      rectangular: '/assets/rectangular-fiberglass-tube.webp',
-      square: '/assets/glass-fiber-square-tubes-.png'
+      circular: '/assets/circular-tube-carbon-fiber.jpg',
+      rectangular: '/assets/Rectangular-Carbon-fiber-tube.webp',
+      square: '/assets/carbon-fiber-square-tubes.webp'
     }
   },
   carbon_kevlar: { 
     density: 7.85, 
     label: 'Carbon Kevlar',
     bgImages: {
-      circular: '/assets/circular-tube-carbon-kevlar.jpg',
+      circular: '/assets/circular-tube-carbon-fiber.jpg',
       rectangular: '/assets/Rectangular-Carbon-fiber-tube.webp',
-      square: '/assets/sq-tube-carbon-kevlar.png'
+     square: '/assets/carbon-fiber-square-tubes.webp'
     }
   },
 };
