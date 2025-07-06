@@ -62,7 +62,6 @@ const TubingComparison = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out"
         style={{ 
           backgroundImage: `url(${getCurrentBackgroundImage()})`,
-          filter: 'blur(0.5px)',
         }}
       />
       <div className="absolute inset-0 bg-black/70" />
@@ -88,7 +87,7 @@ const TubingComparison = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-neutral-900/80 backdrop-blur-sm rounded-xl p-6 sm:p-8 shadow-2xl"
+            className="bg-neutral-900/80 rounded-xl p-6 sm:p-8 shadow-2xl"
           >
             {/* Shape Selection */}
             <div className="mb-6">

@@ -30,19 +30,19 @@ const NavBrand = () => {
 
   return (
     <motion.div 
-      className="flex items-center gap-x-3 relative"
+      className="flex items-center gap-x-2 sm:gap-x-3 relative"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Link to="/" className="flex items-center group  focus:outline-none">
+      <Link to="/" className="flex items-center group focus:outline-none">
         {/* <img
           src={logo}
           alt="Rodella Logo"
           className="h-[40px] w-auto mr-2.5 object-contain transition-transform duration-300 group-hover:scale-110"
         /> */}
         <motion.h3 
-          className="text-lg text-white font-medium tracking-wide group-hover:text-neutral-300 transition-colors duration-300"
+          className="text-base sm:text-lg lg:text-xl text-white font-medium tracking-wide group-hover:text-neutral-300 transition-colors duration-300"
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
@@ -78,7 +78,7 @@ const Form = () => {
     <motion.form
       onSubmit={handleFormSubmit}
       className={`flex justify-center items-center relative mx-auto self-center ${
-        windowWidth <= 600 ? 'w-[200px]' : 'w-full'
+        windowWidth <= 600 ? 'w-[160px] sm:w-[200px]' : windowWidth <= 768 ? 'w-[250px]' : 'w-full'
       }`}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -86,20 +86,20 @@ const Form = () => {
     >
       <motion.input
         type="text"
-        placeholder="Search for products"
+        placeholder={windowWidth <= 480 ? "Search..." : "Search for products"}
         value={searchInput}
         onChange={handleChange}
         required
-        className="w-full h-[45px] outline-none pl-6 text-sm border border-neutral-700 rounded-2xl bg-neutral-900/50 text-white placeholder-neutral-500 transition-all duration-300 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.1)] focus:border-neutral-600"
+        className="w-full h-[36px] sm:h-[40px] lg:h-[45px] outline-none pl-4 sm:pl-6 pr-12 text-xs sm:text-sm border border-neutral-700 rounded-xl sm:rounded-2xl bg-neutral-900/50 text-white placeholder-neutral-500 transition-all duration-300 focus:shadow-[0_0_0_2px_rgba(255,255,255,0.1)] focus:border-neutral-600"
         whileFocus={{ scale: 1.02 }}
       />
       <motion.button
         type="submit"
-        className="absolute h-[45px] w-[50px] bg-neutral-800 text-white right-0 font-bold border border-neutral-700 rounded-r-2xl flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-700"
+        className="absolute h-[36px] sm:h-[40px] lg:h-[45px] w-[40px] sm:w-[45px] lg:w-[50px] bg-neutral-800 text-white right-0 font-bold border border-neutral-700 rounded-r-xl sm:rounded-r-2xl flex justify-center items-center cursor-pointer transition-all duration-300 hover:bg-neutral-700"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <SearchIcon fontSize="medium" />
+        <SearchIcon fontSize={windowWidth <= 480 ? "small" : "medium"} />
       </motion.button>
     </motion.form>
   );
@@ -162,7 +162,7 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
 
   return (
     <motion.div 
-      className="flex items-center gap-x-5"
+      className="flex items-center gap-x-3 sm:gap-x-5"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
@@ -204,15 +204,19 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
           </motion.div>
         </>
       )}
-      <Link to="/contact" className="focus:outline-none">
-        <motion.div 
-          className="bg-neutral-100 text-black px-4 py-2 shadow-lg rounded-2xl flex items-center hover:bg-neutral-200 transition-all duration-300 focus:ring-2 focus:ring-neutral-600 focus:ring-offset-2 focus:ring-offset-neutral-900"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Contact Us
-        </motion.div>
-      </Link>
+      {/* Only show Contact Us button on larger screens (when drawer is not used) */}
+      {windowWidth > 780 && (
+        <Link to="/contact" className="focus:outline-none">
+          <motion.div 
+            className="bg-neutral-100 text-black px-3 sm:px-4 py-2 shadow-lg rounded-2xl flex items-center hover:bg-neutral-200 transition-all duration-300 focus:ring-2 focus:ring-neutral-600 focus:ring-offset-2 focus:ring-offset-neutral-900 text-sm sm:text-base"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="hidden sm:inline">Contact Us</span>
+            <span className="sm:hidden">Contact</span>
+          </motion.div>
+        </Link>
+      )}
     </motion.div>
   );
 };
@@ -256,18 +260,18 @@ const DrawerNav = ({ isLoggedIn }) => {
 
   const list = (anchor) => (
     <Box
-      className="w-[280px] bg-neutral-900 h-full text-white"
+      className="w-[260px] sm:w-[280px] bg-neutral-900 h-full text-white"
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <div className="p-6">
-        <div className="search__drawer mb-6">
-          <Form />
+      <div className="p-4 sm:p-6">
+        <div className="search__drawer mb-4 sm:mb-6">
+         
         </div>
       </div>
       <Divider className="bg-neutral-800" />
-      <List className="px-4">
+      <List className="px-3 sm:px-4">
         {menuItems.map((item, index) => (
           <motion.div
             key={item.path}
@@ -279,7 +283,7 @@ const DrawerNav = ({ isLoggedIn }) => {
               <ListItemButton
                 component={Link}
                 to={item.path}
-                className="rounded-xl hover:bg-neutral-800/50 transition-all duration-300"
+                className="rounded-xl hover:bg-neutral-800/50 transition-all duration-300 py-3"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -288,7 +292,7 @@ const DrawerNav = ({ isLoggedIn }) => {
               >
                 <ListItemText>
                   <motion.span
-                    className="text-white hover:text-white transition-colors duration-300"
+                    className="text-white hover:text-white transition-colors duration-300 text-sm sm:text-base"
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
@@ -302,7 +306,7 @@ const DrawerNav = ({ isLoggedIn }) => {
       </List>
       <Divider className="bg-neutral-800 my-4" />
       <motion.div 
-        className="flex justify-center items-center gap-8 py-8"
+        className="flex justify-center items-center gap-6 sm:gap-8 py-6 sm:py-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.4 }}
@@ -314,19 +318,19 @@ const DrawerNav = ({ isLoggedIn }) => {
           onClick={handleDrawerCartClick}
         >
           <div className="flex flex-col items-center gap-2">
-            <div className="relative w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
-              <ShoppingCartIcon className="text-white w-[30px] h-[30px]" />
+            <div className="relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+              <ShoppingCartIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px]" />
               {totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center"
                 >
                   {totalItems > 99 ? '99+' : totalItems}
                 </motion.span>
               )}
             </div>
-            <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">
+            <span className="text-neutral-400 text-xs sm:text-sm group-hover:text-white transition-colors duration-300">
               Cart {totalItems > 0 && `(${totalItems})`}
             </span>
           </div>
@@ -338,10 +342,10 @@ const DrawerNav = ({ isLoggedIn }) => {
         >
           <Link to={isLoggedIn ? "/dashboard" : "/login"} className="no-underline">
             <div className="flex flex-col items-center gap-2">
-              <div className="w-[60px] h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
-                <PersonIcon className="text-white w-[30px] h-[30px]" />
+              <div className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+                <PersonIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px]" />
               </div>
-              <span className="text-neutral-400 text-sm group-hover:text-white transition-colors duration-300">
+              <span className="text-neutral-400 text-xs sm:text-sm group-hover:text-white transition-colors duration-300">
                 {isLoggedIn ? "Dashboard" : "Account"}
               </span>
             </div>
@@ -349,14 +353,14 @@ const DrawerNav = ({ isLoggedIn }) => {
         </motion.div>
       </motion.div>
       <motion.div 
-        className="px-6 py-4"
+        className="px-4 sm:px-6 py-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.5 }}
       >
         <Link to="/contact" className="no-underline">
           <motion.div 
-            className="bg-neutral-100 text-black px-4 py-2 shadow-lg rounded-2xl flex items-center justify-center hover:bg-neutral-200 transition-all duration-300"
+            className="bg-neutral-100 text-black px-4 py-2.5 sm:py-3 shadow-lg rounded-2xl flex items-center justify-center hover:bg-neutral-200 transition-all duration-300 text-sm sm:text-base font-medium"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -465,6 +469,48 @@ const NavLinks = () => {
 // Main Header Component
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Scroll detection logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Show navbar when at the top of the page
+      if (currentScrollY < 10) {
+        setIsNavbarVisible(true);
+      } 
+      // Hide navbar when scrolling down, show when scrolling up
+      else if (currentScrollY > lastScrollY) {
+        // Scrolling down
+        setIsNavbarVisible(false);
+      } else {
+        // Scrolling up
+        setIsNavbarVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledHandleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+    };
+  }, [lastScrollY]);
 
   // Check authentication status
   useEffect(() => {
@@ -513,16 +559,18 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[9999] px-4 pt-4">
+    <div className={`fixed top-0 left-0 right-0 z-[9999] px-2 sm:px-4 pt-2 sm:pt-4 transition-transform duration-300 ease-in-out ${
+      isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
+    }`}>
       <motion.nav 
-        className="py-3 flex items-center justify-between bg-neutral-900 text-white rounded-2xl px-8 w-full max-w-[1536px] mx-auto shadow-lg backdrop-blur-sm"
+        className="py-2 sm:py-3 flex items-center justify-between bg-neutral-900 text-white rounded-xl sm:rounded-2xl px-3 sm:px-6 lg:px-8 w-full max-w-[1536px] mx-auto shadow-lg backdrop-blur-sm"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <NavBrand />
         <NavLinks />
-        <div className="flex items-center gap-x-5">
+        <div className="flex items-center gap-x-2 sm:gap-x-3 lg:gap-x-5">
           <Control isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           <div className="lg:hidden">
             <DrawerNav isLoggedIn={isLoggedIn} />

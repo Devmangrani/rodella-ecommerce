@@ -585,7 +585,7 @@ const SquareTube = ({ selectedMaterial, onMaterialChange, materials, shapeType }
             <input
               type="number"
               step="0.1"
-              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
               value={tube.wall}
               onChange={(e) => handleChange('wall', e.target.value)}
               autoComplete="off"
@@ -600,7 +600,7 @@ const SquareTube = ({ selectedMaterial, onMaterialChange, materials, shapeType }
               type="number"
               step="any"
               max="1200"
-              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 backdrop-blur-sm text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
+              className="w-20 sm:w-24 px-2 py-1 sm:px-3 sm:py-2 rounded-lg bg-neutral-800/70 text-center text-white text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all duration-200 hover:bg-neutral-700/70 border border-neutral-700"
               value={tube.length}
               onChange={(e) => handleChange('length', e.target.value)}
               autoComplete="off"
