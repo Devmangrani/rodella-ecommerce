@@ -316,7 +316,7 @@ const CompositePlates = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans pt-20 relative"
+      className="min-h-screen w-full bg-black text-white font-sans pt-20 relative mt-6"
     >
       {/* Background Image */}
       <div 
