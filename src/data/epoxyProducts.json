@@ -10,8 +10,7 @@
         "250ml": { "price": 800, "id": "11-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "serviceTemp": "85°C",
@@ -30,8 +29,7 @@
         "250ml": { "price": 1000, "id": "14-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "serviceTemp": "120°C",
@@ -50,8 +48,7 @@
         "250ml": { "price": 900, "id": "17-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "serviceTemp": "100°C",
@@ -71,8 +68,7 @@
         "250ml": { "price": 1400, "id": "20-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "serviceTemp": "200°C",
@@ -94,8 +90,7 @@
         "250ml": { "price": 1300, "id": "1-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "serviceTemp": "300°C",
@@ -114,8 +109,7 @@
         "250ml": { "price": 1200, "id": "10-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "viscosity": "200 mPa·s",
@@ -134,8 +128,7 @@
         "250ml": { "price": 1200, "id": "10-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "viscosity": "200 mPa·s",
@@ -154,8 +147,7 @@
         "250ml": { "price": 1200, "id": "10-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "viscosity": "200 mPa·s",
@@ -176,8 +168,7 @@
         "250ml": { "price": 750, "id": "30-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+        "/assets/Epoxy one image.png"
       ],
       "details": {
         "finish": "High Gloss",
@@ -196,8 +187,7 @@
         "250ml": { "price": 850, "id": "31-250ml" }
       },
       "images": [
-        "/assets/Epoxy.png",
-        "/assets/Epoxy.png"
+          "/assets/Epoxy one image.png"
       ],
       "details": {
         "finish": "Premium Gloss",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/myState';
 
@@ -168,6 +168,7 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
   const [results, setResults] = useState(() => calculateResults({ ...defaultTube, material: selectedMaterial || 'carbon_fiber' }, materials));
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState('');
+  const [showGoToCart, setShowGoToCart] = useState(false);
   const navigate = useNavigate();
   const { addToCartWithAuth } = useCart();
 
@@ -249,6 +250,17 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
 
     // Use the global cart function with authentication check
     addToCartWithAuth(product, calculations, quantity, navigate);
+    setShowGoToCart(true);
+    
+    // Hide the button after 5 seconds
+    setTimeout(() => {
+      setShowGoToCart(false);
+    }, 5000);
+  };
+
+  // Navigate to cart
+  const handleGoToCart = () => {
+    navigate('/cart');
   };
 
   return (
@@ -390,14 +402,9 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
                   >
                     −
                   </button>
-                  <input
-                    type="number"
-                    min="1"
-                    max="100"
-                    value={quantity}
-                    onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                    className="w-16 h-8 text-center bg-neutral-800 text-white focus:outline-none focus:bg-neutral-700 transition-colors duration-200"
-                  />
+                  <span className="w-16 h-8 text-center bg-neutral-800 text-white flex items-center justify-center">
+                    {quantity}
+                  </span>
                   <button
                     className="w-8 h-8 rounded-r-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors duration-200 flex items-center justify-center"
                     onClick={() => handleQuantityChange(quantity + 1)}
@@ -407,17 +414,47 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
                 </div>
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full sm:w-auto px-8 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
-                onClick={handleAddToCart}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Add to Cart
-              </motion.button>
+              {/* Add to Cart and Go to Cart Buttons */}
+              <div className="space-y-3">
+                <AnimatePresence mode="wait">
+                  {!showGoToCart ? (
+                    <motion.button
+                      key="add-to-cart"
+                      initial={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full sm:w-auto px-8 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
+                      onClick={handleAddToCart}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      Add to Cart
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      key="go-to-cart"
+                      initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ 
+                        duration: 0.3,
+                        ease: "easeOut"
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full sm:w-auto px-8 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
+                      onClick={handleGoToCart}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      Go to Cart
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>

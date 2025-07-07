@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ 
   product, 
@@ -25,6 +26,9 @@ const ProductCard = ({
   const [internalLength, setInternalLength] = useState(defaultLength);
   const [internalImageIndex, setInternalImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [showGoToCart, setShowGoToCart] = useState(false);
+  
+  const navigate = useNavigate();
 
   // Use external state if provided, otherwise use internal state
   const currentLength = externalLength !== null ? externalLength : internalLength;
@@ -111,6 +115,33 @@ const ProductCard = ({
       // Use internal state
       setInternalImageIndex(newIndex);
     }
+  };
+
+  // Enhanced add to cart handler
+  const handleAddToCart = () => {
+    onAddToCart(product, { mrp: isEpoxyProduct ? calculations.mrp : calculations.mrp, quantity });
+    setShowGoToCart(true);
+    
+    // Hide the button after 5 seconds
+    setTimeout(() => {
+      setShowGoToCart(false);
+    }, 5000);
+  };
+
+  // Enhanced add to cart handler for non-simple cards
+  const handleAddToCartDetailed = () => {
+    onAddToCart(product, { ...calculations, quantity });
+    setShowGoToCart(true);
+    
+    // Hide the button after 5 seconds
+    setTimeout(() => {
+      setShowGoToCart(false);
+    }, 5000);
+  };
+
+  // Navigate to cart
+  const handleGoToCart = () => {
+    navigate('/cart');
   };
 
   // Default category colors
@@ -211,15 +242,9 @@ const ProductCard = ({
                   −
                 </button>
                 <div className="relative">
-                  <input
-                    type="number"
-                    min="1"
-                    max="100"
-                    value={quantity}
-                    onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                    className="w-12 h-7 text-center bg-transparent text-white text-xs font-semibold focus:outline-none focus:bg-neutral-600/30 transition-colors duration-200 border-none"
-                    aria-label="Product quantity"
-                  />
+                  <span className="w-12 h-7 text-center bg-transparent text-white text-xs font-semibold flex items-center justify-center border-none">
+                    {quantity}
+                  </span>
                 </div>
                 <button
                   onClick={() => handleQuantityChange(quantity + 1)}
@@ -232,12 +257,40 @@ const ProductCard = ({
               </div>
             </div>
             
-            <button
-              onClick={() => onAddToCart(product, { mrp: product.mrp, quantity })}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Add to Cart ({quantity})
-            </button>
+            {/* Add to Cart and Go to Cart Buttons */}
+            <div className="space-y-2">
+              <AnimatePresence mode="wait">
+                {!showGoToCart ? (
+                  <motion.button
+                    key="add-to-cart"
+                    initial={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={handleAddToCart}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Add to Cart ({quantity})
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    key="go-to-cart"
+                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                    onClick={handleGoToCart}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Go to Cart
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       ) : (
@@ -309,15 +362,9 @@ const ProductCard = ({
                 −
               </button>
               <div className="relative">
-                <input
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={quantity}
-                  onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                  className="w-16 sm:w-18 h-8 sm:h-9 text-center bg-transparent text-white text-xs font-semibold focus:outline-none focus:bg-neutral-600/30 transition-colors duration-200 border-none"
-                  aria-label="Product quantity"
-                />
+                <span className="w-16 sm:w-18 h-8 sm:h-9 text-center bg-transparent text-white text-xs font-semibold flex items-center justify-center border-none">
+                  {quantity}
+                </span>
               </div>
               <button
                 onClick={() => handleQuantityChange(quantity + 1)}
@@ -406,12 +453,39 @@ const ProductCard = ({
           
           {/* Add to Cart Button */}
           <div className="mt-auto pt-2">
-            <button
-              onClick={() => onAddToCart(product, { ...calculations, quantity })}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Add to Cart ({quantity})
-            </button>
+            <div className="space-y-2">
+              <AnimatePresence mode="wait">
+                {!showGoToCart ? (
+                  <motion.button
+                    key="add-to-cart"
+                    initial={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={handleAddToCartDetailed}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Add to Cart ({quantity})
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    key="go-to-cart"
+                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                    onClick={handleGoToCart}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-2 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.293 1.293A1 1 0 005 15h1.414m5.586 0h9m-7 4a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Go to Cart
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       )}

@@ -6,7 +6,6 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaRocket,
   FaChevronRight,
 } from "react-icons/fa";
 
@@ -20,9 +19,8 @@ const Footer = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-900/20 to-transparent"></div>
       </div>
 
-
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
 
 
         {/* Main Content Grid */}
@@ -146,6 +144,26 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Custom Solutions Section */}
+        <div className="border-t border-gray-700/50 py-12">
+          <div className="text-center max-w-3xl mx-auto">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Custom Solutions
+            </h3>
+            <p className="text-gray-300 mb-6 leading-relaxed">
+              We build custom composite solutions tailored to your specific requirements. 
+              Whether it's specialized dimensions, unique material combinations, or innovative designs - we make it happen.
+            </p>
+            <Link
+              to="/contact"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-500 transition-all duration-300 focus:outline-none"
+            >
+              <span>Get Your Custom Solution</span>
+              <FaChevronRight className="ml-2 text-sm" />
+            </Link>
+          </div>
+        </div>
+
         {/* Bottom Section */}
         <div className="border-t border-gray-700/50 py-8">
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
@@ -191,7 +209,6 @@ const Footer = () => {
         </div>
 
       </div>
-
 
     </footer>
   );

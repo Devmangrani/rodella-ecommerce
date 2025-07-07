@@ -12,6 +12,7 @@ import aramid1 from '/assets/Aramid200gsm1.jpeg';
 import aramid2 from '/assets/Aramid200gsm2.jpeg';
 import aramid3 from '/assets/Aramid200gsm3.jpeg';
 import core1 from '/assets/core1.jpeg';
+import epoxy1 from '/assets/Epoxy one image.png';
 import core2 from '/assets/core2.jpeg';
 import carbonAramid1 from '/assets/Carbon-Aramidmixed3K200GSM1.jpeg';
 import carbonAramid2 from '/assets/Carbon-Aramidmixed3K200GSM2.jpeg';
@@ -72,7 +73,7 @@ const Homepage = () => {
     {
       id: 4,
       name: "Epoxy System",
-      image: core1,
+      image: epoxy1,
       description: "Professional epoxy resins",
       productCount: 15,
       link: "/epoxy-system"
