@@ -13,6 +13,7 @@ import aramid2 from '/assets/Aramid200gsm2.jpeg';
 import aramid3 from '/assets/Aramid200gsm3.jpeg';
 import core1 from '/assets/core1.jpeg';
 import epoxy1 from '/assets/Epoxy one image.png';
+import epoxy2 from '/assets/Epoxy-resins-556(1).png';
 import core2 from '/assets/core2.jpeg';
 import carbonAramid1 from '/assets/Carbon-Aramidmixed3K200GSM1.jpeg';
 import carbonAramid2 from '/assets/Carbon-Aramidmixed3K200GSM2.jpeg';
@@ -73,7 +74,7 @@ const Homepage = () => {
     {
       id: 4,
       name: "Epoxy System",
-      image: epoxy1,
+      image: epoxy2,
       description: "Professional epoxy resins",
       productCount: 15,
       link: "/epoxy-system"
@@ -288,7 +289,7 @@ const Homepage = () => {
               </p>
             </div>
             <Link
-              to="/products"
+              to="/reinforcement"
               className="hidden md:flex items-center text-blue-400 hover:text-blue-300 font-semibold"
             >
               View All Products
@@ -296,82 +297,86 @@ const Homepage = () => {
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group bg-neutral-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-blue-500 cursor-pointer"
-                onClick={() => handleFeaturedProductClick(product)}
-              >
-                <div className="relative">
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  
-                  {/* Badges */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-2">
-                    {product.isNew && (
-                      <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full font-medium">
-                        NEW
-                      </span>
-                    )}
-                  </div>
-
-              
-
-                  
-                </div>
-
-                <div className="p-4">
-                  <p className="text-neutral-400 text-xs font-medium mb-1">
-                    {product.category}
-                  </p>
-                  <h3 className="font-semibold text-white text-sm mb-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                    {product.name}
-                  </h3>
-                  
-                  {/* Rating */}
-                  <div className="flex items-center mb-2">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={14}
-                          className={`${
-                            i < Math.floor(product.rating)
-                              ? 'text-yellow-400 fill-current'
-                              : 'text-neutral-600'
-                          }`}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl">
+              {featuredProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group w-full"
+                >
+                  <div 
+                    className="bg-neutral-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-blue-500 h-full flex flex-col cursor-pointer"
+                    onClick={() => handleFeaturedProductClick(product)}
+                  >
+                    <div className="relative">
+                      <div className="aspect-square overflow-hidden flex-shrink-0">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
-                      ))}
+                      </div>
+                      
+                      {/* Badges */}
+                      <div className="absolute top-3 left-3 flex flex-col gap-2">
+                        {product.isNew && (
+                          <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            NEW
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-xs text-neutral-400 ml-1">
-                      ({product.reviewCount})
-                    </span>
-                  </div>
 
-                  {/* Price */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-white">
-                      ₹{product.price.toLocaleString()}
-                    </span>
-                    {product.originalPrice > product.price && (
-                      <span className="text-sm text-neutral-500 line-through">
-                        ₹{product.originalPrice.toLocaleString()}
-                      </span>
-                    )}
+                    <div className="p-4 flex-grow flex flex-col justify-between">
+                      <div>
+                        <p className="text-neutral-400 text-xs font-medium mb-1">
+                          {product.category}
+                        </p>
+                        <h3 className="font-semibold text-white text-sm md:text-base mb-1 line-clamp-2">
+                          {product.name}
+                        </h3>
+                        
+                        {/* Rating */}
+                        <div className="flex items-center mb-2">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                size={14}
+                                className={`${
+                                  i < Math.floor(product.rating)
+                                    ? 'text-yellow-400 fill-current'
+                                    : 'text-neutral-600'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs text-neutral-400 ml-1">
+                            ({product.reviewCount})
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Price */}
+                      <div className="flex items-center gap-2 mt-auto">
+                        <span className="text-lg font-bold text-white">
+                          ₹{product.price.toLocaleString()}
+                        </span>
+                        {product.originalPrice > product.price && (
+                          <span className="text-sm text-neutral-500 line-through">
+                            ₹{product.originalPrice.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
 
           {/* Mobile View All Button */}

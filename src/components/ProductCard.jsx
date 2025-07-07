@@ -189,7 +189,7 @@ const ProductCard = ({
       )}
 
       {/* Product Image with Navigation */}
-      <div className="relative aspect-[4/3] sm:aspect-video bg-gradient-to-br from-neutral-700/50 to-neutral-800/50 rounded-lg mb-2 sm:mb-3 overflow-hidden group w-full">
+      <div className={`relative ${isEpoxyProduct ? 'aspect-square' : 'aspect-[4/3] sm:aspect-video'} bg-gradient-to-br from-neutral-700/50 to-neutral-800/50 rounded-lg mb-2 sm:mb-3 overflow-hidden group w-full`}>
         <img 
           src={product.images[currentImageIndex]} 
           alt={`${product.title} - Image ${currentImageIndex + 1}`}
