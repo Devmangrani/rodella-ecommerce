@@ -179,21 +179,21 @@ const ProductCard = ({
         delay: index * animationDelay,
         ease: "easeOut"
       }}
-      className={`bg-gradient-to-br from-neutral-800/70 to-neutral-900/50 border border-neutral-700/40 rounded-xl p-3 sm:p-4 hover:border-neutral-600/60 transition-all duration-300 shadow-lg hover:shadow-xl w-full h-full min-h-[480px] sm:min-h-[520px] lg:min-h-[560px] flex flex-col ${customClassName}`}
+      className={`bg-gradient-to-br from-neutral-800/70 to-neutral-900/50 border border-neutral-700/40 rounded-xl p-2 sm:p-3 lg:p-4 hover:border-neutral-600/60 transition-all duration-300 shadow-lg hover:shadow-xl w-full h-full min-h-[380px] sm:min-h-[420px] lg:min-h-[480px] flex flex-col ${customClassName}`}
     >
       {/* Category Badge */}
       {showCategory && product.category && !simple && (
-        <div className={`inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-medium mb-2 sm:mb-3 bg-gradient-to-r ${getCategoryColor(product.category)} border w-fit`}>
+        <div className={`inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-medium mb-1 sm:mb-2 bg-gradient-to-r ${getCategoryColor(product.category)} border w-fit`}>
           {product.category}
         </div>
       )}
 
       {/* Product Image with Navigation */}
-      <div className="relative aspect-video bg-gradient-to-br from-neutral-700/50 to-neutral-800/50 rounded-lg mb-2 sm:mb-3 overflow-hidden group w-full">
+      <div className="relative aspect-[4/3] sm:aspect-video bg-gradient-to-br from-neutral-700/50 to-neutral-800/50 rounded-lg mb-2 sm:mb-3 overflow-hidden group w-full">
         <img 
           src={product.images[currentImageIndex]} 
           alt={`${product.title} - Image ${currentImageIndex + 1}`}
-          className="w-full h-full object-contain hover:scale-[1.02] transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500 ease-out"
         />
         
         {/* Navigation Buttons */}
@@ -202,9 +202,9 @@ const ProductCard = ({
             {/* Previous Button */}
             <button
               onClick={() => handleImageNavigation('prev')}
-              className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 sm:p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+              className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 sm:p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-3.5 sm:h-3.5">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-3 sm:h-3">
                 <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
@@ -212,9 +212,9 @@ const ProductCard = ({
             {/* Next Button */}
             <button
               onClick={() => handleImageNavigation('next')}
-              className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 sm:p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+              className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 sm:p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-3.5 sm:h-3.5">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-3 sm:h-3">
                 <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
@@ -225,31 +225,31 @@ const ProductCard = ({
       {/* Simple Card: Only Title and Price */}
       {simple ? (
         <div className="flex flex-col flex-1 justify-between min-h-0">
-          <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white leading-tight mb-1 line-clamp-2">{product.title}</h3>
+          <h3 className="text-sm sm:text-base font-bold text-white leading-tight mb-1 line-clamp-2">{product.title}</h3>
           <div className="mt-auto">
-            <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-400 mb-2">₹{product.mrp.toLocaleString()}</div>
+            <div className="text-base sm:text-lg lg:text-xl font-bold text-green-400 mb-2">₹{product.mrp.toLocaleString()}</div>
             
             {/* Quantity Controls for Simple Card */}
-            <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="flex items-center justify-center gap-2 mb-2">
               <span className="text-xs font-semibold text-neutral-300">Qty:</span>
               <div className="flex items-center bg-gradient-to-r from-neutral-700/80 to-neutral-800/60 border border-neutral-600/50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                 <button
                   onClick={() => handleQuantityChange(quantity - 1)}
                   disabled={quantity <= 1}
-                  className="w-7 h-7 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-r border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-xs font-semibold hover:scale-105 active:scale-95"
+                  className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-r border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-xs font-semibold hover:scale-105 active:scale-95"
                   aria-label="Decrease quantity"
                 >
                   −
                 </button>
                 <div className="relative">
-                  <span className="w-12 h-7 text-center bg-transparent text-white text-xs font-semibold flex items-center justify-center border-none">
+                  <span className="w-10 sm:w-12 h-6 sm:h-7 text-center bg-transparent text-white text-xs font-semibold flex items-center justify-center border-none">
                     {quantity}
                   </span>
                 </div>
                 <button
                   onClick={() => handleQuantityChange(quantity + 1)}
                   disabled={quantity >= 100}
-                  className="w-7 h-7 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-l border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-xs font-semibold hover:scale-105 active:scale-95"
+                  className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-l border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-xs font-semibold hover:scale-105 active:scale-95"
                   aria-label="Increase quantity"
                 >
                   +
@@ -294,7 +294,7 @@ const ProductCard = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col flex-1 space-y-2 sm:space-y-3 min-h-0">
+        <div className="flex flex-col flex-1 space-y-1.5 sm:space-y-2 lg:space-y-3 min-h-0">
           {/* Product Title */}
           <h3 className="text-sm sm:text-base font-bold text-white leading-tight line-clamp-2">
             {product.title}
@@ -326,7 +326,7 @@ const ProductCard = ({
           
           {/* Length Input (only for non-epoxy products) */}
           {showLengthInput && !isEpoxyProduct && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <label className="text-xs font-semibold text-neutral-300 whitespace-nowrap">
                 Length (m):
               </label>
@@ -338,9 +338,9 @@ const ProductCard = ({
                   placeholder="1.0"
                   value={currentLength}
                   onChange={(e) => handleLengthChange(e.target.value)}
-                  className="w-20 sm:w-24 bg-gradient-to-r from-neutral-700/80 to-neutral-800/60 border border-neutral-600/50 hover:border-neutral-500/70 focus:border-blue-500/70 rounded-lg pl-3 pr-6 py-2 text-white text-xs placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="w-18 sm:w-20 lg:w-24 bg-gradient-to-r from-neutral-700/80 to-neutral-800/60 border border-neutral-600/50 hover:border-neutral-500/70 focus:border-blue-500/70 rounded-lg pl-2 pr-5 sm:pl-3 sm:pr-6 py-1.5 sm:py-2 text-white text-xs placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 shadow-sm hover:shadow-md"
                 />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 text-xs pointer-events-none">
+                <div className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 text-neutral-400 text-xs pointer-events-none">
                   m
                 </div>
               </div>
@@ -348,7 +348,7 @@ const ProductCard = ({
           )}
 
           {/* Quantity Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <label className="text-xs font-semibold text-neutral-300 whitespace-nowrap flex-shrink-0 min-w-fit">
               Quantity:
             </label>
@@ -356,20 +356,20 @@ const ProductCard = ({
               <button
                 onClick={() => handleQuantityChange(quantity - 1)}
                 disabled={quantity <= 1}
-                className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-r border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-sm font-semibold hover:scale-105 active:scale-95"
+                className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-r border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-sm font-semibold hover:scale-105 active:scale-95"
                 aria-label="Decrease quantity"
               >
                 −
               </button>
               <div className="relative">
-                <span className="w-16 sm:w-18 h-8 sm:h-9 text-center bg-transparent text-white text-xs font-semibold flex items-center justify-center border-none">
+                <span className="w-14 sm:w-16 h-7 sm:h-8 text-center bg-transparent text-white text-xs font-semibold flex items-center justify-center border-none">
                   {quantity}
                 </span>
               </div>
               <button
                 onClick={() => handleQuantityChange(quantity + 1)}
                 disabled={quantity >= 100}
-                className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-l border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-sm font-semibold hover:scale-105 active:scale-95"
+                className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-b from-neutral-600/80 to-neutral-700/80 hover:from-neutral-500/80 hover:to-neutral-600/80 disabled:from-neutral-800/50 disabled:to-neutral-900/50 disabled:opacity-50 disabled:cursor-not-allowed border-l border-neutral-600/40 flex items-center justify-center text-white transition-all duration-200 text-sm font-semibold hover:scale-105 active:scale-95"
                 aria-label="Increase quantity"
               >
                 +
@@ -379,7 +379,7 @@ const ProductCard = ({
 
           {/* Calculated Values (only for non-epoxy products) */}
           {!isEpoxyProduct && (
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+            <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
               <div className="bg-gradient-to-br from-blue-500/8 to-blue-600/4 border border-blue-500/15 px-1.5 sm:px-2 py-1.5 rounded-lg text-center">
                 <span className="block text-blue-300 text-xs font-medium">Area</span>
                 <span className="text-white font-bold text-xs">{calculations.area.toFixed(2)} m²</span>
@@ -405,9 +405,9 @@ const ProductCard = ({
           
           {/* Specifications (only for non-epoxy products) */}
           {!isEpoxyProduct && (
-            <div className="flex-1 space-y-2 min-h-0">
+            <div className="flex-1 space-y-1.5 sm:space-y-2 min-h-0">
               <h4 className="text-xs font-semibold text-neutral-300 flex items-center gap-2">
-                <span className="w-1 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+                <span className="w-1 h-2 sm:h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
                 Specifications
               </h4>
               <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
@@ -422,7 +422,7 @@ const ProductCard = ({
                 ].filter(Boolean).slice(0, 6).map((spec, index) => (
                   <div 
                     key={spec.label}
-                    className={`bg-gradient-to-br ${spec.color} px-1 sm:px-1.5 py-1.5 rounded-lg text-center`}
+                    className={`bg-gradient-to-br ${spec.color} px-1 sm:px-1.5 py-1 sm:py-1.5 rounded-lg text-center`}
                   >
                     <span className="block text-neutral-400 text-xs leading-tight">{spec.label}</span>
                     <span className="text-white font-semibold text-xs leading-tight">{spec.value}</span>
