@@ -75,8 +75,8 @@ export const fetchUserOrders = async (uid) => {
     const ordersRef = collection(firedb, "orders");
     const q = query(
       ordersRef, 
-      where("uid", "==", uid),
-      orderBy("createdAt", "desc")
+      where("uid", "==", uid)
+      // Removed orderBy to avoid index requirement - we'll sort in JavaScript
     );
     
     const querySnapshot = await getDocs(q);
@@ -89,6 +89,14 @@ export const fetchUserOrders = async (uid) => {
       });
     });
     
+    // Sort orders by createdAt in JavaScript (newest first)
+    orders.sort((a, b) => {
+      const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+      const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+      return dateB - dateA; // Descending order (newest first)
+    });
+    
+    console.log(`✅ Orders fetched successfully for uid: ${uid}`, orders);
     return orders;
   } catch (error) {
     console.error("Error fetching orders:", error);

@@ -1,13 +1,265 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Camera, Edit2, Package, MapPin, Calendar, CreditCard, Eye } from 'lucide-react';
+import { Camera, Edit2, Package, MapPin, Calendar, CreditCard, Eye, X, ShoppingBag, Truck, Weight, Layers } from 'lucide-react';
 import { auth } from '../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doSignOut } from '../firebase/auth';
 import { createOrUpdateUser, fetchUserOrders } from '../firebase/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 import { firedb } from '../firebase/firebase';
+
+// Order Details Modal Component
+const OrderDetailsModal = ({ order, isOpen, onClose }) => {
+  if (!order) return null;
+
+  const getProductTypeIcon = (item) => {
+    if (item.isCompositePlate) return <Layers className="text-neutral-400" size={16} />;
+    if (item.isTubeProduct) return <Package className="text-neutral-400" size={16} />;
+    if (item.isReinforcementProduct) return <Truck className="text-neutral-400" size={16} />;
+    if (item.isCoreProduct) return <Weight className="text-neutral-400" size={16} />;
+    if (item.isEpoxyProduct) return <ShoppingBag className="text-neutral-400" size={16} />;
+    return <Package className="text-neutral-400" size={16} />;
+  };
+
+  const getProductTypeBadge = (item) => {
+    if (item.isCompositePlate) return { label: 'Composite Plate', color: 'bg-neutral-700/50 text-neutral-300 border-neutral-600/50' };
+    if (item.isTubeProduct) return { label: 'Tube Product', color: 'bg-neutral-700/50 text-neutral-300 border-neutral-600/50' };
+    if (item.isReinforcementProduct) return { label: 'Reinforcement', color: 'bg-neutral-700/50 text-neutral-300 border-neutral-600/50' };
+    if (item.isCoreProduct) return { label: 'Core Material', color: 'bg-neutral-700/50 text-neutral-300 border-neutral-600/50' };
+    if (item.isEpoxyProduct) return { label: 'Epoxy System', color: 'bg-neutral-700/50 text-neutral-300 border-neutral-600/50' };
+    return { label: 'Product', color: 'bg-neutral-700/50 text-neutral-300 border-neutral-600/50' };
+  };
+
+  const formatDimensions = (item) => {
+    if (item.isCompositePlate && item.dimensions) {
+      return `${item.dimensions.length} × ${item.dimensions.breadth} × ${item.dimensions.thickness} mm`;
+    }
+    if (item.isTubeProduct && item.dimensions) {
+      if (item.dimensions.innerDiameter) {
+        return `ID: ${item.dimensions.innerDiameter}mm | Wall: ${item.dimensions.wallThickness}mm | Length: ${(item.dimensions.length / 1000).toFixed(1)}m`;
+      } else {
+        return `Size: ${item.dimensions.size}mm | Wall: ${item.dimensions.wallThickness}mm | Length: ${(item.dimensions.length / 1000).toFixed(1)}m`;
+      }
+    }
+    if (item.isReinforcementProduct && item.dimensions) {
+      return `Width: ${item.dimensions.width}mm | Length: ${item.dimensions.lengthInMeters}m`;
+    }
+    if (item.isCoreProduct && item.dimensions) {
+      return `${item.dimensions.width} × ${item.dimensions.height} × ${item.dimensions.thickness}mm | Length: ${item.dimensions.lengthInMeters}m`;
+    }
+    if (item.isEpoxyProduct && item.selectedSize) {
+      return `Selected Size: ${item.selectedSize}`;
+    }
+    return 'N/A';
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="bg-neutral-950 border border-neutral-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-neutral-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center">
+                  <Package className="text-white" size={20} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-white">Order Details</h2>
+                  <p className="text-neutral-400 text-sm">#{order.id.slice(-8).toUpperCase()}</p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-neutral-800 rounded-lg transition-colors duration-200"
+              >
+                <X className="text-neutral-400 hover:text-white" size={20} />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+              {/* Order Summary */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+                <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CreditCard size={14} className="text-neutral-400" />
+                    <span className="text-neutral-400 text-xs font-medium">Total Amount</span>
+                  </div>
+                  <span className="text-white font-semibold text-lg">₹{order.total?.toLocaleString('en-IN', { minimumFractionDigits: 2 }) || '0.00'}</span>
+                </div>
+                
+                <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Package size={14} className="text-neutral-400" />
+                    <span className="text-neutral-400 text-xs font-medium">Items</span>
+                  </div>
+                  <span className="text-white font-semibold text-lg">{order.totalItems || 0}</span>
+                </div>
+
+                <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Weight size={14} className="text-neutral-400" />
+                    <span className="text-neutral-400 text-xs font-medium">Weight</span>
+                  </div>
+                  <span className="text-white font-semibold text-lg">{order.totalWeight?.toFixed(2) || '0.00'} kg</span>
+                </div>
+
+                <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar size={14} className="text-neutral-400" />
+                    <span className="text-neutral-400 text-xs font-medium">Order Date</span>
+                  </div>
+                  <span className="text-white font-semibold text-sm">
+                    {order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : 'N/A'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Ordered Products */}
+              <div>
+                <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
+                  <ShoppingBag size={18} className="text-neutral-400" />
+                  Ordered Products ({order.items?.length || 0})
+                </h3>
+                
+                <div className="space-y-3">
+                  {order.items?.map((item, index) => {
+                    const productType = getProductTypeBadge(item);
+                    return (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, delay: index * 0.05 }}
+                        className="bg-neutral-900/30 border border-neutral-800 rounded-lg p-4 hover:bg-neutral-900/50 transition-all duration-200"
+                      >
+                        <div className="flex flex-col lg:flex-row gap-4">
+                          {/* Product Image */}
+                          <div className="flex-shrink-0">
+                            <div className="w-16 h-16 bg-neutral-800/50 rounded-lg overflow-hidden flex items-center justify-center">
+                              {item.image ? (
+                                <img 
+                                  src={item.image} 
+                                  alt={item.title}
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  {getProductTypeIcon(item)}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Product Details */}
+                          <div className="flex-grow space-y-3">
+                            {/* Product Title and Type */}
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                              <h4 className="text-white font-semibold text-lg">{item.title}</h4>
+                              <span className={`px-3 py-1 rounded-full text-xs font-medium border ${productType.color} w-fit`}>
+                                {productType.label}
+                              </span>
+                            </div>
+
+                            {/* Product Specifications */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                              <div className="bg-neutral-800/30 border border-neutral-700/50 px-3 py-2 rounded-md">
+                                <span className="block text-neutral-400 text-xs font-medium">Quantity</span>
+                                <span className="text-white font-medium">{item.quantity}</span>
+                              </div>
+                              
+                              <div className="bg-neutral-800/30 border border-neutral-700/50 px-3 py-2 rounded-md">
+                                <span className="block text-neutral-400 text-xs font-medium">Unit Price</span>
+                                <span className="text-white font-medium">₹{item.unitPrice?.toLocaleString('en-IN') || '0'}</span>
+                              </div>
+                              
+                              <div className="bg-neutral-800/30 border border-neutral-700/50 px-3 py-2 rounded-md">
+                                <span className="block text-neutral-400 text-xs font-medium">Total Price</span>
+                                <span className="text-white font-medium">₹{item.totalPrice?.toLocaleString('en-IN') || '0'}</span>
+                              </div>
+                            </div>
+
+                            {/* Dimensions and Specifications */}
+                            <div className="bg-neutral-800/20 border border-neutral-700/40 rounded-md p-3">
+                              <span className="block text-neutral-400 text-xs font-medium mb-2">Specifications</span>
+                              <span className="text-white text-sm">{formatDimensions(item)}</span>
+                              
+                              {/* Weight and Area (if applicable) */}
+                              <div className="flex flex-wrap gap-3 mt-2">
+                                {item.weight > 0 && (
+                                  <span className="text-neutral-400 text-xs">
+                                    Weight: {(item.weight * item.quantity).toFixed(3)} kg
+                                  </span>
+                                )}
+                                {item.area > 0 && (
+                                  <span className="text-neutral-400 text-xs">
+                                    Area: {(item.area * item.quantity).toFixed(2)} m²
+                                  </span>
+                                )}
+                                {item.length > 1 && (
+                                  <span className="text-neutral-400 text-xs">
+                                    Length: {item.length} m
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Payment Information */}
+              {order.razorpayPaymentId && (
+                <div className="mt-6 bg-neutral-900/30 border border-neutral-800 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-3 flex items-center gap-2">
+                    <CreditCard size={16} className="text-neutral-400" />
+                    Payment Information
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Payment ID:</span>
+                      <span className="text-white font-mono text-xs">{order.razorpayPaymentId}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Payment Method:</span>
+                      <span className="text-white">{order.paymentMethod}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Payment Status:</span>
+                      <span className="text-green-400 font-medium">{order.paymentStatus}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-400">Order Status:</span>
+                      <span className="text-white font-medium">{order.status}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -16,6 +268,8 @@ const UserDashboard = () => {
   const [profileLoading, setProfileLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
 
   // Check Firebase authentication
   useEffect(() => {
@@ -60,7 +314,6 @@ const UserDashboard = () => {
           const userOrders = await fetchUserOrders(user.uid);
           setOrders(userOrders);
         } catch (error) {
-          console.error('Error fetching orders:', error);
           setOrders([]);
         }
         setOrdersLoading(false);
@@ -143,12 +396,12 @@ const UserDashboard = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Delivered': return 'text-green-400 bg-green-400/10';
-      case 'Shipped': return 'text-blue-400 bg-blue-400/10';
-      case 'Processing': return 'text-yellow-400 bg-yellow-400/10';
-      case 'Completed': return 'text-green-400 bg-green-400/10';
-      case 'Cancelled': return 'text-red-400 bg-red-400/10';
-      default: return 'text-neutral-400 bg-neutral-400/10';
+      case 'Delivered': return 'text-green-400 bg-green-400/10 border border-green-400/20';
+      case 'Shipped': return 'text-blue-400 bg-blue-400/10 border border-blue-400/20';
+      case 'Processing': return 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/20';
+      case 'Completed': return 'text-green-400 bg-green-400/10 border border-green-400/20';
+      case 'Cancelled': return 'text-red-400 bg-red-400/10 border border-red-400/20';
+      default: return 'text-neutral-400 bg-neutral-400/10 border border-neutral-400/20';
     }
   };
 
@@ -166,7 +419,7 @@ const UserDashboard = () => {
 
   const formatOrderTotal = (total) => {
     if (typeof total === 'number') {
-      return total.toFixed(2);
+      return total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
     return total || '0.00';
   };
@@ -275,6 +528,17 @@ const UserDashboard = () => {
         }));
       }
     }
+  };
+
+  // Handle order details modal
+  const handleViewOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setShowOrderDetails(true);
+  };
+
+  const closeOrderDetails = () => {
+    setShowOrderDetails(false);
+    setSelectedOrder(null);
   };
 
   // Show loading state while checking authentication
@@ -616,7 +880,7 @@ const UserDashboard = () => {
                         <div className="text-right">
                           <div className="flex items-center gap-2 mb-2">
                             <CreditCard size={16} className="text-neutral-400" />
-                            <span className="font-semibold text-white">${formatOrderTotal(order.total)}</span>
+                            <span className="font-semibold text-white">₹{formatOrderTotal(order.total)}</span>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                             {order.status}
@@ -624,7 +888,10 @@ const UserDashboard = () => {
                         </div>
                       </div>
                       <div className="flex justify-end">
-                        <button className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors duration-300">
+                        <button 
+                          onClick={() => handleViewOrderDetails(order)}
+                          className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors duration-300 hover:bg-neutral-700/30 px-3 py-1 rounded-lg"
+                        >
                           <Eye size={14} />
                           View Details
                         </button>
@@ -637,6 +904,13 @@ const UserDashboard = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Order Details Modal */}
+      <OrderDetailsModal 
+        order={selectedOrder}
+        isOpen={showOrderDetails}
+        onClose={closeOrderDetails}
+      />
     </div>
   );
 };
