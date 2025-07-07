@@ -61,13 +61,15 @@ const Footer = () => {
               </h3>
               <nav className="space-y-4">
                 {[
-                  { to: "http://localhost:5173/reinforcement?category=carbonFiber&product=3", label: "Carbon Fiber" },
-                  { to: "http://localhost:5173/reinforcement?category=aramid&product=12", label: "Aramid" },
-                  { to: "http://localhost:5173/reinforcement?category=aramid&product=12", label: "Mixed Materials" },
+                  { to: "/reinforcement?category=carbonFiber&product=3", label: "Carbon Fiber" },
+                  { to: "/Composite-tubes", label: "Glass Fiber" },
+                  { to: "/Composite-tubes", label: "Carbon Kevlar" },
+                  { to: "/reinforcement?category=aramid&product=12", label: "Aramid" },
+                  { to: "/reinforcement?category=mixed&product=18", label: "Mixed Materials" },
                   { to: "/contact", label: "Custom Solutions" },
                 ].map((item) => (
                   <Link
-                    key={item.to}
+                    key={item.label}
                     to={item.to}
                     className="group flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-1 focus:outline-none"
                   >
