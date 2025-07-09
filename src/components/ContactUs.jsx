@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import { useForm, ValidationError } from '@formspree/react';
+import SEO from './SEO';
+import { createContactPageStructuredData } from './StructuredData';
 
 const ContactUs = () => {
   const [state, handleSubmit] = useForm("mzzgqeqo");
@@ -107,8 +109,26 @@ const ContactUs = () => {
     );
   }
 
+  // SEO Data
+  const contactStructuredData = createContactPageStructuredData();
+
   return (
-    <section className="pt-20 bg-black">
+    <>
+      <SEO
+        title="Contact Rodella Composites - Get Expert Support | Carbon Fiber & Composite Materials"
+        description="Get in touch with Rodella Composites for expert support on carbon fiber, glass fiber, aramid materials, and epoxy systems. Professional technical guidance and custom composite solutions."
+        canonical="https://rodella.shop/contact"
+        keywords="contact Rodella Composites, carbon fiber support, composite materials help, technical guidance, custom composites, aerospace materials consultation"
+        type="webpage"
+        image="https://rodella.shop/assets/logo.jpg"
+        imageAlt="Contact Rodella Composites for composite materials support"
+        structuredData={contactStructuredData}
+        breadcrumbs={[
+          { name: 'Home', url: 'https://rodella.shop' },
+          { name: 'Contact Us', url: 'https://rodella.shop/contact' }
+        ]}
+      />
+      <section className="pt-20 bg-black">
       <div className="container mx-auto max-w-4xl px-4 py-4 text-white">
         {/* Contact Form Section */}
         <section 
@@ -378,6 +398,7 @@ const ContactUs = () => {
         }
       `}</style>
     </section>
+    </>
   );
 };
 

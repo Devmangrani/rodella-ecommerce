@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import productsData from '../data/reinforcementProducts.json';
 import ProductCard from './ProductCard';
 import { useCart } from '../context/myState';
+import SEO from './SEO';
+import { createCollectionPageStructuredData, createProductStructuredData } from './StructuredData';
 
 const Reinforcement = () => {
   const location = useLocation();
@@ -161,8 +163,34 @@ const Reinforcement = () => {
 
   const filteredProducts = getFilteredProducts();
 
+  // SEO Data
+  const collectionStructuredData = createCollectionPageStructuredData(
+    'Reinforcement Materials', 
+    filteredProducts, 
+    'https://rodella.shop'
+  );
+
+  const productStructuredData = filteredProducts.slice(0, 5).map(product => 
+    createProductStructuredData(product, 'Reinforcement Material', 'https://rodella.shop')
+  );
+
   return (
-    <motion.div 
+    <>
+      <SEO
+        title="Reinforcement Materials - Carbon Fiber, Aramid & Mixed Composites | Rodella Composites"
+        description="Premium reinforcement materials including carbon fiber fabrics, aramid kevlar, and mixed composite materials. High-quality 200GSM, 3K weave patterns for aerospace, automotive, and industrial applications."
+        canonical="https://rodella.shop/reinforcement"
+        keywords="carbon fiber fabric, aramid kevlar fabric, composite reinforcement, 200gsm carbon fiber, 3k carbon fiber, twill weave carbon, spread tow fabric, aerospace carbon fiber, automotive composites, structural reinforcement"
+        type="webpage"
+        image="https://rodella.shop/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg"
+        imageAlt="Premium carbon fiber reinforcement materials"
+        structuredData={[collectionStructuredData, ...productStructuredData]}
+        breadcrumbs={[
+          { name: 'Home', url: 'https://rodella.shop' },
+          { name: 'Reinforcement Materials', url: 'https://rodella.shop/reinforcement' }
+        ]}
+      />
+      <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -314,6 +342,7 @@ const Reinforcement = () => {
         </div>
       </div>
     </motion.div>
+    </>
   );
 };
 

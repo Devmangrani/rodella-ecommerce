@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import productsData from '../data/epoxyProducts.json';
 import ProductCard from './ProductCard';
 import { useCart } from '../context/myState';
+import SEO from './SEO';
+import { createCollectionPageStructuredData, createProductStructuredData } from './StructuredData';
 
 const EpoxySystem = () => {
   const location = useLocation();
@@ -151,8 +153,34 @@ const EpoxySystem = () => {
 
   const filteredProducts = getFilteredProducts();
 
+  // SEO Data
+  const collectionStructuredData = createCollectionPageStructuredData(
+    'Epoxy Systems', 
+    filteredProducts, 
+    'https://rodella.shop'
+  );
+
+  const productStructuredData = filteredProducts.slice(0, 5).map(product => 
+    createProductStructuredData(product, 'Epoxy System', 'https://rodella.shop')
+  );
+
   return (
-    <motion.div 
+    <>
+      <SEO
+        title="Professional Epoxy Systems - Resins, Adhesives & Gelcoats | Rodella Composites"
+        description="High-performance epoxy resins, adhesives, and gelcoats for composite manufacturing. Premium compounds with various service temperatures, cure times, and viscosities for aerospace and industrial applications."
+        canonical="https://rodella.shop/epoxy-system"
+        keywords="epoxy resin, composite adhesives, gelcoats, high temperature epoxy, aerospace epoxy, industrial adhesives, marine gelcoat, tooling gelcoat, epoxy system, composite resin"
+        type="webpage"
+        image="https://rodella.shop/assets/Epoxy-resins-556(1).png"
+        imageAlt="Professional epoxy systems and resins"
+        structuredData={[collectionStructuredData, ...productStructuredData]}
+        breadcrumbs={[
+          { name: 'Home', url: 'https://rodella.shop' },
+          { name: 'Epoxy Systems', url: 'https://rodella.shop/epoxy-system' }
+        ]}
+      />
+      <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -304,6 +332,7 @@ const EpoxySystem = () => {
         </div>
       </div>
     </motion.div>
+    </>
   );
 };
 

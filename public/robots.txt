@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+
+# Allow important pages
+Allow: /
+Allow: /contact
+Allow: /Composite-tubes
+Allow: /composite-plates
+Allow: /reinforcement
+Allow: /core-material
+Allow: /epoxy-system
+
+# Sitemap location
+Sitemap: https://rodella.shop/sitemap.xml
+Sitemap: https://www.rodella.shop/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1 

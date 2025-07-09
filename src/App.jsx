@@ -1,21 +1,33 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import Header from './components/Navbar';
 import Footer from './components/Footer';
-import Homepage from './components/Homepage';
-import ContactUs from './components/ContactUs';
-import TubingComparison from './components/TubingComparison';
-import CompositePlates from './components/CompositePlates';
-import Reinforcement from './components/Reinforcement';
-import CoreMaterial from './components/CoreMaterial';
-import EpoxySystem from './components/EpoxySystem';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import UserDashboard from './components/UserDashboard';
-import Cart from './components/Cart';
-// import AuthDebug from './components/AuthDebug';
 import { CartProvider } from './context/myState';
 import PrivateRoute from './components/PrivateRoute';
+
+// Lazy load components for better performance
+const Homepage = lazy(() => import('./components/Homepage'));
+const ContactUs = lazy(() => import('./components/ContactUs'));
+const TubingComparison = lazy(() => import('./components/TubingComparison'));
+const CompositePlates = lazy(() => import('./components/CompositePlates'));
+const Reinforcement = lazy(() => import('./components/Reinforcement'));
+const CoreMaterial = lazy(() => import('./components/CoreMaterial'));
+const EpoxySystem = lazy(() => import('./components/EpoxySystem'));
+const Login = lazy(() => import('./components/Login'));
+const Signup = lazy(() => import('./components/Signup'));
+const UserDashboard = lazy(() => import('./components/UserDashboard'));
+const Cart = lazy(() => import('./components/Cart'));
+
+// Loading component for suspense fallback
+const PageLoader = () => (
+  <div className="min-h-screen bg-black flex items-center justify-center">
+    <div className="text-center">
+      <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-white text-lg">Loading...</p>
+    </div>
+  </div>
+);
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -47,29 +59,32 @@ const ScrollToTop = () => {
 
 const App = () => {
   return (
-    <CartProvider>
-      <Router>
-        <div className="min-h-screen bg-black text-white">
-          <ScrollToTop />
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/contact" element={<ContactUs />} />
-              <Route path="/Composite-tubes" element={<TubingComparison />} />
-              <Route path="/composite-plates" element={<CompositePlates />} />
-              <Route path="/reinforcement" element={<Reinforcement />} />
-              <Route path="/core-material" element={<CoreMaterial />} />
-              <Route path="/epoxy-system" element={<EpoxySystem />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              {/* <Route path="/debug" element={<AuthDebug />} /> */}
-              <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
-              <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
-            </Routes>
+    <HelmetProvider>
+      <CartProvider>
+        <Router>
+          <div className="min-h-screen bg-black text-white">
+            <ScrollToTop />
+                      <Layout>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/Composite-tubes" element={<TubingComparison />} />
+                <Route path="/composite-plates" element={<CompositePlates />} />
+                <Route path="/reinforcement" element={<Reinforcement />} />
+                <Route path="/core-material" element={<CoreMaterial />} />
+                <Route path="/epoxy-system" element={<EpoxySystem />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
+                <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+              </Routes>
+            </Suspense>
           </Layout>
-        </div>
-      </Router>
-    </CartProvider>
+          </div>
+        </Router>
+      </CartProvider>
+    </HelmetProvider>
   )
 }
 

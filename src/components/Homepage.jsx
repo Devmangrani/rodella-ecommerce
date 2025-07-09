@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, Heart, Star, ArrowRight, ChevronRight, Phone, Mail, MapPin } from 'lucide-react';
+import SEO from './SEO';
+import LazyImage from './LazyImage';
+import { createWebSiteStructuredData, createStoreStructuredData, compositeMaterialsFAQs, createFAQStructuredData } from './StructuredData';
 
 // Import all images
 import carbon200 from '/assets/200carbon.jpg';
@@ -204,8 +207,24 @@ const Homepage = () => {
     }
   };
 
+  // SEO Data
+  const websiteStructuredData = createWebSiteStructuredData();
+  const storeStructuredData = createStoreStructuredData();
+  const faqStructuredData = createFAQStructuredData(compositeMaterialsFAQs);
+
   return (
-    <div className="min-h-screen bg-black text-white mt-16">
+    <>
+      <SEO
+        title="Rodella Composites - Premium Carbon Fiber, Glass Fiber & Composite Materials | Professional Grade"
+        description="Leading supplier of high-performance carbon fiber, glass fiber, aramid fabrics, composite tubes & plates, epoxy resins, and adhesives. Professional-grade materials for aerospace, automotive, marine, and industrial applications. Shop now!"
+        canonical="https://rodella.shop"
+        keywords="carbon fiber India, glass fiber materials, aramid kevlar fabric, composite tubes, composite plates, epoxy resin, carbon kevlar sheets, aerospace materials, automotive composites, marine composites, structural materials, prepreg carbon fiber, gelcoat, adhesives, rohacell foam"
+        type="website"
+        image="https://rodella.shop/assets/200carbon.jpg"
+        imageAlt="Premium carbon fiber materials by Rodella Composites"
+        structuredData={[websiteStructuredData, storeStructuredData, faqStructuredData]}
+      />
+      <div className="min-h-screen bg-black text-white mt-16">
      
 
      
@@ -242,9 +261,9 @@ const Homepage = () => {
                   <Link to={category.link} className="block h-full">
                     <div className="bg-neutral-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-blue-500 h-full flex flex-col">
                       <div className="aspect-square overflow-hidden flex-shrink-0">
-                        <img
+                        <LazyImage
                           src={category.image}
-                          alt={category.name}
+                          alt={`${category.name} - ${category.description} available at Rodella Composites`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
@@ -312,11 +331,11 @@ const Homepage = () => {
                     className="bg-neutral-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-blue-500 h-full flex flex-col cursor-pointer"
                     onClick={() => handleFeaturedProductClick(product)}
                   >
-                    <div className="relative">
+                                          <div className="relative">
                       <div className="aspect-square overflow-hidden flex-shrink-0">
-                        <img
+                        <LazyImage
                           src={product.image}
-                          alt={product.name}
+                          alt={`${product.name} - ${product.category} from Rodella Composites. Professional grade composite material.`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
@@ -394,6 +413,7 @@ const Homepage = () => {
 
     
     </div>
+    </>
   );
 };
 

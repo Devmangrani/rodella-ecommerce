@@ -2,12 +2,137 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rodella Composites Shop</title>
+    <link rel="icon" type="image/x-icon" href="/assets/logo.jpg" />
+    <link rel="apple-touch-icon" href="/assets/logo.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Rodella Composites - Premium Carbon Fiber & Composite Materials</title>
+    <meta name="description" content="Leading supplier of high-performance carbon fiber, glass fiber, aramid fabrics, composite tubes & plates, epoxy resins, and adhesives for professional applications." />
+    <link rel="canonical" href="https://rodella.shop" />
+    
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/assets/logo.jpg" as="image" type="image/jpeg" />
+    <!-- Preload LCP hero image with highest priority -->
+    <link rel="preload" href="/assets/200carbon.jpg" as="image" type="image/jpeg" fetchpriority="high" />
+    <!-- Preload other hero images for smooth transitions -->
+    <link rel="prefetch" href="/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg" as="image" />
+    <link rel="prefetch" href="/assets/Aramid200gsm1.jpeg" as="image" />
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="/src/index.css" as="style" />
+    
+    <!-- DNS prefetch for performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    
+    <!-- Resource hints -->
+    <link rel="prefetch" href="/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg" />
+    <link rel="prefetch" href="/assets/composite-tube.jpg" />
+    
+    <!-- Critical inline styles for above-the-fold content -->
+    <style>
+      /* Critical CSS for initial render */
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background-color: #000;
+        color: #fff;
+      }
+      
+      #root {
+        min-height: 100vh;
+      }
+      
+      /* Loading spinner styles */
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255,255,255,0.1);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Initial loading state */
+      .initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      /* Mobile-specific optimizations */
+      @media (max-width: 768px) {
+        body {
+          font-size: 14px;
+        }
+        
+        /* Optimize text rendering on mobile */
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
+        }
+        
+        /* Prevent layout shifts on mobile */
+        img, video {
+          height: auto;
+          max-width: 100%;
+        }
+        
+        /* Optimize touch targets */
+        button, a, input {
+          min-height: 44px;
+          min-width: 44px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Initial loading screen -->
+      <div class="initial-loader">
+        <div style="text-align: center;">
+          <div class="loading-spinner"></div>
+          <p style="margin-top: 20px; font-size: 18px;">Loading Rodella Composites...</p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Remove initial loader when React app loads -->
+    <script>
+      window.addEventListener('load', function() {
+        setTimeout(() => {
+          const loader = document.querySelector('.initial-loader');
+          if (loader) {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => loader.remove(), 500);
+          }
+        }, 100);
+      });
+    </script>
   </body>
 </html>
