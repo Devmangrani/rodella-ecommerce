@@ -28,19 +28,23 @@ function convertToMM(value, unit) {
 
 function calculateResults({ material, size, wall, length, unit }, materials) {
   // Convert all to mm for calculation
-  const { width, height } = tubeSizes[size];
-  const wMM = convertToMM(Number(width), unit);
-  const hMM = convertToMM(Number(height), unit);
+  const { width, height } = tubeSizes[size]; // These are INNER dimensions
+  const innerWMM = convertToMM(Number(width), unit);
+  const innerHMM = convertToMM(Number(height), unit);
   const wallMM = convertToMM(Number(wall), unit);
   const lenMM = convertToMM(Number(length), unit);
   
-  const outerArea = wMM * hMM;
-  const innerArea = (wMM - 2 * wallMM) * (hMM - 2 * wallMM);
+  // Calculate outer dimensions by adding wall thickness
+  const outerWMM = innerWMM + 2 * wallMM;
+  const outerHMM = innerHMM + 2 * wallMM;
+  
+  const outerArea = outerWMM * outerHMM;
+  const innerArea = innerWMM * innerHMM;
   const area = outerArea - innerArea;
   
   // Moment of inertia for rectangular tube
-  const Ix = (wMM * Math.pow(hMM, 3) - (wMM - 2 * wallMM) * Math.pow(hMM - 2 * wallMM, 3)) / 12;
-  const Iy = (hMM * Math.pow(wMM, 3) - (hMM - 2 * wallMM) * Math.pow(wMM - 2 * wallMM, 3)) / 12;
+  const Ix = (outerWMM * Math.pow(outerHMM, 3) - innerWMM * Math.pow(innerHMM, 3)) / 12;
+  const Iy = (outerHMM * Math.pow(outerWMM, 3) - innerHMM * Math.pow(innerWMM, 3)) / 12;
   
   const mass = area * lenMM * materials[material].density / 1000; // g
   // Deflection (simplified, not real-world accurate)
@@ -51,7 +55,7 @@ function calculateResults({ material, size, wall, length, unit }, materials) {
   if (material === 'carbon_fiber') {
     // Convert mass from grams to kilograms and apply Carbon Fiber Rectangular tube rate
     const massInKg = mass / 1000;
-    const basePrice = massInKg * 1650; // 1,650 per kg for Carbon Fiber Rectangular tube
+    const basePrice = massInKg * 16500; // 1,650 per kg for Carbon Fiber Rectangular tube
     price = basePrice * 1.10; // Add 10% margin
   }
   

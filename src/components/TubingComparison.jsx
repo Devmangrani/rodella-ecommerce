@@ -24,7 +24,7 @@ const materials = {
     }
   },
   carbon_kevlar: { 
-    density: 7.85, 
+    density: 1.44, 
     label: 'Carbon Kevlar',
     bgImages: {
       circular: '/assets/circular-tube-carbon-fiber.jpg',
