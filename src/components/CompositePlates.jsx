@@ -4,8 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/myState';
 
 const materials = {
-  carbon_fiber: { density: 1.6, label: 'Carbon Fiber', bgImage: '/assets/carbon-fiber-sheet.jpg' },
-  glass_fiber: { density: 2.7, label: 'Glass Fiber', bgImage: '/assets/glass-fiber-sheet.png' },
+  carbon_fiber: { 
+    density: 2, // g/cm³
+    pricePerGram: 5, // ₹5 per gram
+    label: 'Carbon Fiber', 
+    bgImage: '/assets/carbon-fiber-sheet.jpg' 
+  },
+  glass_fiber: { 
+    density: 2.7, // g/cm³
+    pricePerGram: 3, // ₹3 per gram
+    label: 'Glass Fiber', 
+    bgImage: '/assets/glass-fiber-sheet.png' 
+  },
   // steel: { density: 7.85, label: 'Steel', bgImage: '/assets/Steel plated.jpg' },
 };
 
@@ -31,12 +41,15 @@ function calculateResults({ material, length, breadth, thickness, unit }) {
   
   const volume = lenMM * breadthMM * thicknessMM; // mm³
   const area = lenMM * breadthMM; // mm²
+  // Mass calculation: volume(mm³) ÷ 1000 = volume(cm³), then × density(g/cm³) = mass(g)
   const mass = volume * materials[material].density / 1000; // g
+  // Price calculation: mass(g) × price per gram(₹/g) = total price(₹)
+  const price = mass * materials[material].pricePerGram;
   
   return {
     area: area.toFixed(2),
     mass: mass.toFixed(2),
-    price: (mass * 2).toFixed(2), // Example price calculation
+    price: price.toFixed(2),
   };
 }
 
@@ -90,16 +103,16 @@ const PlateSVG = ({ length, breadth, thickness }) => {
       >
         <defs>
           <linearGradient id="topGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: '#d1d5db', stopOpacity: 0.9 }} />
-            <stop offset="100%" style={{ stopColor: '#9ca3af', stopOpacity: 0.9 }} />
+            <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
           </linearGradient>
           <linearGradient id="frontGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#f3f4f6', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#d1d5db', stopOpacity: 1 }} />
+            <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
           </linearGradient>
           <linearGradient id="sideGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: '#9ca3af', stopOpacity: 0.9 }} />
-            <stop offset="100%" style={{ stopColor: '#6b7280', stopOpacity: 0.9 }} />
+            <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#f5f5f5', stopOpacity: 1 }} />
           </linearGradient>
         </defs>
 
@@ -112,7 +125,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
             points.backTopLeft,
           ])}
           fill="url(#topGradient)"
-          stroke="#6b7280"
+          stroke="#ffffff"
           strokeWidth="1.5"
         />
 
@@ -125,7 +138,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
             points.backTopRight,
           ])}
           fill="url(#sideGradient)"
-          stroke="#6b7280"
+          stroke="#ffffff"
           strokeWidth="1.5"
         />
 
@@ -138,7 +151,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
             points.frontTopLeft,
           ])}
           fill="url(#frontGradient)"
-          stroke="#6b7280"
+          stroke="#ffffff"
           strokeWidth="1.5"
         />
 
@@ -148,7 +161,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
           y1={points.frontBottomLeft[1] + 30}
           x2={points.frontBottomRight[0]}
           y2={points.frontBottomRight[1] + 30}
-          stroke="#9ca3af"
+          stroke="#ffffff"
           strokeWidth="2.5"
           strokeDasharray="4,2"
         />
@@ -156,7 +169,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
           x={(points.frontBottomLeft[0] + points.frontBottomRight[0]) / 2}
           y={points.frontBottomLeft[1] + 55}
           textAnchor="middle"
-          fill="#9ca3af"
+          fill="#ffffff"
           fontSize="24"
           fontWeight="900"
           fontFamily="system-ui, -apple-system, sans-serif"
@@ -169,7 +182,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
           y1={points.frontBottomRight[1]}
           x2={points.backBottomRight[0]}
           y2={points.backBottomRight[1]}
-          stroke="#9ca3af"
+          stroke="#ffffff"
           strokeWidth="2.5"
           strokeDasharray="4,2"
         />
@@ -177,12 +190,10 @@ const PlateSVG = ({ length, breadth, thickness }) => {
           x={points.frontBottomRight[0] + (points.backBottomRight[0] - points.frontBottomRight[0]) / 2}
           y={points.frontBottomRight[1] + (points.backBottomRight[1] - points.frontBottomRight[1]) / 2 - 15}
           textAnchor="middle"
-          fill="#000000"
+          fill="#ffffff"
           fontSize="24"
           fontWeight="900"
           fontFamily="system-ui, -apple-system, sans-serif"
-          stroke="#ffffff"
-          strokeWidth="1"
         >
           {breadth} mm
         </text>
@@ -192,7 +203,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
           y1={points.frontBottomLeft[1]}
           x2={points.frontTopLeft[0] - 30}
           y2={points.frontTopLeft[1]}
-          stroke="#9ca3af"
+          stroke="#ffffff"
           strokeWidth="2.5"
           strokeDasharray="4,2"
         />
@@ -200,7 +211,7 @@ const PlateSVG = ({ length, breadth, thickness }) => {
           x={points.frontBottomLeft[0] - 55}
           y={(points.frontBottomLeft[1] + points.frontTopLeft[1]) / 2}
           textAnchor="middle"
-          fill="#9ca3af"
+          fill="#ffffff"
           fontSize="24"
           fontWeight="900"
           fontFamily="system-ui, -apple-system, sans-serif"
@@ -465,7 +476,7 @@ const CompositePlates = () => {
                   <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center">
                     3D Preview
                   </h3>
-                  <div className="w-full bg-neutral-800/30 rounded-lg p-2" style={{ height: '200px' }}>
+                  <div className="w-full bg-transparent rounded-lg p-2" style={{ height: '200px' }}>
                     <PlateSVG 
                       length={Number(plate.length) >= 200 && Number(plate.length) <= 1000 ? Number(plate.length) : 400} 
                       breadth={Number(plate.breadth) >= 200 && Number(plate.breadth) <= 1000 ? Number(plate.breadth) : 300}
@@ -550,7 +561,7 @@ const CompositePlates = () => {
                   <h3 className="text-sm font-semibold text-neutral-200 mb-2 text-center lg:mb-4">
                     3D Preview
                   </h3>
-                  <div className="w-full bg-neutral-800/30 rounded-lg p-2 lg:p-4" style={{ height: '320px' }}>
+                  <div className="w-full bg-transparent rounded-lg p-2 lg:p-4" style={{ height: '320px' }}>
                     <PlateSVG 
                       length={Number(plate.length) >= 200 && Number(plate.length) <= 1000 ? Number(plate.length) : 400} 
                       breadth={Number(plate.breadth) >= 200 && Number(plate.breadth) <= 1000 ? Number(plate.breadth) : 300}

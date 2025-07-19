@@ -35,20 +35,34 @@ const NavBrand = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Link to="/" className="flex items-center group focus:outline-none">
-        {/* <img
-          src={logo}
-          alt="Rodella Logo"
-          className="h-[40px] w-auto mr-2.5 object-contain transition-transform duration-300 group-hover:scale-110"
-        /> */}
-        <motion.h3 
-          className="text-base sm:text-lg md:text-xl lg:text-2xl text-white font-medium tracking-wide group-hover:text-neutral-300 transition-colors duration-300"
-          whileHover={{ scale: 1.05 }}
+      <a 
+        href="https://rodella.in/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="flex flex-col group focus:outline-none transition-all duration-300 hover:scale-105"
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
+        <motion.div
+          className="flex flex-col leading-tight"
+          whileHover={{ scale: 1.02 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          rodella
-        </motion.h3>
-      </Link>
+          <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white font-bold tracking-wide group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
+            rodella
+          </span>
+          <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] text-gray-500 font-medium tracking-[0.2em] uppercase group-hover:text-gray-300 transition-all duration-300 -mt-1">
+            AEROSPACE LABS
+          </span>
+        </motion.div>
+        {hover && (
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            className="h-0.5 bg-gradient-to-r from-white to-gray-300 origin-left"
+          />
+        )}
+      </a>
     </motion.div>
   );
 };
@@ -174,10 +188,10 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
       {windowWidth > 1024 && (
         <>
           <motion.div 
-            className={`relative w-[40px] h-[40px] md:w-[45px] md:h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
+            className={`relative w-[40px] h-[40px] md:w-[45px] md:h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-gray-800/50 hover:border-gray-500 ${
               isCartPage 
-                ? 'border-white bg-neutral-800/30' 
-                : 'border-neutral-700'
+                ? 'border-white bg-gray-800/30' 
+                : 'border-gray-700'
             }`}
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
@@ -188,17 +202,17 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
               >
                 {totalItems > 99 ? '99+' : totalItems}
               </motion.span>
             )}
           </motion.div>
           <motion.div 
-            className={`w-[40px] h-[40px] md:w-[45px] md:h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-neutral-800/50 hover:border-neutral-600 ${
+            className={`w-[40px] h-[40px] md:w-[45px] md:h-[45px] flex justify-center items-center border rounded-2xl cursor-pointer text-white transition-all duration-300 hover:bg-gray-800/50 hover:border-gray-500 ${
               isDashboardPage 
-                ? 'border-white bg-neutral-800/30' 
-                : 'border-neutral-700'
+                ? 'border-white bg-gray-800/30' 
+                : 'border-gray-700'
             }`}
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
@@ -212,7 +226,7 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
       {windowWidth > 1024 && (
         <Link to="/contact" className="focus:outline-none">
           <motion.div 
-            className="bg-neutral-100 text-black px-3 md:px-4 lg:px-5 py-2 md:py-2.5 shadow-lg rounded-2xl flex items-center hover:bg-neutral-200 transition-all duration-300 focus:ring-2 focus:ring-neutral-600 focus:ring-offset-2 focus:ring-offset-neutral-900 text-sm md:text-base font-medium"
+            className="bg-white text-black px-3 md:px-4 lg:px-5 py-2 md:py-2.5 shadow-lg rounded-2xl flex items-center hover:bg-gray-100 transition-all duration-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-black text-sm md:text-base font-medium"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -254,6 +268,7 @@ const DrawerNav = ({ isLoggedIn }) => {
   };
 
   const menuItems = [
+    { path: "/", label: "Home" },
     { path: "/Composite-tubes", label: "Composite Tubes" },
     { path: "/composite-plates", label: "Composite Plates" },
     { path: "/reinforcement", label: "Reinforcement" },
@@ -263,7 +278,7 @@ const DrawerNav = ({ isLoggedIn }) => {
 
   const list = (anchor) => (
     <Box
-      className="w-[280px] sm:w-[320px] md:w-[360px] bg-neutral-900 h-full text-white"
+      className="w-[280px] sm:w-[320px] md:w-[360px] bg-black h-full text-white"
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -273,7 +288,7 @@ const DrawerNav = ({ isLoggedIn }) => {
           
         </div>
       </div>
-      <Divider className="bg-neutral-800" />
+      <Divider className="bg-gray-800" />
       <List className="px-3 sm:px-4 md:px-6">
         {menuItems.map((item, index) => (
           <motion.div
@@ -286,7 +301,7 @@ const DrawerNav = ({ isLoggedIn }) => {
               <ListItemButton
                 component={Link}
                 to={item.path}
-                className="rounded-xl hover:bg-neutral-800/50 transition-all duration-300 py-3 md:py-4"
+                className="rounded-xl hover:bg-gray-800/50 transition-all duration-300 py-3 md:py-4"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -295,7 +310,7 @@ const DrawerNav = ({ isLoggedIn }) => {
               >
                 <ListItemText>
                   <motion.span
-                    className="text-white hover:text-white transition-colors duration-300 text-sm sm:text-base md:text-lg"
+                    className="text-white hover:text-gray-200 transition-colors duration-300 text-sm sm:text-base md:text-lg"
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
@@ -307,7 +322,7 @@ const DrawerNav = ({ isLoggedIn }) => {
           </motion.div>
         ))}
       </List>
-      <Divider className="bg-neutral-800 my-4 md:my-6" />
+      <Divider className="bg-gray-800 my-4 md:my-6" />
       <motion.div 
         className="flex justify-center items-center gap-6 sm:gap-8 md:gap-10 py-6 sm:py-8 md:py-10"
         initial={{ opacity: 0, y: 20 }}
@@ -321,19 +336,19 @@ const DrawerNav = ({ isLoggedIn }) => {
           onClick={handleDrawerCartClick}
         >
           <div className="flex flex-col items-center gap-2">
-            <div className="relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+            <div className="relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] border-2 border-gray-700 rounded-2xl hover:bg-gray-800/50 transition-all duration-300 group-hover:border-gray-500 flex items-center justify-center">
               <ShoppingCartIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]" />
               {totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 flex items-center justify-center"
+                  className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 flex items-center justify-center"
                 >
                   {totalItems > 99 ? '99+' : totalItems}
                 </motion.span>
               )}
             </div>
-            <span className="text-neutral-400 text-xs sm:text-sm md:text-base group-hover:text-white transition-colors duration-300">
+            <span className="text-gray-400 text-xs sm:text-sm md:text-base group-hover:text-white transition-colors duration-300">
               Cart {totalItems > 0 && `(${totalItems})`}
             </span>
           </div>
@@ -345,10 +360,10 @@ const DrawerNav = ({ isLoggedIn }) => {
         >
           <Link to={isLoggedIn ? "/dashboard" : "/login"} className="no-underline">
             <div className="flex flex-col items-center gap-2">
-              <div className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] border-2 border-neutral-700 rounded-2xl hover:bg-neutral-800/50 transition-all duration-300 group-hover:border-neutral-500 flex items-center justify-center">
+              <div className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] border-2 border-gray-700 rounded-2xl hover:bg-gray-800/50 transition-all duration-300 group-hover:border-gray-500 flex items-center justify-center">
                 <PersonIcon className="text-white w-[24px] h-[24px] sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]" />
               </div>
-              <span className="text-neutral-400 text-xs sm:text-sm md:text-base group-hover:text-white transition-colors duration-300">
+              <span className="text-gray-400 text-xs sm:text-sm md:text-base group-hover:text-white transition-colors duration-300">
                 {isLoggedIn ? "Dashboard" : "Account"}
               </span>
             </div>
@@ -363,7 +378,7 @@ const DrawerNav = ({ isLoggedIn }) => {
       >
         <Link to="/contact" className="no-underline">
           <motion.div 
-            className="bg-neutral-100 text-black px-4 md:px-6 py-2.5 sm:py-3 md:py-4 shadow-lg rounded-2xl flex items-center justify-center hover:bg-neutral-200 transition-all duration-300 text-sm sm:text-base md:text-lg font-medium"
+            className="bg-white text-black px-4 md:px-6 py-2.5 sm:py-3 md:py-4 shadow-lg rounded-2xl flex items-center justify-center hover:bg-gray-100 transition-all duration-300 text-sm sm:text-base md:text-lg font-medium"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -404,7 +419,7 @@ const DrawerNav = ({ isLoggedIn }) => {
             className="z-[1001]"
             PaperProps={{
               sx: {
-                backgroundColor: 'rgb(23, 23, 23)',
+                backgroundColor: 'rgb(0, 0, 0)',
                 backdropFilter: 'blur(10px)',
               }
             }}
@@ -439,6 +454,7 @@ const NavLinks = () => {
       transition={{ duration: 0.5, delay: 0.1 }}
     >
       {[
+        { path: "/", label: "Home" },
         { path: "/Composite-tubes", label: "Composite Tubes" },
         { path: "/composite-plates", label: "Composite Plates" },
         { path: "/reinforcement", label: "Reinforcement" },
@@ -566,7 +582,7 @@ const Header = () => {
       isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
     }`}>
       <motion.nav 
-        className="py-2 sm:py-3 md:py-4 flex items-center justify-between bg-neutral-900 text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-6 lg:px-8 w-full max-w-[1536px] mx-auto shadow-lg backdrop-blur-sm"
+        className="py-2 sm:py-3 md:py-4 flex items-center justify-between bg-black/95 backdrop-blur-md text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-6 lg:px-8 w-full max-w-[1536px] mx-auto shadow-2xl border border-gray-800/50"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}

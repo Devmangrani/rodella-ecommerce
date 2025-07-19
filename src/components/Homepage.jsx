@@ -245,6 +245,17 @@ const Homepage = () => {
             <p className="text-lg text-neutral-300 max-w-2xl mx-auto">
               Discover our comprehensive range of composite materials and tools
             </p>
+            <div className="mt-4">
+              <a
+                href="https://rodella.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium"
+              >
+                <span>Visit rodella AEROSPACE LABS</span>
+                <ChevronRight size={16} className="ml-1" />
+              </a>
+            </div>
           </motion.div>
 
           <div className="flex justify-center">
