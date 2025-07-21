@@ -5,14 +5,14 @@ import { useCart } from '../context/myState';
 
 const materials = {
   carbon_fiber: { 
-    density: 2, // g/cm³
-    pricePerGram: 10, // ₹5 per gram
+    density: 1.6, // g/cm³
+    pricePerGram: 8, // ₹5 per gram
     label: 'Carbon Fiber', 
     bgImage: '/assets/carbon-fiber-sheet.jpg' 
   },
   glass_fiber: { 
-    density: 2.7, // g/cm³
-    pricePerGram: 9, // ₹9000 per KG (₹9 per gram)
+    density: 2, // g/cm³
+    pricePerGram: 5, // ₹9000 per KG (₹9 per gram)
     label: 'Glass Fiber', 
     bgImage: '/assets/glass-fiber-sheet.png' 
   },

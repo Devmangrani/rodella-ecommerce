@@ -53,7 +53,7 @@ function calculateResults({ material, wall, inside, length, unit }, materials) {
     // Convert mass from grams to kilograms and apply Glass Fiber rate
     const massInKg = mass / 1000;
     const basePrice = massInKg * 9000; // 9,000 per kg for Glass Fiber
-    price = basePrice * 1.10; // Add 10% margin
+    price = basePrice *1.10; // Add 10% margin
   }
   
   return {

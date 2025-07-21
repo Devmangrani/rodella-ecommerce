@@ -15,7 +15,7 @@ const materials = {
     }
   },
   glass_fiber: { 
-    density: 2.7, 
+    density: 2, 
     label: 'Glass Fiber',
     bgImages: {
       circular: '/assets/circular-tube-carbon-fiber.jpg',
