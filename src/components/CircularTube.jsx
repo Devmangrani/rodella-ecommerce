@@ -49,6 +49,11 @@ function calculateResults({ material, wall, inside, length, unit }, materials) {
     const massInKg = mass / 1000;
     const basePrice = massInKg * 13500; // 13,500 per kg for Carbon Fiber Circular tube
     price = basePrice * 1.10; // Add 10% margin
+  } else if (material === 'glass_fiber') {
+    // Convert mass from grams to kilograms and apply Glass Fiber rate
+    const massInKg = mass / 1000;
+    const basePrice = massInKg * 9000; // 9,000 per kg for Glass Fiber
+    price = basePrice * 1.10; // Add 10% margin
   }
   
   return {
@@ -282,7 +287,7 @@ const CircularTube = ({ selectedMaterial, onMaterialChange, materials, shapeType
               >
                 <option value="carbon_fiber">Carbon Fiber</option>
                 <option value="glass_fiber">Glass Fiber</option>
-                <option value="carbon_kevlar">Carbon Kevlar</option>
+                {/* <option value="carbon_kevlar">Carbon Kevlar</option> */}
               </select>
             </div>
           </div>

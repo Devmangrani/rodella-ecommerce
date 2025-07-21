@@ -23,15 +23,15 @@ const materials = {
       square: '/assets/carbon-fiber-square-tubes.webp'
     }
   },
-  carbon_kevlar: { 
-    density: 1.44, 
-    label: 'Carbon Kevlar',
-    bgImages: {
-      circular: '/assets/circular-tube-carbon-fiber.jpg',
-      rectangular: '/assets/Rectangular-Carbon-fiber-tube.webp',
-     square: '/assets/carbon-fiber-square-tubes.webp'
-    }
-  },
+  // carbon_kevlar: { 
+  //   density: 1.44, 
+  //   label: 'Carbon Kevlar',
+  //   bgImages: {
+  //     circular: '/assets/circular-tube-carbon-fiber.jpg',
+  //     rectangular: '/assets/Rectangular-Carbon-fiber-tube.webp',
+  //    square: '/assets/carbon-fiber-square-tubes.webp'
+  //   }
+  // },
 };
 
 const TubingComparison = () => {

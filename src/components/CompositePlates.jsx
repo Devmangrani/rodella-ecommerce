@@ -6,13 +6,13 @@ import { useCart } from '../context/myState';
 const materials = {
   carbon_fiber: { 
     density: 2, // g/cm³
-    pricePerGram: 5, // ₹5 per gram
+    pricePerGram: 10, // ₹5 per gram
     label: 'Carbon Fiber', 
     bgImage: '/assets/carbon-fiber-sheet.jpg' 
   },
   glass_fiber: { 
     density: 2.7, // g/cm³
-    pricePerGram: 3, // ₹3 per gram
+    pricePerGram: 9, // ₹9000 per KG (₹9 per gram)
     label: 'Glass Fiber', 
     bgImage: '/assets/glass-fiber-sheet.png' 
   },
@@ -351,7 +351,7 @@ const CompositePlates = () => {
             Composite Plate Specifications
           </h1>
           <p className="text-neutral-400 text-sm sm:text-base max-w-2xl mx-auto">
-            Configure your custom composite plate dimensions and specifications
+            Configure and Order
           </p>
         </motion.div>
         
@@ -366,7 +366,7 @@ const CompositePlates = () => {
               {/* Left Column - Controls and Data */}
               <div className="lg:col-span-1">
                 {/* Material Selection */}
-                <div className="mb-6">
+                <div className="mb-6 bg-black/40 backdrop-blur-sm rounded-lg p-4 border border-gray-500/50 shadow-lg">
                   <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
                     Material Selection
                   </h3>
@@ -384,7 +384,7 @@ const CompositePlates = () => {
                 </div>
 
                 {/* Dimensions */}
-                <div className="mb-4">
+                <div className="mb-6 bg-black/40 backdrop-blur-sm rounded-lg p-4 border border-gray-500/50 shadow-lg">
                   <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
                     Dimensions
                   </h3>
@@ -443,9 +443,7 @@ const CompositePlates = () => {
 
                 {/* Calculations */}
                 <div className="mb-4 lg:mb-6">
-                  <h3 className="text-base font-semibold text-neutral-200 mb-3 text-center sm:text-left">
-                    Calculations
-                  </h3>
+                  <div className="mb-3"></div>
                   
                   <div className="grid grid-cols-3 gap-2 lg:gap-3">
                     <div className="bg-neutral-800/50 rounded-lg p-2 sm:p-3 text-center">
