@@ -80,7 +80,12 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-white">Order Details</h2>
-                  <p className="text-neutral-400 text-sm">#{order.id.slice(-8).toUpperCase()}</p>
+                  <p className="text-neutral-400 text-sm">
+                    {order.orderId ? `Order: ${order.orderId}` : `#${order.id.slice(-8).toUpperCase()}`}
+                  </p>
+                  {order.invoiceId && (
+                    <p className="text-neutral-400 text-xs">Invoice: {order.invoiceId}</p>
+                  )}
                 </div>
               </div>
               <button
@@ -864,7 +869,9 @@ const UserDashboard = () => {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h3 className="font-semibold text-white">Order #{order.id.slice(-8).toUpperCase()}</h3>
+                            <h3 className="font-semibold text-white">
+                              {order.orderId ? order.orderId : `Order #${order.id.slice(-8).toUpperCase()}`}
+                            </h3>
                             <div className="flex items-center gap-4 text-sm text-neutral-400">
                               <span className="flex items-center gap-1">
                                 <Calendar size={14} />

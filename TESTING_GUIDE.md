@@ -5,7 +5,7 @@
 ### Prerequisites
 - App running on http://localhost:5174/
 - Firebase project configured
-- Razorpay test key: `rzp_test_TZsfCOp4wKi2nJ`
+- Razorpay live key: `rzp_live_RBAnaQ0QJRsFF4` (LIVE MODE)
 
 ### 🔐 Step 1: Authentication Test
 1. **Sign Up/Login:**
