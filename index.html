@@ -19,24 +19,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <!-- Preload critical assets -->
+    <!-- Preload only critical assets -->
     <link rel="preload" href="/assets/logo.jpg" as="image" type="image/jpeg" />
-    <!-- Preload LCP hero image with highest priority -->
-    <link rel="preload" href="/assets/200carbon.jpg" as="image" type="image/jpeg" fetchpriority="high" />
-    <!-- Preload other hero images for smooth transitions -->
-    <link rel="prefetch" href="/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg" as="image" />
-    <link rel="prefetch" href="/assets/Aramid200gsm1.jpeg" as="image" />
-    
-    <!-- Preload critical CSS -->
-    <link rel="preload" href="/src/index.css" as="style" />
     
     <!-- DNS prefetch for performance -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-    
-    <!-- Resource hints -->
-    <link rel="prefetch" href="/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg" />
-    <link rel="prefetch" href="/assets/composite-tube.jpg" />
+    <link rel="dns-prefetch" href="//checkout.razorpay.com" />
+    <link rel="dns-prefetch" href="//api.razorpay.com" />
     
     <!-- Critical inline styles for above-the-fold content -->
     <style>

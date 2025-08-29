@@ -8,6 +8,7 @@ import { doSignOut } from '../firebase/auth';
 import { createOrUpdateUser, fetchUserOrders } from '../firebase/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 import { firedb } from '../firebase/firebase';
+import { safeToFixed, safeLengthToMeters, safeWeightFormat, safeAreaFormat } from '../utils/mathUtils';
 
 // Order Details Modal Component
 const OrderDetailsModal = ({ order, isOpen, onClose }) => {
@@ -33,20 +34,20 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
 
   const formatDimensions = (item) => {
     if (item.isCompositePlate && item.dimensions) {
-      return `${item.dimensions.length} × ${item.dimensions.breadth} × ${item.dimensions.thickness} mm`;
+      return `${item.dimensions.length || 0} × ${item.dimensions.breadth || 0} × ${item.dimensions.thickness || 0} mm`;
     }
     if (item.isTubeProduct && item.dimensions) {
       if (item.dimensions.innerDiameter) {
-        return `ID: ${item.dimensions.innerDiameter}mm | Wall: ${item.dimensions.wallThickness}mm | Length: ${(item.dimensions.length / 1000).toFixed(1)}m`;
+        return `ID: ${item.dimensions.innerDiameter || 0}mm | Wall: ${item.dimensions.wallThickness || 0}mm | Length: ${safeLengthToMeters(item.dimensions.length)}m`;
       } else {
-        return `Size: ${item.dimensions.size}mm | Wall: ${item.dimensions.wallThickness}mm | Length: ${(item.dimensions.length / 1000).toFixed(1)}m`;
+        return `Size: ${item.dimensions.size || 0}mm | Wall: ${item.dimensions.wallThickness || 0}mm | Length: ${safeLengthToMeters(item.dimensions.length)}m`;
       }
     }
     if (item.isReinforcementProduct && item.dimensions) {
-      return `Width: ${item.dimensions.width}mm | Length: ${item.dimensions.lengthInMeters}m`;
+      return `Width: ${item.dimensions.width || 0}mm | Length: ${item.dimensions.lengthInMeters || 0}m`;
     }
     if (item.isCoreProduct && item.dimensions) {
-      return `${item.dimensions.width} × ${item.dimensions.height} × ${item.dimensions.thickness}mm | Length: ${item.dimensions.lengthInMeters}m`;
+      return `${item.dimensions.width || 0} × ${item.dimensions.height || 0} × ${item.dimensions.thickness || 0}mm | Length: ${item.dimensions.lengthInMeters || 0}m`;
     }
     if (item.isEpoxyProduct && item.selectedSize) {
       return `Selected Size: ${item.selectedSize}`;
@@ -121,7 +122,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
                     <Weight size={14} className="text-neutral-400" />
                     <span className="text-neutral-400 text-xs font-medium">Weight</span>
                   </div>
-                  <span className="text-white font-semibold text-lg">{order.totalWeight?.toFixed(2) || '0.00'} kg</span>
+                  <span className="text-white font-semibold text-lg">{safeToFixed(order.totalWeight, 2, '0.00')} kg</span>
                 </div>
 
                 <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
@@ -208,12 +209,12 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
                               <div className="flex flex-wrap gap-3 mt-2">
                                 {item.weight > 0 && (
                                   <span className="text-neutral-400 text-xs">
-                                    Weight: {(item.weight * item.quantity).toFixed(3)} kg
+                                    Weight: {safeWeightFormat(item.weight, item.quantity)} kg
                                   </span>
                                 )}
                                 {item.area > 0 && (
                                   <span className="text-neutral-400 text-xs">
-                                    Area: {(item.area * item.quantity).toFixed(2)} m²
+                                    Area: {safeAreaFormat(item.area, item.quantity)} m²
                                   </span>
                                 )}
                                 {item.length > 1 && (
