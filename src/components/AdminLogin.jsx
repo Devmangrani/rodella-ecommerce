@@ -87,7 +87,7 @@ const AdminLogin = () => {
       localStorage.setItem('adminToken', userCredential.user.accessToken || 'admin_authenticated');
       
       // Redirect to admin dashboard
-      navigate('/rodella-admin-dashboard-2024');
+      navigate('/rodella-admin-dashboard');
     } catch (error) {
       console.error('Admin login error:', error);
       
