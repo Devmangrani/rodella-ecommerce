@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
     <!-- Preload only critical assets -->
-    <link rel="preload" href="/assets/logo.jpg" as="image" type="image/jpeg" />
+    <link rel="preload" href="/assets/logo.jpg" as="image" type="image/jpeg" fetchpriority="high" />
     
     <!-- DNS prefetch for performance -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -104,6 +104,7 @@
       <!-- Initial loading screen -->
       <div class="initial-loader">
         <div style="text-align: center;">
+          <img src="/assets/logo.jpg" alt="Rodella Composites" style="width: 60px; height: 60px; border-radius: 8px; margin-bottom: 16px;" loading="eager" />
           <div class="loading-spinner"></div>
           <p style="margin-top: 20px; font-size: 18px;">Loading Rodella Composites...</p>
         </div>

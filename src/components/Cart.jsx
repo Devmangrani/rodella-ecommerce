@@ -7,8 +7,8 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { auth } from '../firebase/firebase';
-import { saveOrder } from '../firebase/firebase';
+import { saveOrder, firedb, auth } from '../firebase/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { RAZORPAY_CONFIG, formatAmountToPaise, validatePaymentData } from '../config/razorpay';
 import { createRazorpayOptions, handlePaymentSuccess } from '../utils/paymentUtils';
@@ -314,16 +314,32 @@ const CartSummary = ({ totals, currentUser: currentUserAuth, onShowToast }) => {
           payment_capture: 1, // Auto capture payment
           handler: async function (response) {
             try {
-              // Get user address from localStorage or Firebase
-              const userData = localStorage.getItem('userData');
+              // Get user address from Firebase (most up-to-date)
               let userAddress = null;
               
-              if (userData) {
+              if (auth.currentUser) {
                 try {
-                  const parsedUserData = JSON.parse(userData);
-                  userAddress = parsedUserData.address || null;
+                  const userRef = doc(firedb, 'users', auth.currentUser.uid);
+                  const userSnap = await getDoc(userRef);
+                  if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    userAddress = userData.address || null;
+                  }
                 } catch (error) {
-                  // Handle parsing error silently
+                  console.error('Error fetching user address:', error);
+                }
+              }
+              
+              // Fallback to localStorage if Firebase fetch fails
+              if (!userAddress) {
+                const userData = localStorage.getItem('userData');
+                if (userData) {
+                  try {
+                    const parsedUserData = JSON.parse(userData);
+                    userAddress = parsedUserData.address || null;
+                  } catch (error) {
+                    // Handle parsing error silently
+                  }
                 }
               }
 

@@ -158,4 +158,98 @@ export const createSampleOrder = async (uid) => {
   return await saveOrder(sampleOrder);
 };
 
+// Admin functions
+// Fetch all users for admin
+export const fetchAllUsers = async () => {
+  try {
+    const usersRef = collection(firedb, "users");
+    const querySnapshot = await getDocs(usersRef);
+    const users = [];
+    
+    querySnapshot.forEach((doc) => {
+      users.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+    
+    console.log('✅ All users fetched successfully for admin', users);
+    return users;
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    return [];
+  }
+};
+
+// Fetch all orders for admin
+export const fetchAllOrders = async () => {
+  try {
+    const ordersRef = collection(firedb, "orders");
+    const querySnapshot = await getDocs(ordersRef);
+    const orders = [];
+    
+    querySnapshot.forEach((doc) => {
+      orders.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+    
+    // Sort orders by createdAt in JavaScript (newest first)
+    orders.sort((a, b) => {
+      const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+      const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+      return dateB - dateA; // Descending order (newest first)
+    });
+    
+    console.log('✅ All orders fetched successfully for admin', orders);
+    return orders;
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    return [];
+  }
+};
+
+// Fetch all carts for admin
+export const fetchAllCarts = async () => {
+  try {
+    const cartsRef = collection(firedb, "carts");
+    const querySnapshot = await getDocs(cartsRef);
+    const carts = [];
+    
+    querySnapshot.forEach((doc) => {
+      carts.push({
+        uid: doc.id,
+        items: doc.data().items || []
+      });
+    });
+    
+    console.log('✅ All carts fetched successfully for admin', carts);
+    return carts;
+  } catch (error) {
+    console.error("Error fetching all carts:", error);
+    return [];
+  }
+};
+
+// Check if user is admin
+export const checkAdminStatus = async (uid) => {
+  if (!uid) return false;
+  
+  try {
+    const userRef = doc(firedb, "users", uid);
+    const userSnap = await getDoc(userRef);
+    
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      return userData.isAdmin === true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return false;
+  }
+};
+
 export { firedb, auth }; 

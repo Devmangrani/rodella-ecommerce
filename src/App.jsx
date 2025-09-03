@@ -5,6 +5,7 @@ import Header from './components/Navbar';
 import Footer from './components/Footer';
 import { CartProvider } from './context/myState';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 
 // Lazy load components for better performance
 const Homepage = lazy(() => import('./components/Homepage'));
@@ -19,6 +20,10 @@ const Signup = lazy(() => import('./components/Signup'));
 const UserDashboard = lazy(() => import('./components/UserDashboard'));
 const Cart = lazy(() => import('./components/Cart'));
 
+// Admin components
+const AdminLogin = lazy(() => import('./components/AdminLogin'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+
 // Loading component for suspense fallback
 const PageLoader = () => (
   <div className="min-h-screen bg-black flex items-center justify-center">
@@ -32,6 +37,12 @@ const PageLoader = () => (
 const Layout = ({ children }) => {
   const location = useLocation();
   const isFullWidthPage = location.pathname === '/reinforcement'; // Add other full-width routes here if needed
+  const isAdminPage = location.pathname.includes('admin'); // Check if it's an admin page
+
+  // Don't show header/footer for admin pages
+  if (isAdminPage) {
+    return children;
+  }
 
   return (
     <>
@@ -78,6 +89,10 @@ const App = () => {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
                 <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+                
+                {/* Secret Admin Routes - Hidden from regular users */}
+                <Route path="/rodella-admin-access" element={<AdminLogin />} />
+                <Route path="/rodella-admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               </Routes>
             </Suspense>
           </Layout>

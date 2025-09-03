@@ -92,8 +92,15 @@ export default defineConfig({
       'react-dom',
       'react-router-dom',
       'framer-motion',
-      'lucide-react'
+      'lucide-react',
+      '@material-tailwind/react',
+      '@mui/material',
+      '@mui/icons-material',
+      '@emotion/react',
+      '@emotion/styled'
     ],
+    exclude: [],
+    force: true
   },
   
   // Performance optimizations
