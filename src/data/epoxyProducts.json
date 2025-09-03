@@ -2,12 +2,11 @@
   "resins": [
     {
       "id": 1,
-      "title": "Compund 556",
-      "mrp": 2800,
+      "title": "compound 556 + Hardner",
+      "mrp": 1200,
       "sizes": {
-        "1L": { "price": 2800, "id": "11-1L" },
-        "500ml": { "price": 1500, "id": "11-500ml" },
-        "250ml": { "price": 800, "id": "11-250ml" }
+        "1L": { "price": 1200, "id": "11-1L" },
+        "500ml": { "price": 600, "id": "11-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -21,12 +20,11 @@
     },
     {
       "id": 2,
-      "title": "Compund 5052",
-      "mrp": 3500,
+      "title": "compound 5052 + Hardner",
+      "mrp": 5000,
       "sizes": {
-        "1L": { "price": 3500, "id": "14-1L" },
-        "500ml": { "price": 1900, "id": "14-500ml" },
-        "250ml": { "price": 1000, "id": "14-250ml" }
+        "1L": { "price": 5000, "id": "14-1L" },
+        "500ml": { "price": 2500, "id": "14-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -40,12 +38,11 @@
     },
     {
       "id": 3,
-      "title": "Compund 2201 (HIFC)",
-      "mrp": 3200,
+      "title": "compound 2201 (HIFC) + Hardner",
+      "mrp": 1100,
       "sizes": {
-        "1L": { "price": 3200, "id": "17-1L" },
-        "500ml": { "price": 1700, "id": "17-500ml" },
-        "250ml": { "price": 900, "id": "17-250ml" }
+        "1L": { "price": 1100, "id": "17-1L" },
+        "500ml": { "price": 550, "id": "17-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -60,12 +57,11 @@
     },
     {
       "id": 4,
-      "title": "Compund 856 (EPCH)",
-      "mrp": 4800,
+      "title": "compound 856 (EPCH) + Hardner",
+      "mrp": 1200,
       "sizes": {
-        "1L": { "price": 4800, "id": "20-1L" },
-        "500ml": { "price": 2600, "id": "20-500ml" },
-        "250ml": { "price": 1400, "id": "20-250ml" }
+        "1L": { "price": 1200, "id": "20-1L" },
+        "500ml": { "price": 600, "id": "20-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -83,11 +79,10 @@
     {
       "id": 5,
       "title": "Cyroacronitrile (Low Viscosity)",
-      "mrp": 4500,
+      "mrp": 400,
       "sizes": {
-        "1L": { "price": 4500, "id": "1-1L" },
-        "500ml": { "price": 2400, "id": "1-500ml" },
-        "250ml": { "price": 1300, "id": "1-250ml" }
+        "1L": { "price": 400, "id": "1-100ml" },
+        "500ml": { "price": 200, "id": "1-50ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -102,11 +97,10 @@
     {
       "id": 6,
       "title": "Cyroacronitrile (High Viscosity)",
-      "mrp": 4200,
+      "mrp": 250,
       "sizes": {
-        "1L": { "price": 4200, "id": "10-1L" },
-        "500ml": { "price": 2300, "id": "10-500ml" },
-        "250ml": { "price": 1200, "id": "10-250ml" }
+        "1L": { "price": 250, "id": "100ml" },
+        "500ml": { "price": 125, "id": "50ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -120,12 +114,11 @@
     },
     {
       "id": 7,
-      "title": "Compund (4852)",
-      "mrp": 4200,
+      "title": "compound (4852) + Hardner (Heat Cure)",
+      "mrp": 3000,
       "sizes": {
-        "1L": { "price": 4200, "id": "10-1L" },
-        "500ml": { "price": 2300, "id": "10-500ml" },
-        "250ml": { "price": 1200, "id": "10-250ml" }
+        "1L": { "price": 3000, "id": "10-1L" },
+        "500ml": { "price": 1500, "id": "10-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -139,12 +132,11 @@
     },
     {
         "id": 8,
-      "title": "Compund (56A/56B)",
-      "mrp": 4200,
+      "title": "compound (56A/56B) + Hardner (Cold Cure)",
+      "mrp": 2000,
       "sizes": {
-        "1L": { "price": 4200, "id": "10-1L" },
-        "500ml": { "price": 2300, "id": "10-500ml" },
-        "250ml": { "price": 1200, "id": "10-250ml" }
+        "1L": { "price": 2000, "id": "10-1L" },
+        "500ml": { "price": 1000, "id": "10-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"

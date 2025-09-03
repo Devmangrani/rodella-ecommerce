@@ -26,20 +26,6 @@
         "weight": "200 gsm",
         "width": "1000mm"
       }
-    },
-    {
-      "id": 3,
-      "title": "Carbon fiber 3k 2-2twill 200gsm",
-      "mrp": 1100,
-      "images": [
-        "/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg",
-        "/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm2.jpeg",
-        "/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm3.jpeg"
-      ],
-      "details": {
-        "weight": "200 gsm",
-        "width": "1000mm"
-      }
     }
   ],
  

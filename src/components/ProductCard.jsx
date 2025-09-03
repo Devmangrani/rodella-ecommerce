@@ -2,6 +2,20 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
+// Epoxy product suitability mapping
+const epoxyProductSuitability = {
+  'compound 556 + Hardner': ['hand layup', 'filament windup', 'heat curing', 'cold curing'],
+  'compound 5052 + Hardner': ['hand layup', 'filament windup', 'heat curing', 'cold curing'],
+  'compound 2201 (HIFC) + Hardner': ['hand layup', 'filament windup', 'heat curing', 'cold curing'],
+  'compound 856 (EPCH) + Hardner': ['hand layup', 'filament windup', 'heat curing', 'cold curing', 'resin infusion'],
+  'compound (4852) + Hardner (Heat Cure)': ['heat curing'],
+  'compound (56A/56B) + Hardner (Cold Cure)': ['cold curing'],
+  'Tooling gelcoats 45': ['mould making', 'heat curing'],
+  'Skinning gelcoats white': ['skinning'],
+  'Cyroacronitrile (Low Viscosity)': ['bonding', 'quick assembly', 'small parts'],
+  'Cyroacronitrile (High Viscosity)': ['gap filling', 'structural bonding', 'heavy duty']
+};
+
 const ProductCard = ({ 
   product, 
   index = 0,
@@ -400,6 +414,26 @@ const ProductCard = ({
             <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/6 border border-green-500/20 px-3 py-2 rounded-lg text-center">
               <span className="block text-green-300 text-xs font-medium">Price ({selectedSize})</span>
               <span className="text-green-400 font-bold text-sm">₹{calculations.mrp.toLocaleString()}</span>
+            </div>
+          )}
+
+          {/* Suitability Information for Epoxy Products */}
+          {isEpoxyProduct && epoxyProductSuitability[product.title] && (
+            <div className="bg-gradient-to-br from-blue-500/8 to-purple-500/6 border border-blue-500/20 px-3 py-2 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-1 h-2 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+                <span className="text-blue-300 text-xs font-medium">Suitable For</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {epoxyProductSuitability[product.title].map((suitability, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-2 py-1 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-full text-xs font-medium text-blue-200 whitespace-nowrap"
+                  >
+                    {suitability}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
           

@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Rohacell PMI Foam - 2mm",
-      "mrp": 250,
+      "mrp": 1800,
       "images": [
         "/assets/core1.jpeg",
         "/assets/core2.jpeg"
@@ -17,7 +17,7 @@
     {
       "id": 2,
       "title": "Rohacell PMI Foam - 3mm",
-      "mrp": 375,
+      "mrp": 2000,
       "images": [
         "/assets/core2.jpeg",
         "/assets/core1.jpeg"
