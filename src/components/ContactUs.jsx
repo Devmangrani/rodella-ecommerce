@@ -4,6 +4,7 @@ import { useForm, ValidationError } from '@formspree/react';
 import SEO from './SEO';
 import { createContactPageStructuredData } from './StructuredData';
 
+
 const ContactUs = () => {
   const [state, handleSubmit] = useForm("mzzgqeqo");
   const [isFormFocused, setIsFormFocused] = useState(false);
@@ -171,10 +172,12 @@ const ContactUs = () => {
                   className="flex items-start gap-4 p-4 rounded-lg border border-neutral-600 relative group overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                   onClick={() => window.open('https://rodella.in/', '_blank')}
                 >
-                  <div className="p-3 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-600 text-white group-hover:from-blue-500 group-hover:to-cyan-500 group-hover:scale-110 transition-all duration-300">
-                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
-                    </svg>
+                  <div className="p-2 rounded-lg overflow-hidden">
+                    <img 
+                      src="/assets/logo.jpg" 
+                      alt="Rodella Aerospace Labs Logo" 
+                      className="h-10 w-10 object-cover rounded"
+                    />
                   </div>
                   <div>
                     <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">Main Website</h3>

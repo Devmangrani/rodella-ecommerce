@@ -48,14 +48,14 @@ const Homepage = () => {
     }
   ];
 
-  // Categories data
+  // Categories data - updated with actual product counts from JSON files
   const categories = [
     {
       id: 1,
       name: "Composite Tubes",
       image: compositeTube,
       description: "Carbon fiber & fiberglass tubes",
-      productCount: 24,
+      productCount: 8, // Placeholder for tubes (no data file yet)
       link: "/Composite-tubes"
     },
     {
@@ -63,7 +63,7 @@ const Homepage = () => {
       name: "Composite Plates",
       image: compositePlate,
       description: "High-strength composite plates",
-      productCount: 18,
+      productCount: 6, // Placeholder for plates (no data file yet)
       link: "/composite-plates"
     },
     {
@@ -71,7 +71,7 @@ const Homepage = () => {
       name: "Reinforcement",
       image: aramid1,
       description: "Carbon fabrics & prepregs",
-      productCount: 32,
+      productCount: 4, // 2 carbon fiber + 1 aramid + 1 mixed = 4 total
       link: "/reinforcement"
     },
     {
@@ -79,7 +79,7 @@ const Homepage = () => {
       name: "Epoxy System",
       image: epoxy2,
       description: "Professional epoxy resins",
-      productCount: 15,
+      productCount: 10, // 4 resins + 4 adhesives + 2 gelcoats = 10 total
       link: "/epoxy-system"
     },
     {
@@ -87,32 +87,32 @@ const Homepage = () => {
       name: "Core Materials",
       image: core2,
       description: "Foam cores & honeycomb",
-      productCount: 12,
+      productCount: 2, // 2 rohacell products
       link: "/core-material"
     },
    
   ];
 
-  // Featured products
+  // Featured products - using real data from JSON files
   const featuredProducts = [
     {
       id: 1,
-      name: "Carbon Fiber 3K 2x2 Twill 200GSM",
-      price: 4599,
-      originalPrice: 5999,
+      name: "200 GSM 12K twill weave fabric (Aerospace series)",
+      price: 1100,
+      originalPrice: 1300,
       rating: 4.8,
       reviewCount: 127,
-      image: carbon3k1,
+      image: carbon200,
       category: "Reinforcement",
       isNew: true,
       reinforcementCategory: "carbonFiber",
-      productId: "3"
+      productId: "2"
     },
     {
       id: 2,
-      name: "Rohacell PMI Foam Core 2mm",
-      price: 3250,
-      originalPrice: 4000,
+      name: "Rohacell PMI Foam - 2mm",
+      price: 1800,
+      originalPrice: 2200,
       rating: 4.6,
       reviewCount: 89,
       image: core1,
@@ -121,9 +121,9 @@ const Homepage = () => {
     },
     {
       id: 3,
-      name: "Aramid - 200gsm",
-      price: 6799,
-      originalPrice: 7999,
+      name: "Aramid - 200gsm Plain Weave",
+      price: 1500,
+      originalPrice: 1800,
       rating: 4.9,
       reviewCount: 203,
       image: aramid1,
@@ -134,13 +134,13 @@ const Homepage = () => {
     },
     {
       id: 4,
-      name: "Carbon Fiber Tube 12mm",
-      price: 2875,
-      originalPrice: 3500,
+      name: "compound 556 + Hardner",
+      price: 1200,
+      originalPrice: 1500,
       rating: 4.7,
       reviewCount: 156,
-      image: carbon3k2,
-      category: "Composite Tubes",
+      image: epoxy1,
+      category: "Epoxy System",
       isNew: true
     }
   ];
