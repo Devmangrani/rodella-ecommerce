@@ -81,8 +81,8 @@
       "title": "Cyroacronitrile (Low Viscosity)",
       "mrp": 400,
       "sizes": {
-        "1L": { "price": 400, "id": "1-100ml" },
-        "500ml": { "price": 200, "id": "1-50ml" }
+        "100ml": { "price": 400, "id": "1-100ml" },
+        "50ml": { "price": 200, "id": "1-50ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -99,8 +99,8 @@
       "title": "Cyroacronitrile (High Viscosity)",
       "mrp": 250,
       "sizes": {
-        "1L": { "price": 250, "id": "100ml" },
-        "500ml": { "price": 125, "id": "50ml" }
+        "100ml": { "price": 250, "id": "100ml" },
+        "50ml": { "price": 125, "id": "50ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"
@@ -118,7 +118,7 @@
       "mrp": 3000,
       "sizes": {
         "1L": { "price": 3000, "id": "10-1L" },
-        "500ml": { "price": 1500, "id": "10-500ml" }
+        "50ml": { "price": 1500, "id": "10-500ml" }
       },
       "images": [
         "/assets/Epoxy one image.png"

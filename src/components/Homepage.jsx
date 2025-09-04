@@ -7,9 +7,9 @@ import LazyImage from './LazyImage';
 import { createWebSiteStructuredData, createStoreStructuredData, compositeMaterialsFAQs, createFAQStructuredData } from './StructuredData';
 
 // Import all images
-import carbon200 from '/assets/200carbon.jpg';
+// import carbon200 from '/assets/200carbon.jpg';
 import carbon3k1 from '/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm1.jpeg';
-import carbon3k2 from '/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm2.jpeg';
+import carbon200 from '/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm2.jpeg';
 import carbon3k3 from '/assets/Carbonfiber-3k-2-2twill-200gsm-1100:sqm3.jpeg';
 import aramid1 from '/assets/Aramid200gsm1.jpeg';
 import aramid2 from '/assets/Aramid200gsm2.jpeg';

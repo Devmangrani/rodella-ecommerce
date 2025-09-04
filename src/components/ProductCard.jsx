@@ -347,9 +347,9 @@ const ProductCard = ({
               <div className="relative">
                 <input
                   type="number"
-                  min="0.1"
+                  min="0"
                   step="0.1"
-                  placeholder="1.0"
+                  placeholder="length"
                   value={currentLength}
                   onChange={(e) => handleLengthChange(e.target.value)}
                   className="w-18 sm:w-20 lg:w-24 bg-gradient-to-r from-neutral-700/80 to-neutral-800/60 border border-neutral-600/50 hover:border-neutral-500/70 focus:border-blue-500/70 rounded-lg pl-2 pr-5 sm:pl-3 sm:pr-6 py-1.5 sm:py-2 text-white text-xs placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 shadow-sm hover:shadow-md"

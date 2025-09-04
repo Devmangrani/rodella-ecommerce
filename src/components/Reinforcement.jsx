@@ -36,7 +36,7 @@ const Reinforcement = () => {
     };
   });
 
-  // State to track length input for each product
+  // State to track length input for each product (allow empty values)
   const [productLengths, setProductLengths] = useState({});
   
   // State to track current image index for each product
@@ -110,12 +110,23 @@ const Reinforcement = () => {
   // Check if all categories are selected
   const allCategoriesSelected = Object.values(selectedCategories).every(value => value);
 
-  // Function to handle length input change
+  // Function to handle length input change with production-ready validation
   const handleLengthChange = (productId, length) => {
-    setProductLengths(prev => ({
-      ...prev,
-      [productId]: length
-    }));
+    // Allow empty string or valid positive numbers only
+    if (length === '') {
+      // Allow empty input
+      setProductLengths(prev => ({
+        ...prev,
+        [productId]: ''
+      }));
+    } else if (!isNaN(length) && parseFloat(length) >= 0) {
+      // Allow valid positive numbers (including zero)
+      setProductLengths(prev => ({
+        ...prev,
+        [productId]: length
+      }));
+    }
+    // Reject invalid inputs (negative numbers, non-numeric strings, etc.)
   };
 
   // Function to handle image navigation
@@ -133,8 +144,18 @@ const Reinforcement = () => {
     // Extract quantity from calculations, default to 1 if not provided
     const quantity = calculations.quantity || 1;
     
-    // Get the length for this product (convert to mm for consistency)
-    const lengthInMeters = productLengths[product.id] || 1;
+    // Get the length for this product - validate and default to 1 if empty or invalid
+    const inputLength = productLengths[product.id];
+    let lengthInMeters = 1; // Default value
+    
+    // Validate and parse input length
+    if (inputLength !== undefined && inputLength !== '' && !isNaN(inputLength)) {
+      const parsedLength = parseFloat(inputLength);
+      if (parsedLength > 0) {
+        lengthInMeters = parsedLength;
+      }
+    }
+    
     const lengthInMM = lengthInMeters * 1000;
     
     // Create enhanced product object with reinforcement-specific information
@@ -329,7 +350,7 @@ const Reinforcement = () => {
                       onAddToCart={handleAddToCart}
                       onLengthChange={handleLengthChange}
                       onImageChange={handleImageChange}
-                      externalLength={productLengths[product.id] || 1}
+                      externalLength={productLengths[product.id] || ''}
                       externalImageIndex={currentImageIndex[product.id] || 0}
                       showCategory={true}
                       animationDelay={0.1}
