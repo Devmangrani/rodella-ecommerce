@@ -15,8 +15,7 @@ const Signup = () => {
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    agreeToTerms: false
+    confirmPassword: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -68,10 +67,6 @@ const Signup = () => {
       newErrors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'You must agree to the terms and conditions';
     }
     
     return newErrors;
@@ -365,36 +360,10 @@ const Signup = () => {
               )}
             </div>
 
-            <div className="flex items-start animate-fade-in animation-delay-1000">
-              <input
-                id="agreeToTerms"
-                name="agreeToTerms"
-                type="checkbox"
-                checked={formData.agreeToTerms}
-                onChange={handleChange}
-                className="h-4 w-4 mt-1 bg-neutral-900 border-neutral-600 rounded focus:ring-neutral-600 focus:ring-2 transition-all duration-300 hover:scale-110"
-              />
-              <div className="ml-3">
-                <label htmlFor="agreeToTerms" className="text-sm text-neutral-300">
-                  I agree to the{' '}
-                  <Link to="/terms" className="text-white hover:text-neutral-300 hover:scale-105 transition-all duration-300 underline">
-                    Terms and Conditions
-                  </Link>
-                  {' '}and{' '}
-                  <Link to="/privacy" className="text-white hover:text-neutral-300 hover:scale-105 transition-all duration-300 underline">
-                    Privacy Policy
-                  </Link>
-                </label>
-                {errors.agreeToTerms && (
-                  <p className="mt-1 text-sm text-red-400 animate-fade-in">{errors.agreeToTerms}</p>
-                )}
-              </div>
-            </div>
-
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-black bg-white hover:bg-neutral-100 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed animate-fade-in animation-delay-1100 group"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-black bg-white hover:bg-neutral-100 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed animate-fade-in animation-delay-1000 group"
             >
               {isLoading ? (
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -406,12 +375,12 @@ const Signup = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center animate-fade-in animation-delay-1200">
-            <p className="text-neutral-400">
+          <div className="mt-6 text-center animate-fade-in animation-delay-1100">
+            <p className="text-neutral-400 text-sm sm:text-base">
               Already have an account?{' '}
               <Link 
                 to="/login" 
-                className="font-medium text-white hover:text-neutral-300 hover:scale-105 transition-all duration-300 inline-block"
+                className="font-medium text-white hover:text-blue-400 transition-colors duration-200 underline decoration-1 underline-offset-2 hover:decoration-2"
               >
                 Sign in here
               </Link>

@@ -278,21 +278,45 @@ const Login = () => {
 
             <div className="flex items-center justify-between animate-fade-in animation-delay-800">
               <div className="flex items-center">
-                <input
-                  id="rememberMe"
-                  name="rememberMe"
-                  type="checkbox"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
-                  className="h-4 w-4 bg-neutral-900 border-neutral-600 rounded focus:ring-neutral-600 focus:ring-2 transition-all duration-300 hover:scale-110"
-                />
-                <label htmlFor="rememberMe" className="ml-2 text-sm text-neutral-300 hover:text-white transition-colors duration-300">
+                <div className="relative flex-shrink-0">
+                  <input
+                    id="rememberMe"
+                    name="rememberMe"
+                    type="checkbox"
+                    checked={formData.rememberMe}
+                    onChange={handleChange}
+                    className="sr-only"
+                  />
+                  <div 
+                    onClick={() => handleChange({ target: { name: 'rememberMe', type: 'checkbox', checked: !formData.rememberMe } })}
+                    className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-md border transition-all duration-200 flex items-center justify-center cursor-pointer ${
+                      formData.rememberMe 
+                        ? 'bg-blue-500 border-blue-500 shadow-sm' 
+                        : 'border-neutral-500 bg-transparent hover:border-blue-400 hover:bg-neutral-800/30'
+                    }`}>
+                    {formData.rememberMe && (
+                      <svg
+                        width="8"
+                        height="8"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="text-white"
+                      >
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <label 
+                  onClick={() => handleChange({ target: { name: 'rememberMe', type: 'checkbox', checked: !formData.rememberMe } })}
+                  className="ml-2 text-xs sm:text-sm text-neutral-300 hover:text-white transition-colors duration-300 cursor-pointer select-none"
+                >
                   Remember me
                 </label>
               </div>
               <Link 
                 to="/forgot-password" 
-                className="text-sm text-neutral-400 hover:text-white hover:scale-105 transition-all duration-300"
+                className="text-xs sm:text-sm text-neutral-400 hover:text-blue-400 transition-colors duration-200 underline decoration-1 underline-offset-2 hover:decoration-2"
               >
                 Forgot password?
               </Link>
@@ -314,11 +338,11 @@ const Login = () => {
           </form>
 
           <div className="mt-6 text-center animate-fade-in animation-delay-1000">
-            <p className="text-neutral-400">
+            <p className="text-neutral-400 text-sm sm:text-base">
               Don't have an account?{' '}
               <Link 
                 to="/signup" 
-                className="font-medium text-white hover:text-neutral-300 hover:scale-105 transition-all duration-300 inline-block"
+                className="font-medium text-white hover:text-blue-400 transition-colors duration-200 underline decoration-1 underline-offset-2 hover:decoration-2"
               >
                 Sign up here
               </Link>
