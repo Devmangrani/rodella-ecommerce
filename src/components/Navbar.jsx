@@ -226,7 +226,11 @@ const Control = ({ isLoggedIn, setIsLoggedIn }) => {
       {windowWidth > 1024 && (
         <Link to="/contact" className="focus:outline-none">
           <motion.div 
-            className="bg-white text-black px-3 md:px-4 lg:px-5 py-2 md:py-2.5 shadow-lg rounded-2xl flex items-center hover:bg-gray-100 transition-all duration-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-black text-sm md:text-base font-medium"
+            className={`bg-white text-black shadow-lg rounded-2xl flex items-center hover:bg-gray-100 transition-all duration-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-black font-medium whitespace-nowrap ${
+              windowWidth >= 1400 ? 'px-5 py-2.5 text-base' :
+              windowWidth >= 1280 ? 'px-3 py-2 text-sm' :
+              'px-2 py-1.5 text-xs'
+            }`}
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -448,7 +452,12 @@ const NavLinks = () => {
 
   return (
     <motion.ul 
-      className="gap-x-1 md:gap-x-2 xl:flex items-center hidden"
+      className={`xl:flex items-center hidden ${
+        windowWidth >= 1400 ? 'gap-x-2' :
+        windowWidth >= 1280 ? 'gap-x-1' :
+        windowWidth >= 1024 ? 'gap-x-0.5' :
+        'gap-x-1'
+      }`}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
@@ -470,7 +479,12 @@ const NavLinks = () => {
         >
           <Link
             to={item.path}
-            className="flex items-center gap-1 hover:bg-white/5 cursor-pointer px-2 md:px-3 lg:px-4 py-2 rounded-2xl text-white hover:text-white transition-all duration-300 text-sm lg:text-base"
+            className={`flex items-center gap-1 hover:bg-white/5 cursor-pointer py-2 rounded-2xl text-white hover:text-white transition-all duration-300 whitespace-nowrap ${
+              windowWidth >= 1400 ? 'px-4 text-base' :
+              windowWidth >= 1280 ? 'px-2 text-sm' :
+              windowWidth >= 1024 ? 'px-1.5 text-xs' :
+              'px-2 text-sm'
+            }`}
           >
             <motion.span
               whileHover={{ scale: 1.05, x: 2 }}
@@ -582,14 +596,14 @@ const Header = () => {
       isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
     }`}>
       <motion.nav 
-        className="py-2 sm:py-3 md:py-4 flex items-center justify-between bg-black/95 backdrop-blur-md text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-6 lg:px-8 w-full max-w-[1536px] mx-auto shadow-2xl border border-gray-800/50"
+        className="py-2 sm:py-3 md:py-4 flex items-center justify-between bg-black/95 backdrop-blur-md text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-6 lg:px-4 xl:px-8 w-full max-w-[1536px] mx-auto shadow-2xl border border-gray-800/50"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <NavBrand />
         <NavLinks />
-        <div className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4 xl:gap-x-5">
+        <div className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4 lg:gap-x-3 xl:gap-x-5">
           <Control isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           <div className="xl:hidden">
             <DrawerNav isLoggedIn={isLoggedIn} />
