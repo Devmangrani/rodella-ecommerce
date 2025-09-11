@@ -115,8 +115,20 @@ const CoreMaterial = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen w-full bg-black text-white font-sans pt-20"
+      className="min-h-screen w-full text-white font-sans pt-20 relative"
+      style={{
+        backgroundImage: "url('/assets/carbon-fiber-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed"
+      }}
     >
+      {/* Dark overlay for better readability */}
+      <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+      
+      {/* Content wrapper with relative positioning */}
+      <div className="relative z-10">
       <div className="w-full h-full py-6 sm:py-8 lg:py-12 px-3 sm:px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -174,6 +186,7 @@ const CoreMaterial = () => {
             </div>
           )}
         </motion.div>
+      </div>
       </div>
     </motion.div>
   );

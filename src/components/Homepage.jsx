@@ -77,7 +77,7 @@ const Homepage = () => {
     {
       id: 4,
       name: "Epoxy System",
-      image: epoxy2,
+      image: epoxy1,
       description: "Professional epoxy resins",
       productCount: 10, // 4 resins + 4 adhesives + 2 gelcoats = 10 total
       link: "/epoxy-system"
@@ -224,206 +224,122 @@ const Homepage = () => {
         imageAlt="Premium carbon fiber materials by Rodella Composites"
         structuredData={[websiteStructuredData, storeStructuredData, faqStructuredData]}
       />
-      <div className="min-h-screen bg-black text-white mt-16">
+      <div 
+        className="min-h-screen text-white relative"
+        style={{
+          backgroundImage: "url('/assets/carbon-fiber-bg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed"
+        }}
+      >
+        {/* Dark overlay for better readability */}
+        <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+        
+        {/* Content wrapper with relative positioning */}
+        <div className="relative z-10">
      
 
      
 
-      {/* Categories Section */}
-      <section className="py-16 bg-black">
-        <div className="container mx-auto px-4">
+      {/* Categories Section - Full Page */}
+      <section className="min-h-screen flex flex-col py-8 sm:py-12 lg:py-16 pt-20 sm:pt-24 lg:pt-28">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col">
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12 lg:mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 lg:mb-6">
               Main Categories
             </h2>
-            <p className="text-lg text-neutral-300 max-w-2xl mx-auto">
-              Discover our comprehensive range of composite materials and tools
+            <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-neutral-300 max-w-4xl mx-auto leading-relaxed">
+              Discover our comprehensive range of composite materials and tools designed for professional applications
             </p>
-            {/* <div className="mt-4">
-              <a
-                href="https://rodella.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium"
-              >
-                <span>Visit rodella AEROSPACE LABS</span>
-                <ChevronRight size={16} className="ml-1" />
-              </a>
-            </div> */}
           </motion.div>
 
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl">
-              {categories.map((category, index) => (
-                <motion.div
-                  key={category.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group w-full"
-                >
-                  <Link to={category.link} className="block h-full">
-                    <div className="bg-neutral-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-blue-500 h-full flex flex-col">
-                      <div className="aspect-square overflow-hidden flex-shrink-0">
-                        <LazyImage
-                          src={category.image}
-                          alt={`${category.name} - ${category.description} available at Rodella Composites`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="p-4 flex-grow flex flex-col justify-between">
-                        <div>
-                          <h3 className="font-semibold text-white text-sm md:text-base mb-1 line-clamp-2">
-                            {category.name}
-                          </h3>
-                          <p className="text-neutral-400 text-xs md:text-sm mb-2 line-clamp-2">
-                            {category.description}
-                          </p>
+          {/* Categories Grid */}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-full max-w-7xl">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
+                {categories.map((category, index) => (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="group w-full"
+                  >
+                    <Link to={category.link} className="block h-full">
+                      <div className="bg-neutral-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-neutral-700/50 hover:border-blue-500/70 h-full flex flex-col group-hover:bg-neutral-700/50 group-hover:scale-105">
+                        {/* Image Container */}
+                        <div className="aspect-square overflow-hidden flex-shrink-0 relative">
+                          <LazyImage
+                            src={category.image}
+                            alt={`${category.name} - ${category.description} available at Rodella Composites`}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
-                        <p className="text-blue-400 text-xs font-medium mt-auto">
-                          {category.productCount} products
-                        </p>
+                        
+                        {/* Content */}
+                        <div className="p-3 sm:p-4 lg:p-6 xl:p-8 flex-grow flex flex-col justify-between">
+                          <div className="flex-grow">
+                            <h3 className="font-bold text-white text-sm sm:text-base lg:text-lg xl:text-xl mb-2 lg:mb-3 line-clamp-2 group-hover:text-blue-300 transition-colors duration-300">
+                              {category.name}
+                            </h3>
+                            <p className="text-neutral-400 text-xs sm:text-sm lg:text-base mb-3 lg:mb-4 line-clamp-2 group-hover:text-neutral-300 transition-colors duration-300">
+                              {category.description}
+                            </p>
+                          </div>
+                          
+                          {/* Product Count */}
+                          <div className="flex items-center justify-between mt-auto">
+                            <p className="text-blue-400 text-xs sm:text-sm lg:text-base font-medium group-hover:text-blue-300 transition-colors duration-300">
+                              {category.productCount} products
+                            </p>
+                            <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 text-neutral-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all duration-300" />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Featured Products Section */}
-      <section className="py-16 bg-neutral-900">
-        <div className="container mx-auto px-4">
+          {/* Optional Bottom CTA */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex justify-between items-center mb-12"
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="text-center mt-8 sm:mt-12 lg:mt-16"
           >
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                Featured Products
-              </h2>
-              <p className="text-lg text-neutral-300">
-                Top-rated materials chosen by our customers
-              </p>
-            </div>
-            <Link
-              to="/reinforcement"
-              className="hidden md:flex items-center text-blue-400 hover:text-blue-300 font-semibold"
+            <p className="text-neutral-400 text-sm sm:text-base lg:text-lg mb-4">
+              Need help choosing the right materials?
+            </p>
+            <a 
+              href="https://wa.me/917723008905" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 lg:px-8 lg:py-4 bg-blue-600 hover:bg-blue-700 text-white 
+              font-medium rounded-lg transition-all duration-300 text-sm lg:text-base"
             >
-              View All Products
-              <ChevronRight size={20} className="ml-2" />
-            </Link>
+              Contact Our Experts
+              <ArrowRight className="ml-2 w-4 h-4 lg:w-5 lg:h-5" />
+            </a>
           </motion.div>
-
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl">
-              {featuredProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group w-full"
-                >
-                  <div 
-                    className="bg-neutral-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-neutral-700 hover:border-blue-500 h-full flex flex-col cursor-pointer"
-                    onClick={() => handleFeaturedProductClick(product)}
-                  >
-                                          <div className="relative">
-                      <div className="aspect-square overflow-hidden flex-shrink-0">
-                        <LazyImage
-                          src={product.image}
-                          alt={`${product.name} - ${product.category} from Rodella Composites. Professional grade composite material.`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      
-                      {/* Badges */}
-                      <div className="absolute top-3 left-3 flex flex-col gap-2">
-                        {product.isNew && (
-                          <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full font-medium">
-                            NEW
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="p-4 flex-grow flex flex-col justify-between">
-                      <div>
-                        <p className="text-neutral-400 text-xs font-medium mb-1">
-                          {product.category}
-                        </p>
-                        <h3 className="font-semibold text-white text-sm md:text-base mb-1 line-clamp-2">
-                          {product.name}
-                        </h3>
-                        
-                        {/* Rating */}
-                        <div className="flex items-center mb-2">
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                size={14}
-                                className={`${
-                                  i < Math.floor(product.rating)
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-neutral-600'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-xs text-neutral-400 ml-1">
-                            ({product.reviewCount})
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Price */}
-                      <div className="flex items-center gap-2 mt-auto">
-                        <span className="text-lg font-bold text-white">
-                          ₹{product.price.toLocaleString()}
-                        </span>
-                        {product.originalPrice > product.price && (
-                          <span className="text-sm text-neutral-500 line-through">
-                            ₹{product.originalPrice.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile View All Button */}
-          <div className="md:hidden text-center mt-8">
-            <Link
-              to="/products"
-              className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-            >
-              View All Products
-              <ChevronRight size={20} className="ml-2" />
-            </Link>
-          </div>
         </div>
-      </section>
-
-    
-    </div>
+      </section>    
+        </div>
+      </div>
     </>
   );
 };

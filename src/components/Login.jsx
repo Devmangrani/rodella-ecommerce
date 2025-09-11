@@ -193,7 +193,21 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <div 
+      className="min-h-screen flex items-center justify-center pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative"
+      style={{
+        backgroundImage: "url('/assets/carbon-fiber-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed"
+      }}
+    >
+      {/* Dark overlay for better readability */}
+      <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+      
+      {/* Content wrapper with relative positioning */}
+      <div className="relative z-10 w-full max-w-md">
       <div className="max-w-md w-full space-y-8 animate-fade-in-up">
         <div className="text-center animate-fade-in-down">
           <h2 className="text-3xl font-bold text-white mb-2 animate-slide-in-left">
@@ -349,6 +363,7 @@ const Login = () => {
             </p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -560,7 +560,21 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 pt-28 pb-8 px-4">
+    <div 
+      className="min-h-screen bg-neutral-950 pt-28 pb-8 px-4 relative"
+      style={{
+        backgroundImage: "url('/assets/carbon-fiber-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed"
+      }}
+    >
+      {/* Dark overlay for better readability */}
+      <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+      
+      {/* Content wrapper with relative positioning */}
+      <div className="relative z-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div 
@@ -919,6 +933,7 @@ const UserDashboard = () => {
         isOpen={showOrderDetails}
         onClose={closeOrderDetails}
       />
+      </div>
     </div>
   );
 };

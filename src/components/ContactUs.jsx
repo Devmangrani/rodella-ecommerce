@@ -46,7 +46,21 @@ const ContactUs = () => {
   // Show success message if form was submitted successfully
   if (state.succeeded) {
     return (
-      <section className="pt-20 bg-black min-h-screen flex items-center justify-center">
+      <section 
+        className="pt-20 min-h-screen flex items-center justify-center relative"
+        style={{
+          backgroundImage: "url('/assets/carbon-fiber-bg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed"
+        }}
+      >
+        {/* Dark overlay for better readability */}
+        <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+        
+        {/* Content wrapper with relative positioning */}
+        <div className="relative z-10 w-full">
         <div className="container mx-auto max-w-2xl px-4 text-white">
           <div className="relative overflow-hidden">
             {/* Background gradient effect */}
@@ -106,6 +120,7 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
+        </div>
       </section>
     );
   }
@@ -129,7 +144,21 @@ const ContactUs = () => {
           { name: 'Contact Us', url: 'https://rodella.shop/contact' }
         ]}
       />
-      <section className="pt-20 bg-black">
+      <section 
+        className="pt-20 relative"
+        style={{
+          backgroundImage: "url('/assets/carbon-fiber-bg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed"
+        }}
+      >
+        {/* Dark overlay for better readability */}
+        <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+        
+        {/* Content wrapper with relative positioning */}
+        <div className="relative z-10">
       <div className="container mx-auto max-w-4xl px-4 py-4 text-white">
         {/* Contact Form Section */}
         <section 
@@ -309,6 +338,7 @@ const ContactUs = () => {
             </div>
           </div>
         </section>
+      </div>
       </div>
 
       <style>{`

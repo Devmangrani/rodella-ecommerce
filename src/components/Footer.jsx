@@ -44,68 +44,10 @@ const Footer = () => {
         {/* Main Content Grid */}
         <div className="py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            
-            {/* Products Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white mb-6">
-                Our Products
-              </h3>
-              <nav className="space-y-4">
-                {[
-                  { to: "/Composite-tubes", label: "Composite Tubes" },
-                  { to: "/composite-plates", label: "Composite Plates" },
-                  { to: "/reinforcement", label: "Reinforcement Materials" },
-                  { to: "/epoxy-system", label: "Epoxy Systems" },
-                  { to: "/core-material", label: "Core Materials" },
-                ].map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className="group flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-1 focus:outline-none"
-                  >
-                    <FaChevronRight className="text-blue-400 text-xs mr-3 group-hover:mr-4 transition-all duration-300" />
-                    <span className="group-hover:text-blue-300 transition-colors duration-300">
-                      {item.label}
-                    </span>
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            {/* Materials Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white mb-6">
-                Materials
-              </h3>
-              <nav className="space-y-4">
-                {[
-                  { to: "/reinforcement?category=carbonFiber&product=3", label: "Carbon Fiber" },
-                  { to: "/Composite-tubes", label: "Glass Fiber" },
-                  { to: "/Composite-tubes", label: "Carbon Kevlar" },
-                  { to: "/reinforcement?category=aramid&product=12", label: "Aramid" },
-                  { to: "/reinforcement?category=mixed&product=18", label: "Mixed Materials" },
-                  { to: "/contact", label: "Custom Solutions" },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.to}
-                    className="group flex items-center text-gray-300 hover:text-white transition-all duration-300 hover:translate-x-1 focus:outline-none"
-                  >
-                    <FaChevronRight className="text-cyan-400 text-xs mr-3 group-hover:mr-4 transition-all duration-300" />
-                    <span className="group-hover:text-cyan-300 transition-colors duration-300">
-                      {item.label}
-                    </span>
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
             {/* Contact Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white mb-6">
-                Contact Us
-              </h3>
-              <div className="space-y-4">
+            <div className="space-y-4 lg:col-span-3">
+             
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
                 {/* Email */}
                 <div className="group">
@@ -137,7 +79,7 @@ const Footer = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-gray-400 mb-1">Phone</p>
                       <p className="text-sm">
-                        (+91) 628163817
+                        (+91) 6380897553
                       </p>
                     </div>
                   </a>
@@ -175,20 +117,7 @@ const Footer = () => {
               <p className="text-gray-400 text-sm">
                 Copyright © {currentYear} Rodella Aerospace Labs. All rights reserved.
               </p>
-              <div className="flex flex-col lg:flex-row lg:items-center gap-2">
-                <p className="text-gray-500 text-xs">
-                  Innovating the future of aerospace composites
-                </p>
-                <span className="hidden lg:block text-gray-600">•</span>
-                <a 
-                  href="https://rodella.in/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium"
-                >
-                  rodella AEROSPACE LABS
-                </a>
-              </div>
+
             </div>
 
             {/* Social Media */}
