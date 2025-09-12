@@ -254,12 +254,7 @@ const Homepage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-8 sm:mb-12 lg:mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 lg:mb-6">
-              Main Categories
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-neutral-300 max-w-4xl mx-auto leading-relaxed">
-              Discover our comprehensive range of composite materials and tools designed for professional applications
-            </p>
+            
           </motion.div>
 
           {/* Categories Grid */}

@@ -51,7 +51,7 @@ const NavBrand = () => {
           <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white font-bold tracking-wide group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
             rodella
           </span>
-          <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] text-gray-500 font-medium tracking-[0.2em] uppercase group-hover:text-gray-300 transition-all duration-300 -mt-1">
+          <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-[11px] text-gray-500 font-medium tracking-[0.15em] uppercase group-hover:text-gray-300 transition-all duration-300 -mt-1 w-full text-center">
             AEROSPACE LABS
           </span>
         </motion.div>

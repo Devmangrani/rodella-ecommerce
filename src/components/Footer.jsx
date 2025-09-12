@@ -61,7 +61,7 @@ const Footer = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-gray-400 mb-1">Email</p>
                       <p className="text-sm break-all">
-                        RodellaAerospace@gmail.com
+                        rodellaAerospace@gmail.com
                       </p>
                     </div>
                   </a>
