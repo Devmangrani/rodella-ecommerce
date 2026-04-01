@@ -40,12 +40,12 @@ const AdminRoute = ({ children }) => {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/rodella-admin-access-2024" replace />;
+    return <Navigate to="/rodella-admin-access" replace />;
   }
 
   // Redirect to login if authenticated but not admin
   if (!isAdmin) {
-    return <Navigate to="/rodella-admin-access-2024" replace />;
+    return <Navigate to="/rodella-admin-access" replace />;
   }
 
   // Render children if admin

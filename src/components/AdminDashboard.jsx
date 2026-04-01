@@ -31,6 +31,7 @@ import {
   fetchAllCarts, 
   updateOrderStatus,
   checkAdminStatus,
+  updateUserAdminStatus,
   firedb
 } from '../firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -52,6 +53,7 @@ const AdminDashboard = () => {
   const [orderUserData, setOrderUserData] = useState(null);
   const [loadingUserData, setLoadingUserData] = useState(false);
   const [expandedUsers, setExpandedUsers] = useState(new Set());
+  const [roleUpdateLoading, setRoleUpdateLoading] = useState({});
 
   // Check admin authentication
   useEffect(() => {
@@ -64,14 +66,14 @@ const AdminDashboard = () => {
             await loadAllData();
           } else {
             console.warn('Unauthorized access attempt to admin panel');
-            navigate('/rodella-admin-access-2024');
+            navigate('/rodella-admin-access');
           }
         } else {
-          navigate('/rodella-admin-access-2024');
+          navigate('/rodella-admin-access');
         }
       } catch (error) {
         console.error('Authentication error:', error);
-        navigate('/rodella-admin-access-2024');
+        navigate('/rodella-admin-access');
       } finally {
         setLoading(false);
       }
@@ -201,6 +203,38 @@ const AdminDashboard = () => {
       }
       return newSet;
     });
+  };
+
+  // Promote/demote user admin role
+  const handleUserAdminRoleUpdate = async (targetUser) => {
+    if (!targetUser?.id) return;
+
+    const nextIsAdmin = !targetUser.isAdmin;
+
+    // Prevent current admin from removing their own admin privileges
+    if (currentAdmin?.uid === targetUser.id && !nextIsAdmin) {
+      alert('You cannot remove your own admin access from here.');
+      return;
+    }
+
+    const actionLabel = nextIsAdmin ? 'make this user an admin' : 'remove admin access for this user';
+    const confirmAction = window.confirm(`Are you sure you want to ${actionLabel}?`);
+    if (!confirmAction) return;
+
+    setRoleUpdateLoading(prev => ({ ...prev, [targetUser.id]: true }));
+    try {
+      await updateUserAdminStatus(targetUser.id, nextIsAdmin);
+      setUsers(prevUsers =>
+        prevUsers.map(user =>
+          user.id === targetUser.id ? { ...user, isAdmin: nextIsAdmin } : user
+        )
+      );
+    } catch (error) {
+      console.error('Error updating user admin role:', error);
+      alert('Failed to update admin role. Please try again.');
+    } finally {
+      setRoleUpdateLoading(prev => ({ ...prev, [targetUser.id]: false }));
+    }
   };
 
   // Filter orders based on status and search
@@ -716,6 +750,22 @@ const AdminDashboard = () => {
 
                     {/* Quick Actions */}
                     <div className="mt-3 sm:mt-4 flex flex-wrap gap-1 sm:gap-2">
+                      <button
+                        onClick={() => handleUserAdminRoleUpdate(user)}
+                        disabled={!!roleUpdateLoading[user.id]}
+                        className={`px-2 py-1 sm:px-3 rounded-lg text-xs transition-colors ${
+                          user.isAdmin
+                            ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30'
+                            : 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30'
+                        } disabled:opacity-60 disabled:cursor-not-allowed`}
+                      >
+                        {roleUpdateLoading[user.id]
+                          ? 'Updating...'
+                          : user.isAdmin
+                            ? 'Remove Admin'
+                            : 'Make Admin'}
+                      </button>
+
                       <button 
                         onClick={() => {
                           const userOrders = orders.filter(order => order.uid === user.id);

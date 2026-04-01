@@ -252,4 +252,20 @@ export const checkAdminStatus = async (uid) => {
   }
 };
 
+// Update user admin role
+export const updateUserAdminStatus = async (uid, isAdmin) => {
+  if (!uid || typeof isAdmin !== 'boolean') return;
+
+  try {
+    const userRef = doc(firedb, "users", uid);
+    await setDoc(userRef, {
+      isAdmin,
+      updatedAt: new Date()
+    }, { merge: true });
+  } catch (error) {
+    console.error("Error updating admin status:", error);
+    throw error;
+  }
+};
+
 export { firedb, auth }; 
