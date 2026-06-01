@@ -12,7 +12,7 @@ const MaintenancePage = () => {
           Website Temporarily Down
         </h1>
         <p className="mt-4 text-base md:text-lg text-slate-700">
-          We're currently making improvements. We'll be back soon.
+          We're currently making improvements. We'll be back soon....
         </p>
         <p className="mt-2 text-sm md:text-base text-slate-600">
           If you need anything, feel free to contact us.
@@ -26,7 +26,7 @@ const MaintenancePage = () => {
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-5 py-3 text-white font-medium transition-transform duration-300 hover:scale-[1.02] hover:bg-emerald-600"
           >
             <FaWhatsapp className="h-5 w-5" />
-            WhatsApp Us
+            WhatsApp Us 
           </a>
 
           <a
